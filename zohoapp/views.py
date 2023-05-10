@@ -108,7 +108,10 @@ def edit_profile(request,pk):
         company.company_email = request.POST.get('comp_email')
         company.city = request.POST.get('city')
         company.state = request.POST.get('state')
+        company.country = request.POST.get('country')
         company.pincode = request.POST.get('pinc')
+        company.gst_num = request.POST.get('gst')
+        company.pan_num = request.POST.get('pan')
         company.business_name = request.POST.get('bname')
         company.company_type = request.POST.get('comp_type')
         if len(request.FILES)!=0 :

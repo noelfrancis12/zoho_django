@@ -256,12 +256,40 @@ tbody tr td{
                           </div></td>
                           <td>
                             <div class="mb-3 mt-3 p-0 ">
-                            <p style=" color:azure ; margin-bottom: 0px;">Pincode:</p>
-                            <input type="text" class="form-control" name = 'pinc' {% if company.pincode  == "NULL" %} value=0 {% else %} value='{{ company.pincode }}' {% endif %} 
+                            <p style=" color:azure ; margin-bottom: 0px;">Country:</p>
+                            <input type="text" class="form-control" name = 'country' value='{{ company.country }}'
                               style="width: 280px;">
                           </div>
                         </td>
                       </tr>
+                      <tr>
+                        <!-- <td><div class="mb-3 mt-3 p-0">
+                          <p style=" color:azure ; margin-bottom: 0px;">State:</p>
+                          <input type="text" class="form-control" name = 'state' value="{{ company.state }}" 
+                            style="width: 280px;">
+                        </div></td> -->
+                        <td>
+                          <div class="mb-3 mt-3 p-0 ">
+                          <p style=" color:azure ; margin-bottom: 0px;">Pincode:</p>
+                          <input type="text" class="form-control" name = 'pinc' {% if company.pincode  == "NULL" %} value=0 {% else %} value='{{ company.pincode }}' {% endif %} 
+                            style="width: 280px;">
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><div class="mb-3 mt-3 p-0">
+                        <p style=" color:azure ; margin-bottom: 0px;">GST Number:</p>
+                        <input type="text" class="form-control" name = 'gst' value="{{ company.gst_num }}" 
+                          style="width: 280px;">
+                      </div></td>
+                      <td>
+                        <div class="mb-3 mt-3 p-0 ">
+                        <p style=" color:azure ; margin-bottom: 0px;">Pan Number:</p>
+                        <input type="text" class="form-control" name = 'pan' value='{{ company.pan_num }}'
+                          style="width: 280px;">
+                      </div>
+                    </td>
+                  </tr>
                       <tr>
                           <td><div class="mb-3 mt-3 p-0">
                             <p style=" color:azure ; margin-bottom: 0px;">Business Name:</p>
