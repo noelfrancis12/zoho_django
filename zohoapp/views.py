@@ -57,9 +57,9 @@ def login(request):
         
         email_or_username = request.POST['emailorusername']
         password = request.POST['password']
-
+        print(password)
         user = authenticate(request, username=email_or_username, password=password)
-        # print(user)
+        print(user)
         if user is not None:
             auth.login(request, user)
             return redirect('base')
@@ -72,6 +72,28 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('/')
+
+
+def forgotpassword(request):
+     return render(request,'setpassword.html')
+
+def setnewpassword(request):
+
+    if request.method=='POST':
+        email = request.POST['email']
+        password=request.POST['password']
+        cpassword=request.POST['cpassword']
+        if password==cpassword:
+
+            c = User.objects.get(email= email)
+            c.password= password
+            c.save()
+            
+        return redirect('register')
+        
+    else:
+        return render(request, 'setpassword.html')
+    
 
 @login_required(login_url='login')
 def base(request):

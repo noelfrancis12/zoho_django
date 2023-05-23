@@ -11,6 +11,9 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('base', views.base, name='base'),
     path('logout', views.logout, name='logout'),
+    path('forgotpassword' , views.forgotpassword,name='forgotpassword'),  
+    path('setnewpassword' , views.setnewpassword,name='setnewpassword'),   
+
     path('view_profile', views.view_profile, name='view_profile'),
     path('edit_profile/<pk>', views.edit_profile, name='edit_profile'),
     path('itemview',views.itemview,name='itemview'),
