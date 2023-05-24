@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render,redirect
 from django.contrib import messages
 from django.utils.text import capfirst
 from django.contrib.auth.models import User,auth
@@ -80,16 +80,16 @@ def forgotpassword(request):
 def setnewpassword(request):
 
     if request.method=='POST':
-        email = request.POST['email']
+        email_or_username = request.POST['emailorusername']
         password=request.POST['password']
         cpassword=request.POST['cpassword']
         if password==cpassword:
 
-            c = User.objects.get(email= email)
-            c.password= password
+            c = User.objects.filter(Q(username = email_or_username)|Q(email = email_or_username)).first()
+            c.set_password(password)
             c.save()
-            
-        return redirect('register')
+
+        return redirect('register' )
         
     else:
         return render(request, 'setpassword.html')
