@@ -5,24 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-    <link rel="stylesheet" href="static/fonts/icomoon/style.css">
-    <link rel="stylesheet" href="static/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-	  <link rel="stylesheet" type="static/text/css" href="css/nunito-font.css">
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
-    <link rel="stylesheet" href="{% static 'js/main.js' %}"/>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-    <title>Zoho Django</title>
+	  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <title>Zoho</title>
     <style>
       body {
 	font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 	height: 200vh;
-	/* background-image: -moz-linear-gradient( 136deg, rgb(0, 0, 0) 0%, rgb(195, 204, 207) 100%);
-    background-image: -webkit-linear-gradient( 136deg, rgb(0, 0, 0) 0%, rgb(195, 204, 207) 100%);
-    background-image: -ms-linear-gradient( 136deg, rgb(0, 0, 0) 0%, rgb(195, 204, 207) 100%); */
 	
 }
 body:before {
@@ -52,386 +41,415 @@ h1, h2, h3, h4, h5, h6,
 	font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; 
 	color: azure;
 }
-	
 
-  a {
-	-webkit-transition: .3s all ease;
-	-o-transition: .3s all ease;
-	transition: .3s all ease; }
-	a, a:hover {
-	  text-decoration: none !important; }
-  
+body{
+  background-image: url("{% static 'images/wallpaper1.jpg'%}");
+  background-position: center;
+  background-repeat: repeat;
+  background-size: 100%;
+  background-attachment: fixed;
+}
 
-  
-  .site-navbar {
-	margin-bottom: 0px;
-	z-index: 1999;
-	position: sticky;
-	top: 2rem;
-	width: 100%; 
-	/* background-color: rgba(218, 164, 48, 0.732); */
-	}
-	.site-navbar.transparent {
-	  background: transparent; }
-	.site-navbar.absolute {
-	  position: absolute;
-	  top: 0;
-	  left: 0;
-	  width: 100%; }
-	.site-navbar .site-logo {
-	  position: relative;
-	  left: 0;
-	  font-size: 24px !important; }
-	.site-navbar .site-navigation .site-menu {
-	  margin-bottom: 0; }
-	  .site-navbar .site-navigation .site-menu .active > a span {
-		background: rgb(218, 164, 48);
-		color: #fff;
-		border-radius: 30px;
-		display: inline-block;
-		padding: 5px 20px; }
-	  .site-navbar .site-navigation .site-menu a {
-		text-decoration: none !important;
-		display: inline-block; }
-	  .site-navbar .site-navigation .site-menu > li {
-		display: inline-block; }
-		.site-navbar .site-navigation .site-menu > li > a {
-		  padding: 10px 0px;
-		  color: #fff;
-		  font-size: 16px;
-		  text-decoration: none !important; transition: 0.5s ease;
-		}
-		  .site-navbar .site-navigation .site-menu > li > a > span {
-			padding: 5px 20px;
-			display: inline-block;
-			-webkit-transition: .3s all ease;
-			-o-transition: .3s all ease;
-			transition: .3s all ease;
-			border-radius: 30px; 
-			transition: 0.5s ease;}
-		  .site-navbar .site-navigation .site-menu > li > a:hover > span {
-			background: rgb(218, 164, 48);
-			color: #fff;
-			border-radius: 30px;
-			display: inline-block; 
-			transition: 0.5s ease;}
-	  .site-navbar .site-navigation .site-menu .has-children {
-		position: relative; }
-	.site-navbar .site-navigation .site-menu .has-children > a span {
-		position: relative;
-		padding-right: 30px; }
-	.site-navbar .site-navigation .site-menu .has-children > a span:before {
-		position: absolute;
-		content: "\e313";
-		font-size: 16px;
-		top: 50%;
-		right: 10px;
-		-webkit-transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
-		transform: translateY(-50%);
-		font-family: 'icomoon'; }
-		.site-navbar .site-navigation .site-menu .has-children .dropdown {
-		  visibility: hidden;
-		  opacity: 0;
-		  top: 100%;
-		  position: absolute;
-		  text-align: left;
-		  border-top: 2px solid rgb(218, 164, 48);
-		  -webkit-box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.1);
-		  box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.1);
-		  padding: 0px 0;
-		  margin-top: 20px;
-		  margin-left: 0px;
-		  background: #fff;
-		  -webkit-transition: 0.2s 0s;
-		  -o-transition: 0.2s 0s;
-		  transition: 0.2s 0s; } 
-	 .site-navbar .site-navigation .site-menu .has-children .dropdown.arrow-top {
-			position: absolute; }
-			.site-navbar .site-navigation .site-menu .has-children .dropdown.arrow-top:before {
-			  bottom: 100%;
-			  left: 20%;
-			  border: solid transparent;
-			  content: " ";
-			  height: 0;
-			  width: 0;
-			  position: absolute;
-			  pointer-events: none; }
-			.site-navbar .site-navigation .site-menu .has-children .dropdown.arrow-top:before {
-			  border-color: rgba(136, 183, 213, 0);
-			  border-bottom-color: #fff;
-			  border-width: 10px;
-			  margin-left: -10px; }
-		  .site-navbar .site-navigation .site-menu .has-children .dropdown a {
-			text-transform: none;
-			letter-spacing: normal;
-			-webkit-transition: 0s all;
-			-o-transition: 0s all;
-			transition: 0s all;
-			color: #343a40; } 
-		  .site-navbar .site-navigation .site-menu .has-children .dropdown .active > a {
-			color: rgb(218, 164, 48) !important; }
-		  .site-navbar .site-navigation .site-menu .has-children .dropdown > li {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-			min-width: 200px; }
-			.site-navbar .site-navigation .site-menu .has-children .dropdown > li > a {
-			  padding: 9px 20px;
-			  display: block; }
-			  .site-navbar .site-navigation .site-menu .has-children .dropdown > li > a:hover {
-				background: #fafafb; }
-			.site-navbar .site-navigation .site-menu .has-children .dropdown > li.has-children > a {
-			  position: relative; }
-			  .site-navbar .site-navigation .site-menu .has-children .dropdown > li.has-children > a:after {
-				position: absolute;
-				right: 0;
-				content: "\e315";
-				right: 20px;
-				font-family: 'icomoon'; }
-			.site-navbar .site-navigation .site-menu .has-children .dropdown > li.has-children > .dropdown, .site-navbar .site-navigation .site-menu .has-children .dropdown > li.has-children > ul {
-			  left: 100%;
-			  top: 0; }
-			.site-navbar .site-navigation .site-menu .has-children .dropdown > li.has-children:hover > a, .site-navbar .site-navigation .site-menu .has-children .dropdown > li.has-children:active > a, .site-navbar .site-navigation .site-menu .has-children .dropdown > li.has-children:focus > a {
-			  background: #fafafb; }
-		.site-navbar .site-navigation .site-menu .has-children:hover > a, .site-navbar .site-navigation .site-menu .has-children:focus > a, .site-navbar .site-navigation .site-menu .has-children:active > a {
-		  color: rgb(218, 164, 48); }
-		  .site-navbar .site-navigation .site-menu .has-children:hover > a span, .site-navbar .site-navigation .site-menu .has-children:focus > a span, .site-navbar .site-navigation .site-menu .has-children:active > a span {
-			background: rgb(218, 164, 48);
-			color: #fff; }
-		.site-navbar .site-navigation .site-menu .has-children:hover, .site-navbar .site-navigation .site-menu .has-children:focus, .site-navbar .site-navigation .site-menu .has-children:active {
-		  cursor: pointer; }
-		  .site-navbar .site-navigation .site-menu .has-children:hover > .dropdown, .site-navbar .site-navigation .site-menu .has-children:focus > .dropdown, .site-navbar .site-navigation .site-menu .has-children:active > .dropdown {
-			-webkit-transition-delay: 0s;
-			-o-transition-delay: 0s;
-			transition-delay: 0s;
-			margin-top: 0px;
-			visibility: visible;
-			opacity: 1; }
-  
-  .site-mobile-menu {
-	width: 300px;
-	position: fixed;
-	right: 0;
-	z-index: 2000;
-	padding-top: 20px;
-	background: #fff;
-	height: calc(100vh);
-	-webkit-transform: translateX(110%);
-	-ms-transform: translateX(110%);
-	transform: translateX(110%);
-	-webkit-box-shadow: -10px 0 20px -10px rgba(0, 0, 0, 0.1);
-	box-shadow: -10px 0 20px -10px rgba(0, 0, 0, 0.1);
-	-webkit-transition: .3s all ease-in-out;
-	-o-transition: .3s all ease-in-out;
-	transition: .3s all ease-in-out; }
-	.offcanvas-menu .site-mobile-menu {
-	  -webkit-transform: translateX(0%);
-	  -ms-transform: translateX(0%);
-	  transform: translateX(0%); }
-	.site-mobile-menu .site-mobile-menu-header {
-	  width: 100%;
-	  float: left;
-	  padding-left: 20px;
-	  padding-right: 20px; }
-	  .site-mobile-menu .site-mobile-menu-header .site-mobile-menu-close {
-		float: right;
-		margin-top: 8px; }
-		.site-mobile-menu .site-mobile-menu-header .site-mobile-menu-close span {
-		  font-size: 30px;
-		  display: inline-block;
-		  padding-left: 10px;
-		  padding-right: 0px;
-		  line-height: 1;
-		  cursor: pointer;
-		  -webkit-transition: .3s all ease;
-		  -o-transition: .3s all ease;
-		  transition: .3s all ease; }
-		  .site-mobile-menu .site-mobile-menu-header .site-mobile-menu-close span:hover {
-			color: #f8f9fa; }
-	  .site-mobile-menu .site-mobile-menu-header .site-mobile-menu-logo {
-		float: left;
-		margin-top: 10px;
-		margin-left: 0px; }
-		.site-mobile-menu .site-mobile-menu-header .site-mobile-menu-logo a {
-		  display: inline-block;
-		  text-transform: uppercase; }
-		  .site-mobile-menu .site-mobile-menu-header .site-mobile-menu-logo a img {
-			max-width: 70px; }
-		  .site-mobile-menu .site-mobile-menu-header .site-mobile-menu-logo a:hover {
-			text-decoration: none; }
-	.site-mobile-menu .site-mobile-menu-body {
-	  overflow-y: scroll;
-	  -webkit-overflow-scrolling: touch;
-	  position: relative;
-	  padding: 0 20px 20px 20px;
-	  height: calc(100vh - 52px);
-	  padding-bottom: 150px; }
-	.site-mobile-menu .site-nav-wrap {
-	  padding: 0;
-	  margin: 0;
-	  list-style: none;
-	  position: relative; }
-	  .site-mobile-menu .site-nav-wrap a {
-		padding: 10px 20px;
-		display: block;
-		position: relative;
-		color: #212529; }
-		.site-mobile-menu .site-nav-wrap a:hover {
-		  color:rgb(218, 164, 48); }
-	  .site-mobile-menu .site-nav-wrap li {
-		position: relative;
-		display: block; }
-		.site-mobile-menu .site-nav-wrap li.active > a {
-		  color: rgb(218, 164, 48);
-		transition: 0.5s ease; }
-	  .site-mobile-menu .site-nav-wrap .arrow-collapse {
-		position: absolute;
-		right: 0px;
-		top: 10px;
-		z-index: 20;
-		width: 36px;
-		height: 36px;
-		text-align: center;
-		cursor: pointer;
-		border-radius: 50%; }
-		.site-mobile-menu .site-nav-wrap .arrow-collapse:hover {
-		  background: #f8f9fa; }
-		.site-mobile-menu .site-nav-wrap .arrow-collapse:before {
-		  font-size: 12px;
-		  z-index: 20;
-		  font-family: "icomoon";
-		  content: "\f078";
-		  position: absolute;
-		  top: 50%;
-		  left: 50%;
-		  -webkit-transform: translate(-50%, -50%) rotate(-180deg);
-		  -ms-transform: translate(-50%, -50%) rotate(-180deg);
-		  transform: translate(-50%, -50%) rotate(-180deg);
-		  -webkit-transition: .3s all ease;
-		  -o-transition: .3s all ease;
-		  transition: .3s all ease; }
-		.site-mobile-menu .site-nav-wrap .arrow-collapse.collapsed:before {
-		  -webkit-transform: translate(-50%, -50%);
-		  -ms-transform: translate(-50%, -50%);
-		  transform: translate(-50%, -50%); }
-	  .site-mobile-menu .site-nav-wrap > li {
-		display: block;
-		position: relative;
-		float: left;
-		width: 100%; }
-		.site-mobile-menu .site-nav-wrap > li > a {
-		  padding-left: 20px;
-		  font-size: 20px; }
-		.site-mobile-menu .site-nav-wrap > li > ul {
-		  padding: 0;
-		  margin: 0;
-		  list-style: none; }
-		  .site-mobile-menu .site-nav-wrap > li > ul > li {
-			display: block; }
-			.site-mobile-menu .site-nav-wrap > li > ul > li > a {
-			  padding-left: 40px;
-			  font-size: 16px; }
-			.site-mobile-menu .site-nav-wrap > li > ul > li > ul {
-			  padding: 0;
-			  margin: 0; }
-			  .site-mobile-menu .site-nav-wrap > li > ul > li > ul > li {
-				display: block; }
-				.site-mobile-menu .site-nav-wrap > li > ul > li > ul > li > a {
-				  font-size: 16px;
-				  padding-left: 60px; }
-	  .site-mobile-menu .site-nav-wrap[data-class="social"] {
-		float: left;
-		width: 100%;
-		margin-top: 30px;
-		padding-bottom: 5em; }
-		.site-mobile-menu .site-nav-wrap[data-class="social"] > li {
-		  width: auto; }
-		  .site-mobile-menu .site-nav-wrap[data-class="social"] > li:first-child a {
-			padding-left: 15px !important; } 
 
-			
-  
+.header {
+transition: all 0.5s;
+z-index: 997;
+height: 90px;
+background-color: var(--color-primary);
+}
 
-      body{
-        background-image: url("{% static 'images/wallpaper1.jpg'%}");
-        background-position: center;
-        background-repeat: repeat;
-        background-size: 100%;
-        background-attachment: fixed;
-      }
+.header.sticked {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 70px;
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+.header .logo img {
+  max-height: 40px;
+  margin-right: 6px;
+}
+
+.header .logo h1 {
+  font-size: 30px;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  color: #fff;
+  font-family: var(--font-primary);
+}
+
+.header .logo h1 span {
+  color: rgb(218, 164, 48);
+}
+
+.sticked-header-offset {
+  margin-top: 70px;
+}
+
+
+@media (min-width: 1280px) {
+  .navbar {
+    padding: 0;
+  }
+
+  .navbar ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+  }
+
+  .navbar li {
+    position: relative;
+  }
+
+  .navbar>ul>li {
+    white-space: nowrap;
+    padding: 10px 0 10px 28px;
+  }
+
+  .navbar a,
+  .navbar a:focus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3px;
+    font-family: var(--font-secondary);
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    white-space: nowrap;
+    transition: 0.3s;
+    position: relative;
+  }
+
+  .navbar a i,
+  .navbar a:focus i {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 5px;
+  }
+
+  .navbar>ul>li>a:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    bottom: -6px;
+    left: 0;
+    background-color: var(--color-secondary);
+    visibility: hidden;
+    width: 0px;
+    transition: all 0.3s ease-in-out 0s;
+  }
+
+  .navbar a:hover:before,
+  .navbar li:hover>a:before,
+  .navbar .active:before {
+    visibility: visible;
+    width: 100%;
+  }
+
+  .navbar a:hover,
+  .navbar .active,
+  .navbar .active:focus,
+  .navbar li:hover>a {
+    color: #fff;
+  }
+
+  .navbar .dropdown ul {
+    display: block;
+    position: absolute;
+    left: 28px;
+    top: calc(100% + 30px);
+    margin: 0;
+    padding: 10px 0;
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    background: #fff;
+    box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.25);
+    transition: 0.3s;
+    border-radius: 4px;
+  }
+
+  .navbar .dropdown ul li {
+    min-width: 200px;
+  }
+
+  .navbar .dropdown ul a {
+    padding: 10px 20px;
+    font-size: 15px;
+    text-transform: none;
+    font-weight: 600;
+    color: #006a5d;
+  }
+
+  .navbar .dropdown ul a i {
+    font-size: 12px;
+  }
+
+  .navbar .dropdown ul a:hover,
+  .navbar .dropdown ul .active:hover,
+  .navbar .dropdown ul li:hover>a {
+    color: var(--color-secondary);
+  }
+
+  .navbar .dropdown:hover>ul {
+    opacity: 1;
+    top: 100%;
+    visibility: visible;
+  }
+
+  .navbar .dropdown .dropdown ul {
+    top: 0;
+    left: calc(100% - 30px);
+    visibility: hidden;
+  }
+
+  .navbar .dropdown .dropdown:hover>ul {
+    opacity: 1;
+    top: 0;
+    left: 100%;
+    visibility: visible;
+  }
+}
+
+@media (min-width: 1280px) and (max-width: 1366px) {
+  .navbar .dropdown .dropdown ul {
+    left: -90%;
+  }
+
+  .navbar .dropdown .dropdown:hover>ul {
+    left: -100%;
+  }
+}
+
+@media (min-width: 1280px) {
+
+  .mobile-nav-show,
+  .mobile-nav-hide {
+    display: none;
+  }
+}
+
+/*--------------------------------------------------------------
+# Mobile Navigation
+--------------------------------------------------------------*/
+@media (max-width: 1279px) {
+  .navbar {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    max-width: 400px;
+    bottom: 0;
+    transition: 0.3s;
+    z-index: 9997;
+  }
+
+  .navbar ul {
+    position: absolute;
+    inset: 0;
+    padding: 50px 0 10px 0;
+    margin: 0;
+    background: rgba(218, 164, 47, 0.8);
+    overflow-y: auto;
+    transition: 0.3s;
+    z-index: 9998;
+  }
+
+  .navbar a,
+  .navbar a:focus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    font-family: var(--font-primary);
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    transition: 0.3s;
+  }
+
+  .navbar a i,
+  .navbar a:focus i {
+    font-size: 12px;
+    line-height: 0;
+    margin-left: 5px;
+  }
+
+  .navbar a:hover,
+  .navbar .active,
+  .navbar .active:focus,
+  .navbar li:hover>a {
+    color: #fff;
+  }
+
+  .navbar .getstarted,
+  .navbar .getstarted:focus {
+    background: var(--color-primary);
+    padding: 8px 20px;
+    border-radius: 4px;
+    margin: 15px;
+    color: #fff;
+  }
+
+  .navbar .getstarted:hover,
+  .navbar .getstarted:focus:hover {
+    color: #fff;
+    background: rgba(218, 164, 47, 0.8);
+  }
+
+  .navbar .dropdown ul,
+  .navbar .dropdown .dropdown ul {
+    position: static;
+    display: none;
+    padding: 10px 0;
+    margin: 10px 20px;
+    transition: all 0.5s ease-in-out;
+    background-color: rgb(218, 164, 47);
+    border: 1px solid rgb(218, 164, 47);
+  }
+
+  .navbar .dropdown>.dropdown-active,
+  .navbar .dropdown .dropdown>.dropdown-active {
+    display: block;
+  }
+
+  .mobile-nav-show {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 0;
+    transition: 0.5s;
+    z-index: 9999;
+    margin-right: 10px;
+  }
+
+  .mobile-nav-hide {
+    color: #fff;
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 0;
+    transition: 0.5s;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    z-index: 9999;
+  }
+
+  .mobile-nav-active {
+    overflow: hidden;
+  }
+
+  .mobile-nav-active .navbar {
+    right: 0;
+  }
+
+  .mobile-nav-active .navbar:before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:rgba(218, 164, 47,0.2);
+    z-index: 9996;
+  }
+}
+
     </style>
+
+
 </head>
 <body>
+	  <header id="header" class="header d-flex align-items-center">
+		
+		<div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+		  <a href="{% url 'index' %}" class="logo d-flex align-items-center">
+			<!-- <h1 class="mb-0 site-logo"><a href="{% url 'index' %}" class="text-white mb-0">Zoho Django</a></h1> -->
+			<h1>Zoho<span>Django</span></h1>
+		  </a>
+		  <nav id="navbar" class="navbar">
+			<ul >
+				<li class=" nav-item {% if request.path == '/' %}active{% endif %}">
+				  <a href="{% url 'index' %}"><span>Home</span></a></li>
+			  
+				<li class=" nav-item {% if request.path == '#' %}active{% endif %}">
+				  <a href="#" class="nav-link"><span>About</span></a>
+				</li>
+				<li class="nav-item{% if request.path == '#' %}active{% endif %}">
+				  <a href="#" class="nav-link"><span>Contact</span></a>
+				</li>
+				<li class="nav-item {% if request.path == '/register' %}active{% endif %}">
+				  <a href="{% url 'register' %}" class="nav-link"><span>Register/Login</span></a>
+				</li>
+			  </ul>
+		  </nav><!-- .navbar -->
+	
+		  <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+		  <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+	
+		</div>
+	  </header><!-- End Header -->
+	  <!-- End Header -->
 
-    <!-- <div class="site-mobile-menu">
-        <div class="site-mobile-menu-header">
-          <div class="site-mobile-menu-close mt-3">
-            <span class="icon-close2 js-menu-toggle"></span>
-          </div>
-        </div>
-        <div class="site-mobile-menu-body"></div>
-      </div> -->
-      
-      <header class="site-navbar" role="banner" style="background-color: none;">
-  
-        <div class="container">
-          <div class="row align-items-center">
-            
-            <div class="col-11 col-xl-2">
-              <h1 class="mb-0 site-logo"><a href="{% url 'index' %}" class="text-white mb-0">Zoho Django</a></h1>
-            </div>
-
-<style>
-	@media (min-width: 1280px) {
-
-.mobile-nav-show,
-.mobile-nav-hide {
-  display: none;
-}
-}
-</style>
-			
-            <div class="col-12 col-md-10 d-none d-xl-block">
-              <nav class="site-navigation position-relative text-right" role="navigation">
-  
-                <ul class=" navbar-nav site-menu js-clone-nav mr-auto d-none d-lg-block">
-                  <li class=" nav-item {% if request.path == '/' %}active{% endif %}">
-					<a href="{% url 'index' %}"><span>Home</span></a></li>
-                
-                  <li class=" nav-item {% if request.path == '#' %}active{% endif %}">
-                    <a href="#" class="nav-link"><span>About</span></a>
-                  </li>
-                  <li class="nav-item{% if request.path == '#' %}active{% endif %}">
-                    <a href="#" class="nav-link"><span>Contact</span></a>
-                  </li>
-                  <li class="nav-item {% if request.path == '/register' %}active{% endif %}">
-                    <a href="{% url 'register' %}" class="nav-link"><span>Register/Login</span></a>
-                  </li>
-                </ul>
-              </nav>
-<!-- 
-			  <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      			<i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i> -->
-            </div>
-
-            <!-- <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px; z-index: 1;">
-				<a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div> -->
-  
-            </div>
-  
-          </div>
-        </div>
-        
-      </header>
       {% block content %}
       {% endblock %}
       
-     <script>
+    </body>
+	  <script>
 
+   const selectHeader = document.querySelector('#header');
+    if (selectHeader) {
+      let headerOffset = selectHeader.offsetTop;
+      let nextElement = selectHeader.nextElementSibling;
 
+    const headerFixed = () => {
+      if ((headerOffset - window.scrollY) <= 0) {
+        selectHeader.classList.add('sticked');
+        if (nextElement) nextElement.classList.add('sticked-header-offset');
+      } else {
+        selectHeader.classList.remove('sticked');
+        if (nextElement) nextElement.classList.remove('sticked-header-offset');
+      }
+    }
+    window.addEventListener('load', headerFixed);
+    document.addEventListener('scroll', headerFixed);
+  }
 
-const mobileNavShow = document.querySelector('.mobile-nav-show');
+  /**
+   * Navbar links active state on scroll
+   */
+  let navbarlinks = document.querySelectorAll('#navbar a');
+
+  function navbarlinksActive() {
+    navbarlinks.forEach(navbarlink => {
+
+      if (!navbarlink.hash) return;
+
+      let section = document.querySelector(navbarlink.hash);
+      if (!section) return;
+
+      let position = window.scrollY + 200;
+
+      if (position >= section.offsetTop && position <= (section.offsetTop + section.offsetHeight)) {
+        navbarlink.classList.add('active');
+      } else {
+        navbarlink.classList.remove('active');
+      }
+    })
+  }
+  window.addEventListener('load', navbarlinksActive);
+  document.addEventListener('scroll', navbarlinksActive);
+
+  /**
+   * Mobile nav toggle
+   */
+  const mobileNavShow = document.querySelector('.mobile-nav-show');
   const mobileNavHide = document.querySelector('.mobile-nav-hide');
 
   document.querySelectorAll('.mobile-nav-toggle').forEach(el => {
@@ -483,11 +501,9 @@ const mobileNavShow = document.querySelector('.mobile-nav-show');
       }
     })
   });
-
-
-
-
-    
+	  </script>
+     <script>
+  
       const menuItems = document.querySelectorAll('.nav-item');
       
       menuItems.forEach(item => {
@@ -560,7 +576,7 @@ var siteMenuClone = function() {
 
   $('body').on('click', '.js-menu-toggle', function(e) {
     var $this = $(this);
-    console.log("$this")
+    console.log("$this");
     e.preventDefault();
 
     if ( $('body').hasClass('offcanvas-menu') ) {
@@ -572,7 +588,7 @@ var siteMenuClone = function() {
     }
   }) 
 
-  // click outisde offcanvas
+  // click outside offcanvas
   $(document).mouseup(function(e) {
     var container = $(".site-mobile-menu");
     if (!container.is(e.target) && container.has(e.target).length === 0) {
