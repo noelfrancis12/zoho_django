@@ -2,11 +2,17 @@
 {% block content %}
 {% load static %}
 
+<<<<<<< HEAD
 <!-- <div class="fixed-top" style="top: 7rem; margin-left: 18rem;" > -->
     <div  style="top: 7rem; " >
 
      
     <!-- <div style="height: 600px;overflow-y: scroll;"> -->
+=======
+<div class="fixed-top" style="top: 7rem; margin-left: 18rem;" >
+     
+    <div style="height: 600px;overflow-y: scroll;">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
        <h3  class="mb-3  text-white " style="font-size: 2rem;">New Vendor</h3>     
 
       <form  method="post" action="{% url 'edit_vendor_details' vdata.id %}" enctype="multipart/form-data">
@@ -18,7 +24,11 @@
               <label >Primary Contact</label>
           </div>
           <div class="col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
               <select id="select1"  name="salutation" class="form-control bg-light text-dark ">
+=======
+              <select id="select1"  name="salutation" class="form-control ">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                   <option  value="{{ vdata.salutation }}"  selected>{{ vdata.salutation }}</option>
                   <option  value="Mr">Mr</option>
                   <option value="Mrs">Mrs</option>
@@ -27,11 +37,19 @@
                  </select> 
           </div>
           <div class="col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
               <input  type="text" class="form-control bg-light text-dark" id="fname" name="first_name" value="{{ vdata.first_name }}" placeholder="first name">
 
           </div>
           <div class="col-sm-12 col-md-3 col-lg-3">
               <input type="text" class="form-control bg-light text-dark" id="lname" name="last_name" value="{{ vdata.last_name }}" placeholder="last name">
+=======
+              <input  type="text" class="form-control" id="fname" name="first_name" value="{{ vdata.first_name }}" placeholder="first name">
+
+          </div>
+          <div class="col-sm-12 col-md-3 col-lg-3">
+              <input type="text" class="form-control" id="lname" name="last_name" value="{{ vdata.last_name }}" placeholder="last name">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
           </div>
       </div>
@@ -39,7 +57,11 @@
          <div class="form-group row mt-4">
              <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Company Name</label></div>
               <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                   <input  type="text" class="form-control bg-light text-dark" name="company_name" value="{{ vdata.company_name }}">      
+=======
+                  <input  type="text" class="form-control" name="company_name" value="{{ vdata.company_name }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
               </div>
 
 
@@ -48,10 +70,15 @@
               <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Vendor Display Name</label></div>
                <div class="col-sm-12 col-md-6 col-lg-6">
                   
+<<<<<<< HEAD
                       <select  name="v_display_name" class="form-control bg-light text-dark" onclick="vendor_display()">
                       <!-- <option id="select2"></option> -->
                       <option id="select2" selected>{{ vdata.salutation }} {{ vdata.first_name }} {{ vdata.last_name }}</option>
 
+=======
+                      <select  name="v_display_name" class="form-control" onclick="vendor_display()">
+                      <option id="select2"></option>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                           
                       </select> 
     
@@ -77,7 +104,11 @@
            <div class="form-group row mt-4">
               <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Vendor Email</label></div>
               <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                    <input  type="email" class="form-control bg-light text-dark" name="vendor_email" value="{{ vdata.vendor_email }}">      
+=======
+                   <input  type="email" class="form-control" name="vendor_email" value="{{ vdata.vendor_email }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                </div>
 
 
@@ -86,6 +117,7 @@
            <div class="form-group row mt-4">
               <label class="col-sm-12 col-md-3 col-lg-3 col-form-label">Vendor phone</label>
                <div class="col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                    <input id="workphone"  type="tel" pattern="[0-9]{7}" class="form-control bg-light text-dark" name="w_phone" value="{{ vdata.vendor_wphone }}">  
                    <label for="" id="workphone_label"></label>
     
@@ -94,6 +126,12 @@
                   <input id="mphone" type="tel" pattern="[0-9]{10}" class="form-control bg-light text-dark" onclick="work_phone()" name="m_phone" value="{{ vdata.vendor_mphone }}">   
                   <label for="" id="mphone_label"></label>
 
+=======
+                   <input  type="number" class="form-control" name="w_phone" value="{{ vdata.vendor_wphone }}">      
+               </div>
+               <div class=" col-sm-12 col-md-3 col-lg-3">
+                  <input  type="number" class="form-control" name="m_phone" value="{{ vdata.vendor_mphone }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
               </div>
               
 
@@ -108,7 +146,11 @@
                   <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Skype name/Number</label></div>
                  
                    <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                      <input  type="text" class="form-control bg-light text-dark" name="skype_number" value="{{ vdata.skype_number }}">      
+=======
+                     <input  type="text" class="form-control" name="skype_number" value="{{ vdata.skype_number }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                    </div>
                    
 
@@ -119,7 +161,11 @@
               <div class="form-group row mt-4">
                   <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Designation</label></div>
                   <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                        <input  type="text" class="form-control bg-light text-dark" name="designation" value="{{ vdata.designation }}">      
+=======
+                       <input  type="text" class="form-control" name="designation" value="{{ vdata.designation }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                    </div>
 
 
@@ -127,7 +173,11 @@
               <div class="form-group row mt-4">
                   <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Department</label></div>
                   <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                        <input  type="text" class="form-control bg-light text-dark" name="department" value="{{ vdata.department }}">      
+=======
+                       <input  type="text" class="form-control" name="department" value="{{ vdata.department }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                    </div>
 
 
@@ -138,12 +188,17 @@
           <div class="form-group row mt-4">
               <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Website</label></div>
               <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                    <input type="text" class="form-control bg-light text-dark" onclick="mobile_phone()" name="website" value="{{ vdata.website }}">      
+=======
+                   <input type="text" class="form-control" name="website" value="{{ vdata.website }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
               </div>
           </div>
 
 
 
+<<<<<<< HEAD
           
           <span class="input-group mb-1 mt-3">
             <div class="toggle2"
@@ -174,6 +229,28 @@
 
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           </span><br><br><br>
+=======
+          <!-- <span class="input-group mb-3 mt-3">
+              <div class="toggle2"
+                style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                <a href="" style="color: rgb(230, 171, 45);">Other Details </a></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="toggle3"
+                style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                Address</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="toggle4"
+                style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                Contact persons</div>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="toggle6"
+                style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                Reporting Tags</div>
+              &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+              <div class="toggle7"
+                style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                Remarks</div>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </span><br><br><br> -->
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
             <fieldset2 class="other details">
 
@@ -185,7 +262,11 @@
                   <div class=" col-sm-12 col-md-3 col-lg-3">
                     {% if vdata.gst_treatment == "Unregistered Business-not Registered under GST" %}
                     
+<<<<<<< HEAD
                       <select name="gst" id="GSTT" class="form-control bg-light text-dark" onclick="gstPan_function()">
+=======
+                      <select name="gst" id="GSTT" class="form-control" onclick="gstPan_function()">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                          <option value="{{ vdata.gst_treatment }}">{{ vdata.gst_treatment }}</option>
 
                           <option value="Select a Gst Treatment" >Select a Gst Treatment</option>
@@ -198,7 +279,11 @@
                       </select><br>
                       {% else %}
                       
+<<<<<<< HEAD
                       <select name="gst" id="GSTT" class="form-control bg-light text-dark" onclick="gstPan_function1()">
+=======
+                      <select name="gst" id="GSTT" class="form-control" onclick="gstPan_function1()">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                         
                         <option value="{{ vdata.gst_treatment }}">{{ vdata.gst_treatment }}</option>
 
@@ -220,7 +305,11 @@
                       <label class="col-sm-12 col-md-3 col-lg-3 col-form-label"  style="color:rgb(214, 75, 75) ;"> GSTIN/UIN*</label>
                        
                       <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                           <input type="text" class="form-control bg-light text-dark" name="gst_number" id="gst_input"  value="{{ vdata.gst_number }}" onmouseout="gst_check()"> 
+=======
+                          <input type="text" class="form-control" name="gst_number" id="gst_input"  value="{{ vdata.gst_number }}" onmouseout="gst_check()"> 
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                           <label id="gst_label"></label>     
   
                       </div>
@@ -235,7 +324,11 @@
                       <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > PAN</label>
                        
                       <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                           <input type="text" class="form-control bg-light text-dark" id="pan_input" name="pan_number" onmouseout="pan_check()" value="{{ vdata.pan_number }}">      
+=======
+                          <input type="text" class="form-control" id="pan_input" name="pan_number" onmouseout="pan_check()" value="{{ vdata.pan_number }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                           <label id="pan_label"></label>     
 
                       </div>
@@ -253,7 +346,11 @@
               <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> Source Of Supply*</label>
                
               <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                   <select name="source_supply" id="PLACE" class="form-control bg-light text-dark">
+=======
+                  <select name="source_supply" id="PLACE" class="form-control">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                       <option value="{{ vdata.source_supply }}">{{ vdata.source_supply }}</option>
 
                       <option value="value"></option>
@@ -287,7 +384,11 @@
               <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> Currency*</label>
                
               <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                   <select name="currency" id="PLACE" class="form-control bg-light text-dark">
+=======
+                  <select name="currency" id="PLACE" class="form-control">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                       <option value="Indian Rupee" selected>Indian Rupee</option>
             
                   </select>
@@ -301,7 +402,11 @@
               <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Opening Balance</label>
                
               <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                   <input  type="number" class="form-control bg-light text-dark" name="opening_bal" value="{{ vdata.opening_bal }}">      
+=======
+                  <input  type="number" class="form-control" name="opening_bal" value="{{ vdata.opening_bal }}">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
               </div>
 
@@ -313,7 +418,11 @@
               <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Payment Terms</label>
                
               <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                   <select name="payment_terms" id="PLACE" class="form-control bg-light text-dark">
+=======
+                  <select name="payment_terms" id="PLACE" class="form-control">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                       <option value="{{ vdata.payment_terms }}" selected>{{ vdata.payment_terms }}</option>                    
                       <option value="NET 60" >NET 60</option>
                       <option value="NET 45" >NET 45</option>                          
@@ -332,6 +441,7 @@
       </fieldset2>
 
 
+<<<<<<< HEAD
       <fieldset5 id="address" style="display: none;">
         <div>
             <div class="row">
@@ -539,16 +649,26 @@
     </fieldset7>
 
 
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
       
           <div class="row mt-4">
               <div class="col-sm-12 col-md-2 col-lg-2">
+<<<<<<< HEAD
                   <input type="submit" class="form-control bg-warning text-dark " style="font-weight: bold;" value="save">
+=======
+                  <input type="submit" class="form-control btn-outline-warning" value="save">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                   
               </div>
                
               <div class=" col-sm-12 col-md-2 col-lg-2">
+<<<<<<< HEAD
                   <a href="" role="button" class="form-control bg-warning text-dark" style="font-weight: bold;"><center>Cancel</center></a>
+=======
+                  <a href="" role="button" class="form-control btn btn-light" >Cancel</a>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
               </div>
 
@@ -576,11 +696,16 @@
            
 
         </form>
+<<<<<<< HEAD
     <!-- </div> -->
+=======
+    </div>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 </div>
 
 
 <script>
+<<<<<<< HEAD
 
        $(document).ready(function () {
         $(".toggle2").click(function (e) {
@@ -634,6 +759,8 @@
 
 
 
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     function gstPan_function(){
         var x=document.getElementById('GSTT').value
         
@@ -705,6 +832,7 @@
 
         }
     }
+<<<<<<< HEAD
 
     function work_phone()
       {
@@ -897,6 +1025,8 @@
 
 
 
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 </script>
 
 

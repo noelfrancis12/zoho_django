@@ -8,6 +8,7 @@
 <!-- style=" position: fixed;" -->
 
 <!-- <section > -->
+<<<<<<< HEAD
     <!-- <div class="fixed-top" style="top: 7rem; margin-left: 18rem;" > -->
         <div  style="top: 7rem; " >
 
@@ -16,6 +17,14 @@
              <h3  class="mb-3  text-white " style="font-size: 2rem;">New Vendor</h3><br>     
       
              <form  method="post" action="{% url 'add_vendor' %}"  enctype="multipart/form-data" class="">
+=======
+    <div class="fixed-top" style="top: 7rem; margin-left: 18rem;" >
+     
+          <div style="height: 600px;overflow-y: scroll;">
+             <h3  class="mb-3  text-white " style="font-size: 2rem;">New Vendor</h3>     
+      
+            <form  method="post" action="{% url 'add_vendor' %}" enctype="multipart/form-data" class="">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
               {% csrf_token %}
               
               
@@ -23,11 +32,19 @@
                 <div class="col-sm-12 col-md-3 col-lg-3 col-form-label">
                     <label >Primary Contact</label>
                 </div>
+<<<<<<< HEAD
                 <div class="col-sm-12 col-md-1 col-lg-1" style="width: 5.5rem;">
                     <select id="select1"  name="salutation" class="form-control bg-light text-dark  " >
                       
                      
                         <option value="Mr">Mr</option>
+=======
+                <div class="col-sm-12 col-md-3 col-lg-3">
+                    <select id="select1"  name="salutation" class="form-control ">
+                      
+                     
+                        <option  value="Mr">Mr</option>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                         <option value="Mrs">Mrs</option>
                         <option value="Ms">Ms</option>
                         <option value="Dr">Dr</option>
@@ -37,12 +54,21 @@
                         
                        </select> 
                 </div>
+<<<<<<< HEAD
                 <div class="col-sm-12 col-md-2 col-lg-3" style="width:17rem;">
                     <input  type="text" class="form-control bg-light text-dark  " id="fname" name="first_name" placeholder="first name" required >
 
                 </div>
                 <div class="col-sm-12 col-md-2 col-lg-3" style="width:17rem;">
                     <input type="text" class="form-control bg-light text-dark " id="lname" name="last_name" placeholder="last name" required >
+=======
+                <div class="col-sm-12 col-md-3 col-lg-3">
+                    <input  type="text" class="form-control" id="fname" name="first_name" placeholder="first name" required>
+
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-3">
+                    <input type="text" class="form-control" id="lname" name="last_name" placeholder="last name" required>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
                 </div>
             </div>
@@ -50,7 +76,11 @@
                <div class="form-group row mt-4">
                    <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Company Name</label></div>
                     <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                         <input  type="text" class="form-control bg-light text-dark " name="company_name" required>     
+=======
+                        <input  type="text" class="form-control" name="company_name" required>     
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                         <div class="invalid-feedback">Please fill out this field.</div>   
  
                     </div>
@@ -61,7 +91,11 @@
                     <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Vendor Display Name</label></div>
                      <div class="col-sm-12 col-md-6 col-lg-6">
                         
+<<<<<<< HEAD
                             <select  name="v_display_name" class="form-control bg-light text-dark " onclick="vendor_display()">
+=======
+                            <select  name="v_display_name" class="form-control" onclick="vendor_display()">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                             <option id="select2"></option>
                                 
                             </select> 
@@ -88,7 +122,11 @@
                  <div class="form-group row mt-4">
                     <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Vendor Email</label></div>
                     <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                          <input  type="email" class="form-control bg-light text-dark" name="vendor_email" required> 
+=======
+                         <input  type="email" class="form-control" name="vendor_email" required> 
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                          <div class="invalid-feedback">Please fill out this field.</div>   
      
                      </div>
@@ -96,6 +134,7 @@
  
                  </div>
 
+<<<<<<< HEAD
                  <!-- <div class="form-group row mt-4">
                     <label class="col-sm-12 col-md-3 col-lg-3 col-form-label">Vendor phone</label>
                      <div class="col-sm-12 col-md-3 col-lg-3">
@@ -120,17 +159,31 @@
                      <div class="col-sm-12 col-md-3 col-lg-3">
                          <input id="workphone"  type="tel" class="form-control bg-light text-dark" pattern="[0-9]{7}"   name="w_phone" placeholder="work phone" required>
                          <label for="" id="workphone_label"></label>
+=======
+                 <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label">Vendor phone</label>
+                     <div class="col-sm-12 col-md-3 col-lg-3">
+                         <input  type="number" class="form-control" name="w_phone" placeholder="work phone" required>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                          <div class="invalid-feedback">Please fill out this field.</div>   
       
                      </div>
                      <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                         <input id="mphone"  type="tel" pattern="[0-9]{10}" class="form-control bg-light text-dark" onclick="work_phone()"                        name="m_phone" placeholder="mobile number" required>
                         <label for="" id="mphone_label"></label>
+=======
+                        <input  type="number" class="form-control" name="m_phone" placeholder="mobile number" required>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                         <div class="invalid-feedback">Please fill out this field.</div>   
       
                     </div>
                     <div class="toggle1" style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
                         <a href="">More Details</a>
+<<<<<<< HEAD
+=======
+                        <!-- <button onclick="fieldset1_function()" style="background-color: transparent; border: none;color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">More Details</button> -->
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
                      </div>
  
@@ -145,7 +198,11 @@
                         <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Skype name/Number</label></div>
                        
                          <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                            <input  type="text" class="form-control bg-light text-dark" name="skype_number">      
+=======
+                           <input  type="text" class="form-control" name="skype_number">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                          </div>
                          
      
@@ -156,7 +213,11 @@
                     <div class="form-group row mt-4">
                         <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Designation</label></div>
                         <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                              <input  type="text" class="form-control bg-light text-dark" name="designation">      
+=======
+                             <input  type="text" class="form-control" name="designation">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                          </div>
      
      
@@ -164,7 +225,11 @@
                     <div class="form-group row mt-4">
                         <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Department</label></div>
                         <div class="col-sm-12 col-md-6 col-lg-6">
+<<<<<<< HEAD
                              <input  type="text" class="form-control bg-light text-dark" name="department">      
+=======
+                             <input  type="text" class="form-control" name="department">      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                          </div>
      
      
@@ -172,6 +237,7 @@
 
                  </fieldset1>
 
+<<<<<<< HEAD
                 <!-- <div class="form-group row mt-4">
                     <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Website</label></div>
                     <div class="col-sm-12 col-md-6 col-lg-6">
@@ -182,11 +248,18 @@
                     <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Website</label></div>
                     <div class="col-sm-12 col-md-6 col-lg-6">
                          <input id="web" type="text" class="form-control bg-light text-dark" onclick="mobile_phone()"    name="website" required>      
+=======
+                <div class="form-group row mt-4">
+                    <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Website</label></div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                         <input type="text" class="form-control" name="website" required>      
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                     </div>
                 </div>
 
 
 
+<<<<<<< HEAD
                 <br><br><span class="input-group mb-1 mt-3">
                     <div class="toggle2"
                       style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
@@ -214,6 +287,26 @@
                       style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
                       <a href="" style="color: rgb(230, 171, 45);">Remarks</a></div>
 
+=======
+                <span class="input-group mb-3 mt-3">
+                    <div class="toggle2"
+                      style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      <a href="" style="color: rgb(230, 171, 45);">Other Details </a></div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="toggle3"
+                      style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      Address</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="toggle4"
+                      style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      Contact persons</div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="toggle6"
+                      style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      Reporting Tags</div>
+                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                    <div class="toggle7"
+                      style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      Remarks</div>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   </span><br><br><br>
 
@@ -221,6 +314,7 @@
 
                     
 
+<<<<<<< HEAD
                       <div class="form-group row mt-2">
                         <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > GST Treatment*</label>
                          
@@ -231,6 +325,17 @@
                                 <option value="Registered Business-Composition Business that is registered under the Composition scheme in GST">
                                     Registered Business-Composition Business that is registered under the Composition schemen in GST
                                 </option>
+=======
+                      <div class="form-group row mt-4">
+                        <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> GST Treatment*</label>
+                         
+                        <div class=" col-sm-12 col-md-3 col-lg-3">
+                            <select name="gst" id="GSTT" class="form-control" onclick="gstPan_function()">
+                                <option value="Select a Gst Treatment" selected>Select a Gst Treatment</option>
+                                <option value="Registered Business-Regular Business that is registered under GST">Registered Business-Regular Business that is registered under GST</option>
+                                <option value="Registered Business-Composition Business that is registered under the Composition scheme in GST">Registered Business-Composition Business that is registered under the Composition scheme
+                                  in GST</option>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                                 <option value="Unregistered Business-not Registered under GST">Unregistered Business-not Registered under GST</option>
                                 <option value="Overseas- Persons with who you do import or exports of supplies outside india">Overseas- Persons with who you do import or exports of supplies outside india</option>
                                 <option value="Special Economic Zone">Special Economic Zone</option>
@@ -241,10 +346,17 @@
                     </div>
                     <fieldset3 id="gst" style="display: none;">
                         <div class="row mt-4">
+<<<<<<< HEAD
                             <label class="col-sm-12 col-md-3 col-lg-3 col-form-label"  > GSTIN/UIN*</label>
                              
                             <div class=" col-sm-12 col-md-3 col-lg-3">
                                 <input type="text" class="form-control bg-light text-dark" name="gst_number" id="gst_input" onmouseout="gst_check()"> 
+=======
+                            <label class="col-sm-12 col-md-3 col-lg-3 col-form-label"  style="color:rgb(214, 75, 75) ;"> GSTIN/UIN*</label>
+                             
+                            <div class=" col-sm-12 col-md-3 col-lg-3">
+                                <input type="text" class="form-control" name="gst_number" id="gst_input" onmouseout="gst_check()"> 
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                                 <label id="gst_label"></label>     
         
                             </div>
@@ -259,7 +371,11 @@
                             <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > PAN</label>
                              
                             <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                                 <input type="text" class="form-control bg-light text-dark" id="pan_input" onmouseout="pan_check()" name="pan_number">  
+=======
+                                <input type="text" class="form-control" id="pan_input" onmouseout="pan_check()" name="pan_number">  
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                                 <label id="pan_label"></label>     
     
         
@@ -275,10 +391,17 @@
                     
 
                 <div class="form-group row mt-4">
+<<<<<<< HEAD
                     <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Source Of Supply*</label>
                      
                     <div class=" col-sm-12 col-md-3 col-lg-3">
                         <select name="source_supply" id="PLACE" class="form-control bg-light text-dark">
+=======
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> Source Of Supply*</label>
+                     
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <select name="source_supply" id="PLACE" class="form-control">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                         <option value="value" selected></option>
                       <option value="[AN]-Andaman And Nicobar Islands">[AN]-Andaman And Nicobar Islands</option> <option value="[AD]-Andhra Pradesh">[AD]-Andhra Pradesh</option>
                       <option value="[AR]-Arunachal Pradesh">[AR]-Arunachal Pradesh	</option> <option value="volvo">[AS]-Assam</option>
@@ -307,10 +430,17 @@
 
 
                 <div class="form-group row mt-4">
+<<<<<<< HEAD
                     <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Currency*</label>
                      
                     <div class=" col-sm-12 col-md-3 col-lg-3">
                         <select name="currency" id="PLACE" class="form-control bg-light text-dark">
+=======
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> Currency*</label>
+                     
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <select name="currency" id="PLACE" class="form-control">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                             <option value="Indian Rupee" selected>Indian Rupee</option>
                             <option value="Indian Rupee">Indian Rupee</option>
                   
@@ -320,6 +450,7 @@
  
                 </div>
 
+<<<<<<< HEAD
                 <div class="form-group row">
                     <label class="col-sm-12 col-md-3 col-lg-3 col-form-label">Opening Balance Type</label>
                     <div class="col-sm-12 col-md-3 col-lg-3 d-flex align-items-center">
@@ -343,13 +474,30 @@
                 </div>
                 
                 
+=======
+
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Opening Balance</label>
+                     
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <input  type="number" class="form-control" name="opening_bal">      
+
+                    </div>
+ 
+ 
+                </div>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
 
                 <div class="form-group row mt-4">
                     <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Payment Terms</label>
                      
                     <div class=" col-sm-12 col-md-3 col-lg-3">
+<<<<<<< HEAD
                         <select name="payment_terms" id="PLACE" class="form-control bg-light text-dark">
+=======
+                        <select name="payment_terms" id="PLACE" class="form-control">
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                             <option value="NET 60" >NET 60</option>
                             <option value="NET 45" >NET 45</option>                          
                             <option value="NET 30">NET 30</option>
@@ -366,6 +514,7 @@
                 
 
             </fieldset2>
+<<<<<<< HEAD
 <!-- ....................................   Fieldset 5  .................................................... -->
 
             <fieldset5 id="address" style="display: none;">
@@ -594,10 +743,13 @@
                 </div>
 
             </fieldset7>
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
 
 
             
+<<<<<<< HEAD
             <div class="row mt-5">
                 <div class="col-sm-12 col-md-2 col-lg-2 mt-3">
                     <input type="submit" class="btn btn-outline-warning form-control bg-warning text-dark" style="font-weight: bold;" value="save">
@@ -623,6 +775,31 @@
               </form>
 
           <!-- </div> -->
+=======
+                <div class="row mt-4">
+                    <div class="col-sm-12 col-md-2 col-lg-2">
+                        <input type="submit" class="form-control btn-outline-warning" value="save">
+                        <!-- <a href="{% url 'add_vendor' %}" role="button" class="form-control"></a> -->
+                        <!-- <button type="submit">save</button> -->
+                    </div>
+                     
+                    <div class=" col-sm-12 col-md-2 col-lg-2">
+                        <a href="{% url 'cancel_vendor' %}" role="button" class="form-control btn btn-light" >Cancel</a>
+
+                    </div>
+ 
+ 
+                </div>
+
+           
+            <br><br><br><br><br><br><br>
+
+
+                                          
+
+              </form>
+          </div>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     </div>
      
 
@@ -683,8 +860,12 @@
 
         }
     }
+<<<<<<< HEAD
 
 
+=======
+ 
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
     $(document).ready(function () {
         $(".toggle1").click(function (e) {
@@ -695,6 +876,7 @@
       $(document).ready(function () {
         $(".toggle2").click(function (e) {
           e.preventDefault();
+<<<<<<< HEAD
          
           $("fieldset2").toggle(); 
           $("fieldset5").hide();
@@ -984,6 +1166,16 @@
       
 
      
+=======
+          $("fieldset2").toggle();
+        })
+      })
+
+      fieldset1_function()
+      {
+        document.getElementById("more_detail").style.display="block";
+      }
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 </script>
 
 

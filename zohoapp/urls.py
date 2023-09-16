@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 from django.urls import path,include,re_path
 from.import views
+=======
+from.import views
+from django.urls import path,include,re_path
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.static import serve
+<<<<<<< HEAD
 from .views import EmailAttachementView
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -19,6 +27,10 @@ urlpatterns = [
     path('edit_profile/<pk>', views.edit_profile, name='edit_profile'),
     path('itemview',views.itemview,name='itemview'),
     path('additem',views.additem,name='additem'),
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     path('add',views.add,name='add'),
     path('add_account',views.add_account,name='add_account'),
     path('detail/<int:id>',views.detail,name='detail'),
@@ -41,6 +53,7 @@ urlpatterns = [
     path('download_doc/<int:pk>',views.download_doc,name='download_doc'),
     path('cancel_vendor/',views.cancel_vendor,name='cancel_vendor'),
     path('delete_vendor/<int:pk>',views.delete_vendor,name='delete_vendor'),
+<<<<<<< HEAD
     path('add_customer/',views.add_customer,name='add_customer'),
     path('retainer_invoices/',views.retainer_invoice,name='retainer_invoice'),
     path('add_invoice/',views.add_invoice,name='add_invoice'),
@@ -558,5 +571,13 @@ urlpatterns = [
     
     
 ]
+=======
+    
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+    
+
+]
+
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

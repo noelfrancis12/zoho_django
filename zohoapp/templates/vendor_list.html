@@ -9,6 +9,7 @@
     }
 </style>
 
+<<<<<<< HEAD
   <div  style="top: 7rem; " >
     <div class="pb-4"><a class="text-white" style="font-size: 2rem;">All Vendors</a></div>
     <div class="row mb-4">
@@ -56,6 +57,26 @@
                         <th>BALANCE</th>
                         <th>DELETE</th>
 
+=======
+<div class="fixed-top" style="top: 7rem; margin-left: 18rem;">
+    <div style="height: 600px;overflow-y: scroll;">
+        <div class="row">
+            <div class="col-md-3"><a class="text-white" style="font-size: 2rem;">All Vendors</a></div>
+            <div class="col-md-6 form-inline" style="margin-left: 55rem;margin-top: -2rem;"><a style="color: #ccc;" class="btn btn-success mr-2" href="{% url 'vendor' %}"><i class="fa-solid fa-plus "></i>New</a>
+
+            </div>
+        </div>   
+    
+        <div class="row">
+            <div class="col-sm-12 col-md-11 col-lg-11">
+                <table class="table  text-white" id="myTable">
+                    <thead>
+                      <tr>
+                        <th>NAME</th>
+                        <th>COMPANY NAME</th>
+                        <th>EMAIL</th>
+                        <th>WORK PHONE</th>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
                       </tr>
                     </thead>
                     <tbody>
@@ -68,6 +89,7 @@
                         <td>{{v.company_name}}</td>
                         <td>{{v.vendor_email}}</td>
                         <td>{{v.vendor_wphone}}</td>
+<<<<<<< HEAD
 
                         <td ><textarea class="bg-transparent text-white border-0" name="" id="" cols="45" rows="2">{{v.gst_treatment}}</textarea></td>
                         {% if v.opening_bal_type == 'credit' %}
@@ -78,14 +100,19 @@
                         <td></td>
                         <td><a href="{% url 'delete_vendor' v.id %}" onclick="alert('Do You Want to Delete?')"><i class="fas fa-trash text-danger text-center"></i></a></td>
 
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
         
                        
                       </tr>
                       {% endfor %}
                     </tbody>
                 </table>
+<<<<<<< HEAD
                 </div>
                 <br><br><br><br><br>
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
             </div>
             <div class="col-sm-12 col-md-1 col-lg-1"></div>
 
@@ -95,11 +122,16 @@
            
         
 
+<<<<<<< HEAD
     <!-- </div> -->
+=======
+    </div>
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
 </div>
 
 
+<<<<<<< HEAD
 <script>
   $(document).ready(function () {
     $("#search").on("keyup", function () {
@@ -110,6 +142,9 @@
     });
   });
 </script>
+=======
+
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
 
 

@@ -9,14 +9,21 @@ class company_details(models.Model):
     address = models.CharField(max_length=100,null=True,blank=True)
     city = models.CharField(max_length=100,null=True,blank=True)
     state = models.CharField(max_length=100,null=True,blank=True)
-    pincode = models.IntegerField(null=True,blank=True)
+    country = models.CharField(max_length=100,null=True,blank=True)
+    pincode = models.CharField(max_length = 100,null=True,blank=True)
     company_email = models.CharField(max_length=255,null=True,blank=True)
     business_name = models.CharField(max_length=255,null=True,blank=True)
     company_type = models.CharField(max_length=255,null=True,blank=True)
     industry_type = models.CharField(max_length=255,null=True,blank=True)
+<<<<<<< HEAD
     profile_pic = models.ImageField(null=True,blank = True,upload_to = 'image/patient')
 
 
+=======
+    gst_num = models.CharField(max_length=255,null=True,blank=True)
+    pan_num = models.CharField(max_length=255,null=True,blank=True)
+    profile_pic = models.ImageField(null=True,blank = True,upload_to = 'image/profile')
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
 
 
 class Sales(models.Model):
@@ -30,12 +37,16 @@ class Sales(models.Model):
 
 
 class Purchase(models.Model):
+<<<<<<< HEAD
     ACC_TYPE_CHOICES = (
         ('1', 'EXPENSE'),
         ('2', 'Cost of Goods Sold'),
         ('3', 'Fixed Asset'),
     )
     Account_type=models.CharField(max_length=255,choices=ACC_TYPE_CHOICES)
+=======
+    Account_type=models.TextField(max_length=255)
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     Account_name=models.TextField(max_length=255)
     Acount_code=models.TextField(max_length=255)
     Account_desc=models.TextField(max_length=255)
@@ -51,11 +62,15 @@ class Unit(models.Model):
     def __str__(self):
         return self.unit
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     
     
     
 class AddItem(models.Model):
+<<<<<<< HEAD
     user=models.ForeignKey(User,on_delete=models.CASCADE,default='')
     type=models.TextField(max_length=255)
     Name=models.TextField(max_length=255)
@@ -63,6 +78,13 @@ class AddItem(models.Model):
     hsn=models.IntegerField(null=True,blank=True)
     sales=models.ForeignKey(Sales,on_delete=models.CASCADE)
 
+=======
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    type=models.TextField(max_length=255)
+    Name=models.TextField(max_length=255)
+    unit=models.ForeignKey(Unit,on_delete=models.CASCADE)
+    sales=models.ForeignKey(Sales,on_delete=models.CASCADE)
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     purchase=models.ForeignKey(Purchase,on_delete=models.CASCADE)
     date=models.DateTimeField(auto_now_add=True)
     s_desc=models.TextField(max_length=255)
@@ -73,6 +95,7 @@ class AddItem(models.Model):
     satus=models.TextField(default='active')
     interstate=models.CharField(max_length=255,default='')
     intrastate=models.CharField(max_length=255,default='')
+<<<<<<< HEAD
     tax=models.TextField(max_length=255,null=True)
     invacc=models.TextField(max_length=255,null=True)
     stock=models.IntegerField(blank=True,null=True,)
@@ -82,6 +105,11 @@ class AddItem(models.Model):
 
 class History(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default='')
+=======
+
+class History(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     date=models.DateTimeField(auto_now=True)
     message=models.CharField(max_length=255)
     p=models.ForeignKey(AddItem,on_delete=models.CASCADE)
@@ -107,6 +135,7 @@ class vendor_table(models.Model):
     source_supply=models.CharField(max_length=100)
     currency=models.CharField(max_length=50)
     opening_bal=models.CharField(max_length=100)
+<<<<<<< HEAD
     opening_bal_type=models.CharField(max_length=100,null=True,blank=True)
     payment_terms=models.CharField(max_length=100)
     battention=models.CharField(max_length=100,default='')
@@ -129,11 +158,21 @@ class vendor_table(models.Model):
 
 class comments_table(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
+=======
+    payment_terms=models.CharField(max_length=100)
+
+class comments_table(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     vendor=models.ForeignKey(vendor_table,on_delete=models.CASCADE,null=True)
     comment=models.TextField(max_length=500)
 
 class mail_table(models.Model):
+<<<<<<< HEAD
     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
+=======
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
     vendor=models.ForeignKey(vendor_table,on_delete=models.CASCADE,null=True)
     mail_from=models.TextField(max_length=300)
     mail_to=models.TextField(max_length=300)
@@ -142,6 +181,7 @@ class mail_table(models.Model):
     mail_date=models.DateTimeField(auto_now_add=True)
 
 class doc_upload_table(models.Model):
+<<<<<<< HEAD
     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True,default='')
     vendor=models.ForeignKey(vendor_table,on_delete=models.CASCADE,null=True)
     title=models.TextField(max_length=200)
@@ -1172,3 +1212,10 @@ class EWayBillItem(models.Model):
     tax = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     discount = models.DecimalField(max_digits=10, decimal_places=2,null=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2,null=True)     
+=======
+    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    vendor=models.ForeignKey(vendor_table,on_delete=models.CASCADE,null=True)
+    title=models.TextField(max_length=200)
+    document=models.FileField(upload_to='doc/')
+
+>>>>>>> 9de7eaf08eea9bd91f7ddd180e5b580804db9216
