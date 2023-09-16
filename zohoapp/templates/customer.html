@@ -1,0 +1,1054 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- class="row fixed-top " -->
+<!-- style=" position: fixed;" -->
+
+<!-- <section > -->
+    <!-- <div class="fixed-top" style="top: 7rem; margin-left: 18rem;" > -->
+        <div class="modal fade"  id="newpayment" >
+            <div class="modal-dialog modal-md" style="background-color: rgb(64, 63, 63);">
+              <div class="modal-content"style="background-color: rgb(64, 63, 63);
+              font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h2  style="text-align:center;color: rgb(230, 171, 45);">Configure Payment terms</h2>
+                </div>
+                <div class="modal-body">
+                    <form method='POST'>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label">
+                                <label for="name" style="color: rgb(230, 171, 45);">Term Name</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6">
+                                 <input type="text" id="term" name="term" class="form-control bg-light text-dark "required>
+              </div></div>
+              <div class="form-group row mt-4">
+                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label">
+                    <label for="name" style="color: rgb(230, 171, 45);">Number of days</label></div>
+                 <div class="col-sm-12 col-md-6 col-lg-6">
+                     <input type="number"id="day" name="day" class="form-control bg-light text-dark "required>
+  </div></div>
+  <div class="form-group row mt-4">
+    <div class="col-sm-12 col-md-3 col-lg-3 col-form-label">
+    </div>
+     <div class="col-sm-12 col-md-6 col-lg-6">
+        <button type='submit' class="btn btn-primary" data-dismiss="modal" id="paySave" >Save</button>
+                           
+</div></div>
+                            
+                            <div class="col-md-4"></div>
+                        </div>
+                    </form>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+        <div  style="top: 7rem; " >
+
+     
+          <!-- <div  style="height: 600px;overflow-y: scroll;"> -->
+             <h3  class="mb-3  text-white " style="font-size: 2rem;">New Customer</h3><br>     
+      
+             <form  method="POST" action="{% url 'entr_custmrA' %}"  enctype="multipart/form-data" class="">
+              {% csrf_token %}
+              
+              <div class="form-group row mt-4">
+                <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: white;">Customer Type</label>
+                
+                <div class=" col-sm-12 col-md-3 col-lg-3">
+                    <input  type="radio"  value="Business" name="type" >
+                            <label for="Business"> Business</label>
+                           &nbsp;&nbsp;&nbsp;
+                           <input  type="radio"  value="Individual" name="type" >
+                           <label for="Business">Individual</label>
+                </div><br></div>
+              <div class=" form-group row">
+                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label">
+                    <label >Primary Contact</label>
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-3">
+                    <select id="sa"  name="txtsalu" class="form-control bg-light text-dark  " >
+                      
+                     
+                        <option value="Mr" selected>Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                        <option value="Dr">Dr</option>
+
+
+   
+                        
+                       </select> 
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-3" >
+                    <input  type="text" class="form-control bg-light text-dark  " name="fName" id="fName"  placeholder="first name" oninput="generateFullName()" required >
+
+                </div>
+                <div class="col-sm-12 col-md-3 col-lg-3" >
+                    <input type="text" class="form-control bg-light text-dark "  name="lName" id="lName"  placeholder="last name"  oninput="generateFullName()" required >
+
+                </div>
+            </div>
+            <div class="form-group row mt-4">
+                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Customer Display Name*</label></div>
+                 <div class="col-sm-12 col-md-6 col-lg-6">
+                    
+                    <input type="text" class="form-control bg-light text-dark "  id="txtFullName" name="txtFullName" >
+ 
+      
+                            
+                          
+                 </div>
+            
+               <div class="form-group row mt-4">
+                   <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Company Name</label></div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <input type="text" id="ccname" name="cpname" class="form-control bg-light text-dark "required>
+     </div></div>
+
+                 <div class="form-group row mt-4">
+                    <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Customer Email</label></div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <input type="email" id="myEmail" name="email"  pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" 
+                        class="form-control bg-light text-dark"  required> 
+                        
+                     </div> </div>
+
+             
+                 <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label">Customer phone</label>
+                     <div class="col-sm-12 col-md-3 col-lg-3">
+                          <input type="text" name="wphone" class="form-control bg-light text-dark" style="width: 100%;" placeholder="0000-0000000" pattern="[0-9]{4}-[0-9]{7}">
+                         
+                        
+                     </div>
+                     <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <input type="text" name="mobile" style="width:100%;" placeholder="Mobile" pattern="[0-9]{10}" class="form-control bg-light text-dark" required>
+                        <div class="toggle"
+                        style=" color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                        Add more details </div>
+                    </div>
+                    
+ 
+ 
+                 </div>
+                 
+
+                 <fieldset19 class="contact" style="display: none;">
+
+
+                    <div class="form-group row mt-4">
+                        <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Skype name/Number</label></div>
+                       
+                         <div class="col-sm-12 col-md-6 col-lg-6">
+                           <input  type="text" class="form-control bg-light text-dark"  id="cn"  name="skname">      
+                         </div>
+                         
+     
+     
+                     </div>
+
+
+                    <div class="form-group row mt-4">
+                        <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Designation</label></div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                             <input  type="text" class="form-control bg-light text-dark"  id="cn"   name="desg">      
+                         </div>
+     
+     
+                    </div>
+                    <div class="form-group row mt-4">
+                        <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Department</label></div>
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                             <input  type="text" class="form-control bg-light text-dark"  id="cn"   name="dept">      
+                         </div>
+     
+     
+                     </div>
+
+                 </fieldset19>
+                <div class="form-group row mt-4">
+                    <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Website</label></div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                         <input type="text" class="form-control bg-light text-dark" id="cn" name="wbsite" required>      
+                    </div>
+                </div>
+
+
+
+                <br><br><span class="input-group mb-1 mt-3">
+                    <div class="toggle2"
+                      style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      <a href="" style="color: rgb(230, 171, 45);">Other Details </a></div>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <div class="toggle3" style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                    
+                      <a href="" style="color: rgb(230, 171, 45);">Address </a>
+                      <!-- <button class="btn" onclick="fieldset5_function()" style="border: none;background-color: transparent;">Address</button> -->
+                    </div>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <div class="toggle4"
+                      style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      <a href="" style="color: rgb(230, 171, 45);">Contact Persons </a></div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                   
+
+                    &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                    <div class="toggle7"
+                      style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                      <a href="" style="color: rgb(230, 171, 45);">Remarks</a></div>
+
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  </span><br><br><br>
+
+                  <fieldset2 class="other details" style="display: block;">
+                      <div class="form-group row mt-2">
+                        <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> GST Treatment*</label>
+                         
+                        <div class=" col-sm-12 col-md-3 col-lg-3">
+                            <select name="v_gsttype" id="GSTT" class="form-control bg-light text-dark" onclick="gstPan_function()">
+                                <option value="Select a Gst Treatment" selected>Select a Gst Treatment</option>
+                                <option value="Registered Business-Regular Business that is registered under GST">Registered Business-Regular Business that is registered under GST</option>
+                                <option value="Registered Business-Composition Business that is registered under the Composition scheme in GST">
+                                    Registered Business-Composition Business that is registered under the Composition schemen in GST
+                                </option>
+                                <option value="Unregistered Business-not Registered under GST">Unregistered Business-not Registered under GST</option>
+                                <option value="Overseas- Persons with who you do import or exports of supplies outside india">Overseas- Persons with who you do import or exports of supplies outside india</option>
+                                <option value="Special Economic Zone">Special Economic Zone</option>
+                            </select><br>
+                        </div>
+     
+     
+                    </div>
+                    <fieldset3 id="gst" style="display: none;">
+                        <div class="row mt-4">
+                            <label class="col-sm-12 col-md-3 col-lg-3 col-form-label"  style="color:rgb(214, 75, 75) ;"> GSTIN/UIN*</label>
+                             
+                            <div class=" col-sm-12 col-md-3 col-lg-3">
+                                <input type="text" class="form-control bg-light text-dark" name="v_gstin" placeholder="29APPCK7465F1Z1" id="gst_input" onmouseout="gst_check()"> 
+                                <label id="gst_label"></label>     
+        
+                            </div></div>
+
+                    </fieldset3>
+
+                    <fieldset4 id="pan" style="display: none;">
+                        <div class=" row mt-4">
+                            <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > PAN</label>
+                             
+                            <div class=" col-sm-12 col-md-3 col-lg-3">
+                                <input type="text" class="form-control bg-light text-dark" id="pan_input" onmouseout="pan_check()" name="pan_number">  
+                                <label id="pan_label"></label>     
+    
+        
+                            </div>
+         
+         
+                        </div>
+
+                    </fieldset4>
+
+
+
+                    
+
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> Source Of Supply*</label>
+                     
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <select name="posply" id="PLACE" class="form-control bg-light text-dark">
+                        <option value="value" selected></option>
+                      <option value="[AN]-Andaman And Nicobar Islands">[AN]-Andaman And Nicobar Islands</option> <option value="[AD]-Andhra Pradesh">[AD]-Andhra Pradesh</option>
+                      <option value="[AR]-Arunachal Pradesh">[AR]-Arunachal Pradesh	</option> <option value="volvo">[AS]-Assam</option>
+                      <option value="[BR]-Bihar">[BR]-Bihar</option> <option value="volvo">[CH]-	Chandhigarh</option><option value="[CG]-Chattisgarh">[CG]-Chattisgarh</option>
+                      <option value="[DD]-Daman Diu">[DD]-Daman Diu</option><option value="volvo">[DL]-	Delhi</option><option value="[GA]-Goa">[GA]-Goa</option> <option value="[GJ]-Gujarat">[GJ]-Gujarat</option>
+                      <option value="[HR]-Haryana">[HR]-Haryana</option> <option value="[HP]-Himachal Pradesh">[HP]-Himachal Pradesh</option>
+                      <option value="[JK]-Jammu And Kashmir">[JK]-Jammu And Kashmir</option><option value="[JH]-Jharkand">[JH]-Jharkand</option>
+                      <option value="[KA]-Karnataka">[KA]-Karnataka</option><option value="[KL]-Kerala">[KL]-Kerala</option>
+                      <option value="[LA]-Ladakh">[LA]-Ladakh</option><option value="[LD]-Lakshadweep">[LD]-Lakshadweep</option>
+                      <option value="[MP]-Madhyapradesh">[MP]-Madhyapradesh</option><option value="[MH]-Maharashtra">[MH]-Maharashtra</option>
+                      <option value="[MN]-Manipur">[MN]-Manipur</option>  <option value="[ML]-Meghalaya">[ML]-Meghalaya</option>
+                    <option value="[MZ]-Mizoram">[MZ]-Mizoram</option> <option value="[NL]-Nagaland">[NL]-Nagaland</option> <option value="[NL]-Nagaland">[NL]-Nagaland</option>
+                     <option value="[OD]-Odisha">[OD]-Odisha</option><option value="[PY]-Puducherry">[PY]-Puducherry</option>
+                      <option value="[PB]-Punjab">[PB]-Punjab.</option><option value="[RL]-Rajasthan">[RL]-Rajasthan</option>
+                      <option value="[SK]-Sikkim">[SK]-Sikkim</option><option value="[TN]-Tamilnadu">[TN]-Tamilnadu</option>
+                      <option value="[TS]-Telenghana">[TS]-Telenghana</option><option value="[TR]-Tripura">[TR]-Tripura</option><option value="[UP]-Uttar Pradesh">[UP]-Uttar Pradesh</option>
+                      <option value="[UK]-Utharakhand">[UK]-Utharakhand</option><option value="[WB]-West Bengal">[WB]-West Bengal</option>
+                      <option value="[OT]-Other Territory">[OT]-Other Territory</option>
+                          </select>
+                    </div>
+ 
+ 
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;">Tax Preference*</label>
+                    
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <input type="checkbox" id="Taxable" name="tax1" value="Taxable">
+                        <label for="vehicle1">Taxable</label>
+                        &nbsp;&nbsp;&nbsp;
+                        <input type="checkbox" id="Tax Exempt" name="tax1" value="Tax Exempt">
+                        <label for="vehicle2"> Tax Exempt</label>
+                  
+                    </div>
+ 
+ 
+                </div>
+
+
+
+
+
+
+
+
+
+                
+
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:rgb(214, 75, 75) ;"> Currency*</label>
+                     
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <select name="crncy"  id="PLACE" class="form-control bg-light text-dark">
+                            <option value="Indian Rupee" selected>Indian Rupee</option>
+                            <option value="Indian Rupee">Indian Rupee</option>
+                  
+                        </select>
+                    </div>
+ 
+ 
+                </div>
+
+
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Opening Balance</label>                    
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <input  type="number" class="form-control bg-light text-dark" id="cn"  name="obal" required>      
+                    </div>
+                </div>
+
+
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Payment Terms</label>
+                     
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                    
+                            <select name="pterms" id="PLACE" class="form-control bg-light text-dark">
+       
+
+                                {% for cs in sb %}
+                        
+                              <option type="text" value ='{{ cs.Terms }}'> {{ cs.Terms}}</option>
+                             
+                              {% endfor %}
+                             </select><br>
+                             <a href="" style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;" data-toggle="modal" data-target="#newpayment"><i class="fa fa-gear"></i> Configure  Trems</a>
+    
+                    </div>
+ 
+ 
+                </div>
+
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" >Price List </label>
+                     
+                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                        <select name="plst" id="PLACE" id="PLACE" class="form-control bg-light text-dark">
+                            
+        
+                            <option type="text">PriceBook0 [ 68% Markup ]</option>
+                            <option type="text">PriceBook1 [ 70% Markdown ]</option>
+
+                                {% for cs in hi %}
+                        
+                              <option type="text" value ='{{ cs.name }}'> {{ cs.name}}</option>
+                             
+                              {% endfor %}
+                             </select>
+                       
+                    </div>
+        
+        
+                </div>
+             
+                     
+
+                        <div class="form-group row mt-4">
+                            <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:white ;">Enable Portal? </label>
+                                <div class=" col-sm-12 col-md-3 col-lg-3">
+                                    <input type="checkbox"  id="vehicle1" name="vehicle1" value="Bike">
+                                    <label for="vehicle1">Allow Portal Access For This Customer</label>
+   
+                            </div></div>
+
+
+
+
+
+
+
+                            <div class="form-group row mt-4">
+                                <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:white ;">
+                                    Portal Language</label>
+                                    <div class=" col-sm-12 col-md-3 col-lg-3">
+                                        <select name="plang" id="PLACE" style="width: 100%;" class="form-control bg-light text-dark"  >
+                                            <option selected disabled value="" >Choose..</option>
+                                            <option value="ENGLISH">ENGLISH</option>
+                                          </select>
+                                </div></div>   
+                                <div class="form-group row mt-4">
+                                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:white ;">Facebook </label>
+                                        <div class=" col-sm-12 col-md-3 col-lg-3">
+                                            <input type="text" id="cn" name="fbk" class="form-control bg-light text-dark" >
+                                            
+                                    </div></div>
+                                <div class="form-group row mt-4">
+                                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color:white ;">Twitter</label>
+                                        <div class=" col-sm-12 col-md-3 col-lg-3">
+                                            <input type="text" id="cn" name="twtr" class="form-control bg-light text-dark" >
+                                          
+                                    </div></div>
+                                    
+
+            </fieldset2>
+<!-- ....................................   Fieldset 5  .................................................... -->
+
+<fieldset5 class="address" style="display: none;">
+    <div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="">BILLING ADDRESS</label>
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Attention</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="text" class="form-control bg-light text-dark" id="batn"  name="atn" >      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Country</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <select name="ctry" id="bcty" class="form-control bg-light text-dark">
+                            <option value="India" selected>India</option>
+                        </select>      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Address</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <textarea class="form-control bg-light text-dark"  style="border: none;color: rgb(7, 7, 7);" cols="26" rows="4" id="bads1" name="addrs" ></textarea><br>
+                        <textarea class="form-control bg-light text-dark"  style="border: none;color: rgb(7, 7, 7);" cols="26" rows="4" id="bads2"
+                        name="addrs1"></textarea>
+       
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > City</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="text" class="form-control bg-light text-dark"  id="bct" name="bct" >      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > State</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input type="text" class="form-control bg-light text-dark"  id="bst" name="bst" >      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Zip Code </label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="number" class="form-control bg-light text-dark" id="bzip" name="bzip">      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Mobile </label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="tel" class="form-control bg-light text-dark" placeholder="0000000000" pattern="[0-9]{10}" id="bpon" name="bpon" >      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Fax </label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="number" class="form-control bg-light text-dark" placeholder="0000000" id="bfx" name="bfx">      
+                    </div>
+                </div> 
+                
+
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="row">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <label for="">SHIPPING ADDRESS</label>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <input  type="checkbox" id="myCheckT" onclick="myCopyAddressFunction()">&nbsp;
+                        <label for="myCheck">Copy Billing Address</label>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Attention</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="text" class="form-control bg-light text-dark " style="color: white;" id="satn" name="lna">      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Country</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <select name="Place" id="scty" class="form-control bg-light text-dark">
+                            <option value="India" selected>India</option>
+                        </select>      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Address</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <textarea class="form-control bg-light text-dark" style="border: none;color: rgb(10, 10, 10);"  cols="26" rows="4"  id="sads1" name="lna"></textarea><br>
+                        <textarea class="form-control bg-light text-dark" style="border: none;color: rgb(10, 10, 10);"  cols="26" rows="4" id="sads2" name="lna"></textarea>
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > City</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="text" class="form-control bg-light text-dark" id="sct" name="lna">      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > State</label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input type="text" class="form-control bg-light text-dark" id="sst" name="lna">      
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Zip Code </label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="number" class="form-control bg-light text-dark" id="szip" name="lna">      
+                    </div>
+                </div>
+             
+
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" >Mobile </label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="tel" class="form-control bg-light text-dark" placeholder="0000000000" pattern="[0-9]{10}" style="color: white;" id="spn" name="lna">  
+                        <label for="" id="sphone_label"></label>    
+                    </div>
+                </div>
+                <div class="form-group row mt-4">
+                    <label class="col-sm-12 col-md-3 col-lg-3 col-form-label" > Fax </label>                    
+                    <div class=" col-sm-12 col-md-6 col-lg-6">
+                        <input  type="tel" class="form-control bg-light text-dark" placeholder="0000000" pattern="[0-9]{7}" style="color: white;" id="sfx" name="bfx"> 
+                        <label for="" id="sfax_label"></label>     
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</fieldset5>
+
+
+            <fieldset6 class="contact_person" style="display: none;color: azure ; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;" >
+                <div class="row">
+                    <div class="col-sm-12 col-md-11 col-lg-11">
+                        <div style="overflow-x: scroll;">
+                            <table id="tbl" style="border:1px solid;border-color:white;width:75%;">
+                                <tr>
+                                  <th>Salutation</th>
+                                  <th>First Name</th>
+                                  <th>Last Name</th>
+                                  <th>Email Address</th>
+                                  <th >Work Phone <br><label for="" id="twph_label"></label></th>
+                                  <th >Mobile <br><label for="" id="tlabel"></label>    </th>
+                                  <th >Skype </th>
+                                  <th >Designation</th>
+                                  <th >Department</th>
+                                </tr>
+                                <tr>
+                                  <td><select name="sal[]" class="bg-light" style="width:8rem;height: 2.4rem;border: none;color: black;" id="PLACE" style="width:8rem;height: 2.4rem;">
+                                      <option value="Mr" selected>Mr.</option>
+                                      <option value="Mrs">Mrs.</option>
+                                      <option value="Ms">Ms.</option>
+                                      <option value="Miss">Miss.</option>
+                                      <option value="Dr">Dr.</option>
+                                    </select></td>
+                                    <td><input type="text" name="ftname[]" ></td>
+                                    <td><input type="text" name="ltname[]" ></td>
+                                    <td><input type="text" name="mail[]" ></td>
+                                    <td><input type="tel" placeholder="0000-0000000" name="bworkpn[]" ></td>
+                                    <td><input type="tel" name="bmobile[]" ></td>
+                                    <td><input type="text" name="bskype[]" ></td>
+                                    <td><input type="text" name="bdesg[]" ></td>
+                                    <td><input type="text" name="bdept[]" ></td>
+                                  </tr>
+                              </table>
+                             
+                        </div>
+                        <div class="button add_another mt-3"
+                        style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;">
+                        + Add Contact Person</div>
+                          
+                    </div>
+                    
+                </div>
+
+            </fieldset6>
+
+
+
+ <!-- ...........................................................Remarks    ......................................... -->
+
+
+
+            <fieldset7 class="remarks" style="display: none;">
+                <div class="row">
+                    <div class="col-sm-12 col-md-8 col-lg-8">
+                        <div class="form-group row mt-4">
+                            <div class=" col-sm-12 col-md-6 col-lg-6">
+                                <textarea class="bg-light" style="border: none;color: rgb(5, 5, 5);" cols="70" rows="4" name="remark"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                </div>
+
+            </fieldset7>
+
+
+
+            
+            <div class="row mt-4">
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <input type="submit" class="form-control bg-warning text-dark" style="font-weight: bold;" value="save">
+                    <!-- <a href="{% url 'add_vendor' %}" role="button" class="form-control bg-light text-dark"></a> -->
+                    <!-- <button type="submit">save</button> -->
+                </div>
+                 
+                <div class=" col-sm-12 col-md-2 col-lg-2">
+                    <a href="" role="button" class="form-control  bg-warning text-dark" style="font-weight: bold;"><center>Cancel</center></a>
+
+                </div> 
+
+
+            </div>
+
+           
+
+
+                <br><br><br><br><br><br><br><br><br><br><br><br>
+
+                       
+
+              </form>
+
+          <!-- </div> -->
+    </div>
+     
+
+
+
+
+
+<script>
+     function generateFullName()
+{
+   document.getElementById('txtFullName').value = 
+   document.getElementById('sa').value + ' '+
+   document.getElementById('fName').value + ' ' + 
+   document.getElementById('lName').value;
+
+}
+    function gstPan_function(){
+        var x=document.getElementById('GSTT').value
+        if(x=="Unregistered Business-not Registered under GST")
+        {
+            document.getElementById("pan").style.display="block";
+            document.getElementById("gst").style.display="none";
+
+            
+        }
+        else if((x=="Registered Business-Regular Business that is registered under GST") || (x=="Registered Business-Composition Business that is registered under the Composition scheme in GST") || (x=="Overseas- Persons with who you do import or exports of supplies outside india") || (x=="Special Economic Zone"))
+        {
+            document.getElementById("gst").style.display="block";
+            document.getElementById("pan").style.display="block";
+
+
+        }
+    
+    }
+    function gst_check(){
+        var x=document.getElementById("gst_input").value;
+        var gst_label=document.getElementById("gst_label")
+        // var expr=/^[0-9]{15}$/;
+        var expr=/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+
+        // "[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Z]{1}[0-9a-zA-Z]{1}"
+        // /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/
+        if (!expr.test(x)) {
+            gst_label.style.color="red";
+            gst_label.innerHTML = "Invalid GST Number.";
+        }
+        else{
+            gst_label.style.color="green";
+
+            gst_label.innerHTML = "valid GST Number.";
+
+        }
+    }
+    function pan_check(){
+        var x=document.getElementById("pan_input").value;
+        var gst_label=document.getElementById("pan_label")
+        var expr=    /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
+        if (!expr.test(x)) {
+            pan_label.style.color="red";
+            pan_label.innerHTML = "Invalid PAN Number.";
+        }
+        else{
+            pan_label.style.color="green";
+
+            pan_label.innerHTML = "valid PAN Number.";
+
+        }
+    }
+    $(document).ready(function () {
+        $(".toggle1").click(function (e) {
+          e.preventDefault();
+          $("fieldset1").toggle();
+        })
+      })
+
+
+    $(document).ready(function () {
+        $(".toggle").click(function (e) {
+          e.preventDefault();
+          $("fieldset19").toggle();
+        })
+      })
+      $(document).ready(function () {
+        $(".toggle2").click(function (e) {
+          e.preventDefault();
+         
+          $("fieldset2").toggle(); 
+          $("fieldset5").hide();
+          $("fieldset6").hide();
+          $("fieldset7").hide();
+
+
+      
+        })
+      })
+
+      $(document).ready(function () {
+        $(".toggle3").click(function (e) {
+          e.preventDefault();
+          $("fieldset5").toggle();
+          $("fieldset2").hide();
+          $("fieldset6").hide();
+          $("fieldset7").hide();
+
+        })
+      })
+      $(document).ready(function () {
+        $(".toggle4").click(function (e) {
+          e.preventDefault();
+          $("fieldset6").toggle();
+          $("fieldset2").hide();
+          $("fieldset5").hide();
+          $("fieldset7").hide();
+                
+        })
+      })
+      $(document).ready(function () {
+        $(".toggle7").click(function (e) {
+          e.preventDefault();
+          $("fieldset7").toggle();
+          $("fieldset2").hide();
+          $("fieldset6").hide();
+          $("fieldset5").hide();
+         
+
+         
+        })
+      })
+
+ 
+
+  
+
+   
+
+    //   $('document').ready(function () {
+    //     $('.add_another').click(function () {
+    //       $("#tbl").append('<tr><td><select name="salutation[]" id="PLACE" style="width:8rem;height: 2.4rem;"><option value="Mr" selected>Mr.</option><option value=""Mrs">Mrs.</option><option value="Ms">Ms.</option><option value="Miss">Miss.</option><option value="Dr">Dr.</option></select>  </td><td><input type="text" name="first_name[]" style="width:8rem;" class="txtbox" value="" /></td><td><input type="text" name="last_name[]" style="width:8rem;" class="txtbox" value="" /></td><td><input type="text" name="email[]" style="width:8rem;" class="txtbox" value="" /></td><td><input type="text" name="wphone[]" style="width:8rem;" class="txtbox" value="" /></td><td><input type="text" name="mobile[]" style="width:8rem;" class="txtbox" value="" /></td><td><input type="text" name="skype[]" style="width:8rem;" class="txtbox" value="" /></td><td><input type="text" name="designation[]" style="width:8rem;" class="txtbox" value="" /></td><td><input type="text" name="department[]" style="width:8rem;" class="txtbox" value="" /></td></tr>');
+    //     });
+    //   })
+
+    $('document').ready(function () {
+        $('.add_another').click(function () {
+          $("#tbl").append('<tr><td><select name="sal[]" id="PLACE" class="bg-light" style="width:8rem;height:2.4rem;border: none;color: black;"><option value="Mr" selected>Mr.</option><option value=""Mrs">Mrs.</option><option value="Ms">Ms.</option><option value="Miss">Miss.</option><option value="Dr">Dr.</option></select>  </td><td><input type="text" name="ftname[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td><td><input type="text" name="ltname[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td><td><input type="email" name="mail[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td><td><input type="tel" pattern="[0-9]{7} name="bworkpn[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td><td><input type="tel" pattern="[0-9]{10}"  name="bmobile[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td><td><input type="text"  name="bskype[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td><td><input type="text" name="bdesg[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td><td><input type="text" name="bdept[]" class="bg-light" style="width:8rem;border: none;color: black;" class="txtbox" value="" /></td></tr>');
+        });
+      })
+
+      function fieldset5_function()
+      {
+        document.getElementById("address").style.display="block";
+      }
+
+    
+      function myCopyAddressFunction() {
+        var checkBox = document.getElementById("myCheckT");
+        var textatn = document.getElementById("batn");
+        var txtcry = document.getElementById("bcty");
+        var txtadrs11 = document.getElementById("bads1");
+        var txtadrs12 = document.getElementById("bads2");
+        var txtcty = document.getElementById("bct");
+        var txtstat = document.getElementById("bst");
+        var txtzip = document.getElementById("bzip");
+        var txtphone = document.getElementById("bpon");
+        var txtfx = document.getElementById("bfx");
+
+        var textatn1 = document.getElementById("satn");
+        var txtcry1 = document.getElementById("scty");
+        var txtadrs21 = document.getElementById("sads1");
+        var txtadrs22 = document.getElementById("sads2");
+        var txtcty1 = document.getElementById("sct");
+        var txtstat1 = document.getElementById("sst");
+        var txtzip1 = document.getElementById("szip");
+        var txtphone1 = document.getElementById("spn");
+        var txtfx1 = document.getElementById("sfx");
+        if (checkBox.checked == true) {
+        textatn1.value = textatn.value;
+        txtcry1.value = txtcry.value;
+        txtadrs21.value = txtadrs11.value;
+        txtadrs22.value = txtadrs12.value;
+        txtcty1.value = txtcty.value;
+        txtstat1.value = txtstat.value;
+        txtzip1.value = txtzip.value;
+        txtphone1.value = txtphone.value;
+        txtfx1.value = txtfx.value;
+
+        } else {
+        textatn1.value = "";
+        txtcry1.value = "";
+        txtadrs21.value = "";
+        txtadrs22.value = "";
+        txtcty1.value = "";
+        txtstat1.value = "";
+        txtzip1.value = "";
+        txtphone1.value = "";
+        txtfx1.value = "";
+
+        }
+        }
+    
+
+      function open_table()
+      {
+        document.getElementById("hid").style.display="block";
+        
+      }
+
+
+
+      function work_phone()
+      {
+        var x=document.getElementById("workphone").value;
+        var y=document.getElementById("workphone_label")
+        var expr=/^[0-9]{7}$/;
+        if (!expr.test(x)) {
+            y.style.color="red";
+            y.innerHTML = "Invalid Phone Number.";
+        }
+        else{
+            y.style.color="green";
+
+            y.innerHTML = "valid Phone Number.";
+
+        }
+
+
+      }
+
+      function mobile_phone()
+      {
+        
+        var a=document.getElementById("mphone").value;
+        var b=document.getElementById("mphone_label");
+        var expr=/^[0-9]{10}$/;
+        if (!expr.test(a)) {
+            b.style.color="red";
+            b.innerHTML = "Invalid Phone Number.";
+        }
+        else{
+            b.style.color="green";
+
+            b.innerHTML = "valid Phone Number.";
+
+        }
+      }
+
+      function bphone_number()
+      {
+        var a1=document.getElementById("bphone_num").value;
+        var b1=document.getElementById("bphone_label");
+        var expr=/^[0-9]{10}$/;
+        if (!expr.test(a1)) {
+            b1.style.color="red";
+            b1.innerHTML = "Invalid Phone Number.";
+        }
+        else{
+            b1.style.color="green";
+
+            b1.innerHTML = "valid Phone Number.";
+
+        }
+      }
+
+      function sphone_number()
+      {
+        var a1=document.getElementById("sphone_num").value;
+        var b1=document.getElementById("sphone_label");
+        var expr=/^[0-9]{10}$/;
+        if (!expr.test(a1)) {
+            b1.style.color="red";
+            b1.innerHTML = "Invalid Phone Number.";
+        }
+        else{
+            b1.style.color="green";
+
+            b1.innerHTML = "valid Phone Number.";
+
+        }
+      }
+
+      function fax_number()
+      {
+        var a1=document.getElementById("bfx").value;
+        var b1=document.getElementById("fax_label");
+        var expr=/^[0-9]{7}$/;
+        if (!expr.test(a1)) {
+            b1.style.color="red";
+            b1.innerHTML = "Invalid Phone Number.";
+        }
+        else{
+            b1.style.color="green";
+
+            b1.innerHTML = "valid Phone Number.";
+
+        }
+      }
+
+      function sfax_number()
+      {
+        var a1=document.getElementById("sfx").value;
+        var b1=document.getElementById("sfax_label");
+        var expr=/^[0-9]{7}$/;
+        if (!expr.test(a1)) {
+            b1.style.color="red";
+            b1.innerHTML = "Invalid Phone Number.";
+        }
+        else{
+            b1.style.color="green";
+
+            b1.innerHTML = "valid Phone Number.";
+
+        }
+      }
+
+    
+      function sample()
+      {
+
+        var tbldata = document.getElementById("tbl");
+        var total_rows = tbldata.rows.length;
+        x=document.getElementById("tbl");
+        var a1=x.rows[total_rows-1].cells[5].getElementsByTagName('input')[0].value;
+
+        var b1=document.getElementById("tlabel");
+
+        b1.innerHTML = "";
+
+        var expr=/^[0-9]{10}$/;
+        if (!expr.test(a1)) {
+            b1.style.color="red";
+            b1.innerHTML = "Invalid";
+        }
+        else{
+            b1.style.color="green";
+            b1.innerHTML = "valid";
+
+        }
+
+       
+
+      }
+
+      function sample1()
+      {
+
+        var tbldata = document.getElementById("tbl");
+        var total_rows = tbldata.rows.length;
+        x=document.getElementById("tbl");
+        var a1=x.rows[total_rows-1].cells[4].getElementsByTagName('input')[0].value;
+
+        var b1=document.getElementById("twph_label");
+
+        b1.innerHTML = "";
+
+        var expr=/^[0-9]{7}$/;
+        if (!expr.test(a1)) {
+            b1.style.color="red";
+            b1.innerHTML = "Invalid";
+        }
+        else{
+            b1.style.color="green";
+            b1.innerHTML = "valid";
+
+        }
+
+       
+
+      }
+
+
+      
+ //--------payment terms modal-----------
+
+$(document).on("click","#paySave",function(){
+  $.ajax({
+    
+    type : 'POST',
+    url:"{% url 'payment_termA' %}",
+
+    data:{
+      term : $("#term").val(),
+         day : $("#day").val(),
+        
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+      },
+    
+      success: function(response) {
+        document.getElementById("modalPayment").reset();
+        
+      },
+  });        
+});
+
+
+     
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,374 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+     @media print {
+        body * {
+            visibility: hidden;
+        }
+        
+    
+    .printable-content table {
+        margin: 0 auto;
+    }
+        .printable-content, .printable-content * {
+            visibility: visible;
+        }
+        .printable-content {
+            width: 200%;
+            max-width: 100%;
+            padding: 60px;
+           
+        }
+        .printable-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+    }
+}
+  
+    
+
+
+</style>
+<head>
+   
+</head>
+<div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex">
+       
+        <div class="mx-1">
+         
+            <input type="date" id="startDate" name="startDate" >
+
+        
+            <input type="date" id="endDate" name="endDate"  >
+
+        </div>
+    </div>
+    <div class="d-fex asd">
+       
+       
+        
+        <!-- Define the datalist with customer options -->
+        <datalist id="customers" >
+            {% for i in customer %}
+                <option value="{{ i.customerName }}" >
+            {% endfor %}
+            {% for i in vendor %}
+            <option value="{{ i.vendor_display_name }}" >
+        {% endfor %}
+        </datalist>
+        
+    </div>
+    <div class="d-flex">
+        <!-- Print button -->
+        <button class="btn btn-light mr-2" id="pdf" onclick="display()">Print</button>
+        <div style="width: 3px;"></div>
+        <div class="dropdown">
+            <button class="btn btn-light mr-3 dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Export
+            </button>
+            <div class="dropdown-menu" aria-labelledby="exportDropdown">
+                <a class="dropdown-item"  href="#" onclick="exportAsPDF()">PDF</a>
+                <a class="dropdown-item" href="#" onclick="exportToExcel()">XLS (Excel)</a>
+            </div>
+           
+            <a href="javascript:history.back()" class="btn btn-light" style=" color: rgb(1, 1, 1);">
+                <i class="fa fa-times-circle"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="printable-wrapper" id="container-to-print" >
+
+    <div class="printable-content" >
+        <center>
+        <h2 class="text" style="color: white;">{{ company.company_name }}</h2>
+        <h4 class="text" style="color: white;"><span id="name_statement">Party</span>&nbsp;&nbsp;Statement</h4>
+        
+       
+       
+        <!-- <p class="text" style="color: white;">From 21 Jan 2023 To 21 Jan 2024</p> -->
+    </center>
+        <input type="text" id="search" list="customers" placeholder="Select Party">
+        <table class="table table-bordered table-striped mt-4" id="transactionTable">
+            <thead style="color: white;">
+                <tr>
+                    <th>DATE</th>
+                    <th>TRANSACTIONS</th>
+                    <th>REFERENCE</th>
+                    <th>PAYMENT</th>
+                    <th>DEBIT</th>
+                    <th>CREDIT</th>
+                    <th>BALANCE</th>
+                </tr>
+            </thead>
+            <tbody >
+                
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="printable-content mt-3">
+    <p style="color: rgb(2, 144, 4);">**Amount is displayed in your base currency: INR</p>
+</div>
+<div class="d-flex printable-content" >
+    <label>Total sale:</label>&nbsp;&nbsp;
+    <label id="total_sale"></label>
+    <label style="margin-left: 200px;">Total Purchase:</label>&nbsp;&nbsp;
+    <label id="total_purchase"></label>
+    <label style="margin-left: 200px;">Total Payable:</label>&nbsp;&nbsp;
+    <label id="">0</label>
+</div>
+<script>
+
+
+// function exportToPDF() {
+//      console.log("Exporting to PDF...");
+//      var pdf = new jsPDF();
+//      var content = document.querySelector('.printable-wrapper');
+//      console.log("Content:", content);
+//      pdf.fromHTML(content, 10, 10, {
+//          width: 180
+//      }, function (dispose) {
+//          pdf.save('report.pdf');
+//      });
+// }
+function exportAsPDF() {
+      const container = document.getElementById('container-to-print');
+    
+      // Save the original background color
+      const originalBackgroundColor = container.style.backgroundColor;
+    
+      // Set the container's background color to white
+      container.style.backgroundColor = 'white';
+    
+      // Apply styling changes to the container's content
+      const textWhiteElements = container.querySelectorAll('.text');
+      textWhiteElements.forEach(element => {
+        element.style.color = 'black'; // Set text color to black
+      });
+    
+      const tableElements = container.querySelectorAll('table');
+      const tableCells = container.querySelectorAll('td, th');
+      const tableRows = container.querySelectorAll('tr');
+    
+      tableElements.forEach(table => {
+        table.style.backgroundColor = '#ffffff'; // Set background color to white
+        table.style.color = '#000000'; // Set text color to black
+      });
+    
+      tableCells.forEach(cell => {
+        cell.style.backgroundColor = '#ffffff'; // Set background color to white
+        cell.style.color = '#000000'; // Set text color to black
+        cell.style.border = '1px solid black'; // Add a black border
+      });
+    
+      tableRows.forEach(row => {
+        row.style.backgroundColor = '#000000'; // Set background color to black
+      });
+    
+      const pdfOptions = {
+        margin: 0,
+        filename: '{{company_data.company_name}}partystatement.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+      };
+    
+      // Generate PDF from the container
+      html2pdf().from(container).set(pdfOptions).save().then(() => {
+
+        // Restore the original background color
+        container.style.backgroundColor = originalBackgroundColor;
+
+        textWhiteElements.forEach(element => {
+          element.style.color = 'white'; // Restore original text color
+
+        // Remove the pdf-background class after generating the PDF
+        container.classList.remove('pdf-background');
+        });
+      });
+    }
+
+    // Function to save Excel using XLSX
+    function exportToExcel() {
+        var table = document.querySelector('table');
+        var ws = XLSX.utils.table_to_sheet(table);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, 'report.xlsx');
+    }
+
+    // Function to handle export based on dropdown selection
+    document.getElementById('exportDropdown').addEventListener('change', function () {
+        var selectedValue = this.value;
+        if (selectedValue === 'pdf') {
+            exportToPDF();
+        } else if (selectedValue === 'xls') {
+            exportToExcel();
+        }
+    });
+    const pdfExportLink = document.getElementById('pdf'); // This should be the link for PDF export
+pdfExportLink.addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent the link from navigating
+    exportToPDF();
+});
+
+
+
+
+
+    // function display() {
+    //     // Print the page
+    //     window.print();
+    // }
+
+    function adjustTableForPrint() {
+        
+        const table = document.querySelector('.printable-content table');
+        const container = document.querySelector('.printable-content');
+
+       
+       
+        const scaleFactor = (container.offsetWidth / table.offsetWidth) * 0.85;
+
+        
+        table.style.transform = `scale(${scaleFactor})`;
+        table.style.transformOrigin = 'top left';
+
+        
+        const marginTop = (container.offsetHeight - table.offsetHeight * scaleFactor) / 1.5;
+        table.style.marginTop = `${marginTop}px`;
+    }
+
+    //  "Print" button
+    const printButton = document.getElementById('pdf');
+    printButton.addEventListener('click', function() {
+        adjustTableForPrint();
+        window.print();
+    });
+</script>
+
+
+<script>
+    // Get references to the date input fields and the display area
+    const startDateIn = document.getElementById("startDate");
+    const endDateIn = document.getElementById("endDate");
+  
+    const today = new Date().toISOString().slice(0, 10);
+    startDateIn.value = today;
+    endDateIn.value = today
+   
+    // Add event listeners to the date input fields
+    function updateDateDisplay() {
+        const startDate = startDateIn.value;
+        const endDate = endDateIn.value;
+        
+        // Display the selected dates
+    
+        handleInput();;
+        
+    }
+   
+    startDateIn.addEventListener("change", updateDateDisplay);
+    endDateIn.addEventListener("change", updateDateDisplay);
+    
+
+    // Function to update the display when the date inputs change
+    
+  
+
+    // Get references to the input field and the display area
+    const searchInput = document.getElementById("search");
+    
+
+    // Add event listener to the input field for the "input" event
+    searchInput.addEventListener("input", handleInput);
+ 
+    // Function to handle input changes
+    function handleInput() {
+        const inputValue = searchInput.value;
+        const datalistOptions = document.getElementById("customers").options;
+        const startDateIn = document.getElementById("startDate").value;
+        const endDateIn = document.getElementById("endDate").value;
+        const partyname = document.getElementById('name_statement');
+      
+        // Check if the input matches any of the datalist options
+        for (let i = 0; i < datalistOptions.length; i++) {
+            if (inputValue === datalistOptions[i].value) {
+                partyname.innerHTML=datalistOptions[i].value
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'get_transactions' %}",
+                    data: {
+                        party: datalistOptions[i].value,
+                        start_date:startDateIn,
+                        end_date:endDateIn,
+                      
+                    },
+                    success: function (response) {
+                       
+                       
+                        var transactions = response.transactions;
+                        var total_sale=response.sale_total
+                        var total_purchase=response.pur_total
+                        var tot_sal = document.getElementById('total_sale');
+                        tot_sal.innerHTML=total_sale
+                        var tot_pur=document.getElementById('total_purchase')
+                        tot_pur.innerHTML=total_purchase
+                        var table = document.getElementById('transactionTable');
+                        var rowCount = table.rows.length;
+                        for (var i = rowCount - 1; i > 0; i--) {
+                            table.deleteRow(i);
+                        }
+                        for (var i = 0; i < transactions.length; i++) {
+                            var row = table.insertRow(i + 1);
+                            var trans = transactions[i];
+
+                            // Assuming you have columns like 'ID', 'Estimate No', 'Customer Name', 'Estimate Date', 'Reference', etc.
+                            var date = row.insertCell(0);
+                            date.innerHTML = trans.date;
+
+                            var transaction = row.insertCell(1);
+                            transaction.innerHTML = trans.transaction;
+
+                            var reference = row.insertCell(2);
+                            reference.innerHTML = trans.reference;
+
+                            var payment = row.insertCell(3);
+                            payment.innerHTML = 0.0;
+
+                            var debit = row.insertCell(4);
+                            debit.innerHTML = "Nil";
+
+                            var credit = row.insertCell(5);
+                            credit.innerHTML = "Nil";
+                            
+                            var balance=row.insertCell(6);
+                            balance.innerHTML=0.0;
+                // Add more cells for other columns as needed
+            }
+
+                            
+
+              }
+          });
+                return; // Exit the loop
+            }
+        }
+
+        // If the input doesn't match any datalist option, clear the display
+        selectedPartyDisplay.textContent = "";
+    }
+</script>
+
+
+{% endblock %}

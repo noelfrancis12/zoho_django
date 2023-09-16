@@ -1,0 +1,793 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/css/pikaday.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/pikaday.min.js"></script>
+</head>
+
+<style>
+
+    .multiselect {
+        width: 200px;
+        position: relative;
+        user-select: none;
+        cursor: pointer;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 200px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .option {
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+    }
+
+    .option:last-child {
+        border-bottom: none;
+    }
+
+    .form-group label {
+        color: beige;
+        margin-bottom: 5px;
+    }
+
+    .column_button{
+        height: 4vh;
+        width: 5vh;
+        float: right;
+        margin-right: 2vh;
+    }
+
+    #general{
+        background-color:#007bff;
+    }
+
+    .ui-dateRangePicker {
+        background: #333;
+        border: 1px solid #555;
+        color: #EEE;
+    }
+
+    .myDiv:target{
+        display:block !important;
+    }
+
+    .myd{
+         display:none;
+    } 
+
+    .searchdiv{
+        display: list-item;	
+    }
+
+    .colborder{
+        border: 2px solid white;
+        height: 65vh;
+        overflow: hidden;
+    }
+
+    .inputdiv{
+        background-color: white; 
+        color: #060606; 
+        width:39vh;
+        height: 5vh;
+        border-radius: 5px;
+        margin-bottom: 1vh;
+        padding-top: 1vh;
+        padding-left: 2vh;
+    }
+
+    .dropdown-content{
+        width:39vh;
+        border-radius: 10px;
+    }
+
+    #custom-dropdown-btn{
+        background-color: white;
+        width: 61%;
+        height: 5vh;
+        text-align: left;
+    }
+
+    .dropdown-content .option:hover{
+        background-color: #007bff;
+    }
+
+    #date-options{
+        background-color: white;
+        width: 61%;
+        margin-top: 1vh;
+        border-radius: 10px;
+        margin-left: 4vh;
+    }
+
+    #date-options a{
+        color: #060606;
+    }
+
+
+
+    .div-option:hover{
+        background-color: #007bff;
+    }
+
+    
+    .close-button{
+        font-size: 2vh;
+        margin-top: 1vh; 
+        font-weight: 100;
+    }
+
+    .close-button:hover{
+        color: blue;
+    }
+
+    .multi-line {
+        position: relative;
+        width: 50%;
+    }
+
+    /* Style for the custom dropdown button */
+    .multi-line button {
+        width: 100%;
+        height: 5vh;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: left;
+    }
+
+    /* Style for the dropdown content */
+    .multi-line .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 95%;
+        overflow-y: auto;
+    }
+
+    /* Style for the dropdown options */
+    .multi-line .dropdown-option {
+        cursor: pointer;
+    }
+
+    /* Show the dropdown content when the button is clicked */
+    .custom-dropdown.active .dropdown-content {
+        display: block;
+    }
+    #AddFilter:hover, #addmore_btn:hover{
+        background-color: transparent;
+    }
+
+     #remove_btn:hover,#filteracc:hover{
+        background-color: #f8f9fa;
+    }
+
+    #multi{
+        color: black;
+    }
+
+    #multi:hover{
+        background-color: #007bff;
+        color: white;
+    }
+
+</style>
+
+<div class="container-fluid ">
+    <div class="row">
+        <div class="col-md-11">
+            <h1 class="text-uppercase">Customize Report</h1>
+        </div>
+        <div class="col-md-1">
+            <a href="{% url 'load_horizontal_balance_sheet' %}" class="btn  btn-light close-button" >
+                X
+            </a>
+        </div>
+        </div><br><br>
+
+
+    <div class="row row-container">
+        <div class="col-md-3"><br>
+            <div class="nav-item " id="general">
+                <a class="nav-link cursor-pointer active" style="background-color: grey; color: white; font-size: 3vh;">General</a>
+            </div> 
+        </div>
+
+        <div class="col-md-9 myDiv" id="generaldiv">
+            <form method='post' class='post-form' action="{% url 'update_hbalancesheet' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="custom-dropdown">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="dateRangePicker" style="font-size: medium;">Date Options</label>
+                        </div>
+                        <div class="col-md-9 d-flex">
+                            <i class="fa fa-calendar" aria-hidden="true" style="font-size: 4vh; color: white;"></i>&nbsp;
+                            <a id="custom-dropdown-btn" href="#" class="btn bg-white text-dark">&nbsp;</a>
+                            <input type="text" name="newdate" id="date_input" style="display: none;">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            <div id="datepicker-container" style="display: none;">
+                                <div id="date-options" style="display: none;">
+                                    <a class="date-option" href="#"><div class="div-option">Today</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">This Week</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">This Month</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">This Quarter</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">This Year</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">Yesterday</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">Previous Week</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">Previous Month</div></a>
+                                    <a class="date-option" href="#"><div class="div-option">Previous Quarter</div></a>
+                                    <a id="datepicker" href="#"><div class="div-option">Custom</div></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><br><br>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="comapny" style="font-size: medium; margin-top: 1vh;">Select Company</label>
+                        </div>
+                        <div class="col-md-6">
+                            <select id="comapny" class="form-control text-dark bg-white">
+                                <option value="#" style="color: #060606;" selected hidden></option>
+                                <option value="{{company.company_name}}" style="color: #060606;">{{company.company_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="ReportBasis" style="font-size: medium; margin-top: 1vh;" >Report Basis</label>
+                        </div>
+                        <div class="col-md-6">
+                            <select id="ReportBasis" class="form-control text-dark bg-white">
+                                <option value="#" style="color: #060606;" selected hidden></option>
+                                <option value="Accrual" style="color: #060606;">Accrual</option>
+                                <option value="Cash" style="color: #060606;">Cash</option>
+                            </select>
+                        </div>
+                    </div>
+                </div><br>
+    
+                <div class="form-group">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label for="FilterAccounts" style="margin-top: 1vh; font-size: medium;">Filter Accounts</label>
+                                </div>
+                                <div class="col-md-9 custom-dropdown multi-line">
+                                    <a class="btn btn-light" id="filteracc" onclick="toggleDropdown()" style="width: 100%; height: 5vh; text-align: left;">Select an option</a>
+                                    <div class="dropdown-content">
+                                        <div value="ZeroBalance" id="multi" class="dropdown-option text-dark" onclick="selectOption('Accounts With Zero Balance. \n Filter every account except the ones with zero-balance.')">
+                                            Accounts Without Zero Balance. <br> <span style="font-size: small;">Filter every account except the ones with zero-balance.</span>
+                                        </div>
+                                        <div value="AlAcc" id="multi" class="dropdown-option text-dark" onclick="selectOption('All Accounts.\n Filter all accounts, including the ones with zero-balance.')">
+                                            All Accounts. <br><span style="font-size: small;">Filter all accounts, including the ones with zero-balance.</span>
+                                        </div>
+                                        <div value="WithTrans" id="multi" class="dropdown-option text-dark" onclick="selectOption('Accounts With Transaction. \n Filter transactions created during the specific period.')">
+                                            Accounts With Transaction. <br> <span style="font-size: small;">Filter the transactions that were created during the specific period.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+    
+                <h6 style="color: aliceblue;" style="font-size: medium;">Advanced Filters</h6>
+                <p style="color: #eeebeb; font-size: medium;">Use advanced filters to filter the report based on the fields of Projects, Reporting Tag.</p>
+                
+                <a id="AddFilter" style="color: rgb(184, 121, 4);" class="btn" style="display: block;">+ Add Filter</a>
+                <div class="row after-add-more" id="filterdiv" style="display: none;">           
+                    <div class="col-md-4 form-group ">
+                        <div class="form-group d-flex">
+                            <select id="field_0" class="form-control text-dark bg-white" onchange="selectfield(this.value,this.id)" >
+                                <option value="#" style="color: #060606;" selected="true" hidden>Select Field</option>
+                                <option class="dropdown-header" value="#" style="color: grey; font-size: large;" disabled >Project</option>
+                                <option value="project" style="color: #060606;" >&nbsp;&nbsp;&nbsp;Project</option>
+                                <option class="dropdown-header" value="#" style="color: grey; font-size: large;" disabled >Reporting Tag</option>
+                                <option value="department" style="color: #060606;" >&nbsp;&nbsp;&nbsp;Department</option>
+                                <option value="segments" style="color: #060606;" >&nbsp;&nbsp;&nbsp;9 Segments</option>
+                                <option value="products" style="color: #060606;" >&nbsp;&nbsp;&nbsp;8 Products</option>
+                            </select>
+                        </div>
+                    </div>
+    
+                    <div class="col-md-4 form-group" id="initial_comparator_0">
+                        <select id="first_comparator" class="form-control text-dark bg-white">
+                            <option value="#" style="color: #060606;" selected="true" hidden>Select Comparator</option>
+                            <option value="#" style="color: grey;" >No Result Found</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-4 form-group" id = "final_comparator_proj_0" style="display: none;">
+                        <select id="last_comparator_proj_0" class="form-control text-dark bg-white">
+                            <option value="#" style="color: #060606;" selected="true" hidden>Select Comparator</option>
+                            <option value="is" style="color: #060606;" >Is</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-4 form-group" id = "final_comparator_dep_0" style="display: none;">
+                        <select id="last_comparator_dep_0" class="form-control text-dark bg-white" onchange="depisempty(this.value,this.id)">
+                            <option value="no" style="color: #060606;" selected="true" hidden>Select Comparator</option>
+                            <option value="is" style="color: #060606;" >Is</option>
+                            <option value="empty" style="color: #060606;" >Is Empty</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-4 form-group" id = "final_comparator_seg_0" style="display: none;">
+                        <select id="last_comparator_seg_0" class="form-control text-dark bg-white" onchange="segisempty(this.value,this.id)">
+                            <option value="no" style="color: #060606;" selected="true" hidden>Select Comparator</option>
+                            <option value="is" style="color: #060606;" >Is</option>
+                            <option value="empty" style="color: #060606;" >Is Empty</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-4 form-group" id = "final_comparator_prod_0" style="display: none;">
+                        <select id="last_comparator_prod_0" class="form-control text-dark bg-white" onchange="prodisempty(this.value,this.id)">
+                            <option value="no" style="color: #060606;" selected="true" hidden>Select Comparator</option>
+                            <option value="is" style="color: #060606;" >Is</option>
+                            <option value="empty" style="color: #060606;" >Is Empty</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-3 form-group" id="showproject0" class="myd form-group" style="display: none;">
+                        <select id="SelectProject" class="form-control text-dark bg-white">
+                            <option value="#" style="color: #060606;" selected="true" hidden>Select Project</option>
+                                <option value="project1" style="color: #060606;" >Project-1</option>
+                                <option value="project2" style="color: #060606;" >Project-2</option>
+                                <option value="project3" style="color: #060606;" >Project-3</option>
+                                <option value="project4" style="color: #060606;" >Project-4</option>
+                                <option value="project5" style="color: #060606;" >Project-5</option>
+                                <option value="project6" style="color: #060606;" >Project-6</option>
+                                <option value="project7" style="color: #060606;" >Project-7</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-3 form-group " id="showdepartment0" class="form-group" style="display: none;">
+                        <div class="multiselect" id="multiselect0">
+                            <div class="inputdiv" id="inputdiv0" onclick="multiselectfun(this.id)" style="width: 30vh;">&nbsp;</div>
+                            <div class="dropdown-content" id="dropdown0" style="background-color: white; color: black;">
+                                <div class="option" data-value="ME">ME</div>
+                                <div class="option" data-value="NMS">NMS</div>
+                                <div class="option" data-value="zoho">Zoho</div>
+                            </div>
+                        </div>
+                    </div>
+    
+    
+                    <div class="col-md-3 form-group" id="showsegment0" class="form-group" style="display: none;">
+                        <select  class="form-control text-dark bg-white">
+                            <option value="#" style="color: #060606;" selected hidden></option>
+                            <option value="seg_zoho" style="color: #060606;">Zoho</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-3 form-group" id="showproduct0" class="form-group" style="display: none;">
+                        <select  class="form-control text-dark bg-white">
+                            <option value="#" style="color: #060606;" selected hidden></option>
+                            <option value="books" style="color: #060606;">Zoho Books</option>
+                        </select>
+                    </div>
+    
+                    <div class="col-md-3 form-group" id="ifempty_0" class="form-group" style="display: none;">
+                        <input value="Empty" style="width: 30vh; height: 5vh; border-radius: 5px;" readonly>
+                    </div>
+    
+                    <div class="col-md-1">
+                        <a class="btn btn-light remove" id="remove_btn" style="height: 5vh;"><span style="font-size: 3vh;">-</span></a>&nbsp;
+                    </div>
+                </div>
+    
+    
+                <div id="AddMore" style="display: none;">
+                    <a style="color: rgb(184, 121, 4);" class="btn add-more" id="addmore_btn">+ Add More</a>
+                </div><br><br><br>
+                <div class="row">
+                    <div class="col-md-4 d-flex">
+                        <button class="btn btn-success" style="width: 100%; background-color: transparent; margin-right: 2vh;">Run Report</button>
+                        <a class="btn btn-danger" href="{% url 'load_customize_report_hbs' %}" style="width: 100%; background-color: transparent;">Cancel</a>
+                    </div>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    let selectedOption = "";
+
+    function toggleDropdown() {
+        const dropdown = document.querySelector('.multi-line');
+        dropdown.classList.toggle('active');
+    }
+
+    function selectOption(optionText) {
+        selectedOption = optionText;
+        var index = selectedOption.indexOf("\n");  // Gets the first index where a space occours
+        var optionstring = selectedOption.slice(0, index);
+        document.querySelector('#filteracc').textContent = optionstring;
+        toggleDropdown();
+    }
+
+    // Initialize Pikaday date picker
+    const weekday = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var nowDate = new Date(); 
+    document.getElementById('custom-dropdown-btn').innerHTML= weekday[nowDate.getDay()]+" "+month[nowDate.getMonth()]+" "+nowDate.getDate()+" "+ nowDate.getFullYear(); 
+    const picker = new Pikaday({
+        field: document.getElementById('datepicker'),
+        format: 'MM/DD/YYYY', // You can change the date format
+        onSelect: function(date) {
+            
+            // document.getElementById('custom-dropdown-btn').textContent =  "Custom";
+            document.getElementById('custom-dropdown-btn').textContent =  picker.toString();
+            document.getElementById('date_input').value=  picker.toString();
+            document.getElementById('datepicker-container').style.display = 'none';
+            document.getElementById('date-options').style.display = 'none';
+        }
+    });
+
+    // Handle custom dropdown button click
+    const customDropdownBtn = document.getElementById('custom-dropdown-btn');
+    const datepickerContainer = document.getElementById('datepicker-container');
+    const dateOptions = document.getElementById('date-options');
+
+    customDropdownBtn.addEventListener('click', function() {
+        if (datepickerContainer.style.display === 'none') {
+            datepickerContainer.style.display = 'block';
+            dateOptions.style.display = 'block';
+        } else {
+            datepickerContainer.style.display = 'none';
+            dateOptions.style.display = 'none';
+        }
+    });
+
+    // Close date picker if clicking outside
+    document.addEventListener('click', function(event) {
+        if (!datepickerContainer.contains(event.target) && event.target !== customDropdownBtn) {
+            datepickerContainer.style.display = 'none';
+            dateOptions.style.display = 'none';
+        }
+    });
+
+    // Add date option handlers
+    const dateOptionButtons = document.querySelectorAll('.date-option');
+    
+    dateOptionButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const optionText = button.textContent;
+            switch (optionText) {
+                case 'Today':
+                    picker.setDate(new Date());
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Today";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Week':
+                    // Set date to the start of the week (Sunday)
+                    const today = new Date();
+                    today.setDate(today.getDate() - today.getDay());
+                    picker.setDate(today);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Week";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Month':
+                    // Set date to the 1st day of the current month
+                    const firstDayOfMonth = new Date();
+                    firstDayOfMonth.setDate(1);
+                    picker.setDate(firstDayOfMonth);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Month";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Quarter':
+                    // Calculate the start date of the current quarter
+                    const quarterStartMonth = Math.floor(new Date().getMonth() / 3) * 3;
+                    const firstDayOfQuarter = new Date(new Date().getFullYear(), quarterStartMonth, 1);
+                    picker.setDate(firstDayOfQuarter);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Quarter";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';                        
+                    break;
+
+                case 'This Year':
+                    // Set date to January 1st of the current year
+                    const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1);
+                    picker.setDate(firstDayOfYear);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Year";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Yesterday':
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    picker.setDate(yesterday);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Yesterday";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Week':
+                    // Set date to the start of the previous week (Sunday)
+                    const prevWeekStart = new Date();
+                    prevWeekStart.setDate(prevWeekStart.getDate() - prevWeekStart.getDay() - 7);
+                    picker.setDate(prevWeekStart);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Week";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Month':
+                    // Set date to the 1st day of the previous month
+                    const prevMonth = new Date();
+                    prevMonth.setDate(1);
+                    prevMonth.setMonth(prevMonth.getMonth() - 1);
+                    picker.setDate(prevMonth);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Month";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Quarter':
+                    // Calculate the start date of the previous quarter
+                    const prevQuarterStartMonth = Math.floor(new Date().getMonth() / 3) * 3 - 3;
+                    const prevQuarterStart = new Date(new Date().getFullYear(), prevQuarterStartMonth, 1);
+                    picker.setDate(prevQuarterStart);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Quarter";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+                    
+                default:
+                    break;
+            }
+            document.getElementById('datepicker-container').style.display = 'none';
+            document.getElementById('date-options').style.display = 'none';
+        });
+    });
+
+    function multiselectfun(mul_id){
+        //multiselect
+        var mul_val = mul_id.slice(-1);
+        const multiselect = document.getElementById("multiselect"+mul_val);
+        const dropdown = document.getElementById('dropdown'+mul_val);
+
+        multiselect.addEventListener('click', () => {
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        const options = document.querySelectorAll('.option');
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                option.classList.toggle('selected');
+                const selectedItems = Array.from(options)
+                .filter(option => option.classList.contains('selected'))
+                .map(option => option.dataset.value);
+                i=0
+                if(selectedItems.length > 0){
+                    document.getElementById("inputdiv"+mul_val).innerHTML = selectedItems.join(', ')
+                }else{
+                    document.getElementById("inputdiv"+mul_val).innerHTML = ' '
+                }
+            });
+        });
+
+        // Close the dropdown when clicking outside of it
+        window.addEventListener('click', (event) => {
+            if (!multiselect.contains(event.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    };
+    function selectfield(sel,sel_id){
+        var id_val = sel_id.slice(-1);
+        if(sel=="project"){
+            $("#initial_comparator_"+id_val).hide();
+            $("#final_comparator_proj_"+id_val).show();
+            $("#final_comparator_dep_"+id_val).hide();
+            $("#final_comparator_seg_"+id_val).hide();
+            $("#final_comparator_prod_"+id_val).hide();
+            $("#showproject"+id_val).show();
+            $("#showdepartment"+id_val).hide();
+            $("#showsegment"+id_val).hide();
+            $("#showproduct"+id_val).hide();
+            projisempty("is",id_val)
+
+        }
+
+        if(sel=="department"){
+            $("#initial_comparator_"+id_val).hide();
+            $("#final_comparator_proj_"+id_val).hide();
+            $("#final_comparator_dep_"+id_val).show();
+            $("#final_comparator_seg_"+id_val).hide();
+            $("#final_comparator_prod_"+id_val).hide();
+            $("#showproject"+id_val).hide();
+            $("#showdepartment"+id_val).show();
+            $("#showsegment"+id_val).hide();
+            $("#showproduct"+id_val).hide();
+            depisempty("is",id_val)
+        }
+        
+        if(sel=="segments"){
+            $("#initial_comparator_"+id_val).hide();
+            $("#final_comparator_proj_"+id_val).hide();
+            $("#final_comparator_dep_"+id_val).hide();
+            $("#final_comparator_seg_"+id_val).show();
+            $("#final_comparator_prod_"+id_val).hide();
+            $("#showproject"+id_val).hide();
+            $("#showdepartment"+id_val).hide();
+            $("#showsegment"+id_val).show();
+            $("#showproduct"+id_val).hide();
+            segisempty("is",id_val)
+        }
+        
+        if(sel=="products"){
+            $("#initial_comparator_"+id_val).hide();
+            $("#final_comparator_proj_"+id_val).hide();
+            $("#final_comparator_dep_"+id_val).hide();
+            $("#final_comparator_seg_"+id_val).hide();
+            $("#final_comparator_prod_"+id_val).show();
+            $("#showproject"+id_val).hide();
+            $("#showdepartment"+id_val).hide();
+            $("#showsegment"+id_val).hide();
+            $("#showproduct"+id_val).show();
+            prodisempty("is",id_val)
+        }
+    }
+
+    function projisempty(proj,proj_id){
+        var proj_val = proj_id.slice(-1);
+        if(proj=="empty"){
+            $("#showproject"+proj_val).hide();
+            $("#ifempty_"+proj_val).show();
+        }
+        else{
+            $("#showproject"+proj_val).show();
+            $("#ifempty_"+proj_val).hide();
+        }
+    }
+
+    function depisempty(dep,dep_id){
+        var dep_val = dep_id.slice(-1);
+        if(dep=="empty"){
+            $("#showdepartment"+dep_val).hide();
+            $("#ifempty_"+dep_val).show();
+        }
+        else{
+            $("#showdepartment"+dep_val).show();
+            $("#ifempty_"+dep_val).hide();
+        }
+    }
+
+    function segisempty(seg,seg_id){
+        var seg_val = seg_id.slice(-1);
+        if(seg=="empty"){
+            $("#showsegment"+seg_val).hide();
+            $("#ifempty_"+seg_val).show();
+        }
+        else{
+            $("#showsegment"+seg_val).show();
+            $("#ifempty_"+seg_val).hide();
+        }
+    }
+
+    function prodisempty(prod,prod_id){
+        var prod_val = prod_id.slice(-1);
+        if(prod=="empty"){
+            $("#showproduct"+prod_val).hide();
+            $("#ifempty_"+prod_val).show();
+        }
+        else{
+            $("#showproduct"+prod_val).show();
+            $("#ifempty_"+prod_val).hide();
+        }
+    }
+
+
+
+    $(document).ready(function(){
+        $('#CompareWith').on('change', function(){
+            var demovalue = $(this).val(); 
+            if (demovalue=="py"){
+                $("#showpy").show()
+                $("#showpp").hide()
+            }else{
+                $("#showpp").show()
+                $("#showpy").hide()
+            }
+        });
+    });
+
+
+    $(document).ready(function(){
+        $("#AddFilter").click(function(){
+          $("#filterdiv").show();
+          $("#AddFilter").hide();
+          $("#AddMore").show();
+        });
+    });
+
+    $(document).ready(function() {
+        $("body").on("click",".add-more",function(){ 
+            var length = $(".after-add-more").length
+            var html = $(".after-add-more").first().clone();      
+            $(".after-add-more").last().after(html);
+            html.find("#field_0").attr("id","field_"+length)
+            html.find("#initial_comparator_0").attr("id","initial_comparator_"+length)
+            html.find("#showproject0").attr("id","showproject"+length)
+            html.find("#showdepartment0").attr("id","showdepartment"+length)
+            html.find("#showsegment0").attr("id","showsegment"+length)
+            html.find("#showproduct0").attr("id","showproduct"+length)
+            html.find("#multiselect0").attr("id","multiselect"+length)
+            html.find("#dropdown0").attr("id","dropdown"+length)
+            html.find("#inputdiv0").attr("id","inputdiv"+length)
+            html.find("#final_comparator_proj_0").attr("id","final_comparator_proj_"+length)
+            html.find("#final_comparator_dep_0").attr("id","final_comparator_dep_"+length)
+            html.find("#final_comparator_seg_0").attr("id","final_comparator_seg_"+length)
+            html.find("#final_comparator_prod_0").attr("id","final_comparator_prod_"+length)
+            html.find("#last_comparator_proj_0").attr("id","last_comparator_proj_"+length)
+            html.find("#last_comparator_dep_0").attr("id","last_comparator_dep_"+length)
+            html.find("#last_comparator_seg_0").attr("id","last_comparator_seg_"+length)
+            html.find("#last_comparator_prod_0").attr("id","last_comparator_prod_"+length)
+            html.find("#ifempty_0").attr("id","ifempty_"+length)
+
+            $("#ifempty_"+length).hide();
+            $("#showproject"+length).hide();
+            $("#showproject"+length).hide();
+            $("#showdepartment"+length).hide();
+            $("#showsegment"+length).hide();
+            $("#showproduct"+length).hide();
+            document.getElementById("inputdiv"+length).innerHTML=" "
+        });
+
+        $("body").on("click",".remove",function(){ 
+
+            var length = $(".after-add-more").length
+            if(length==1){
+                $("#AddFilter").show();
+                $("#AddMore").hide();
+                $("#filterdiv").hide();
+            }else{
+                $(this).parents(".after-add-more").remove();
+            }
+        });
+    });
+    
+</script>
+
+
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+  #over:hover{
+        background-color: rgba(110, 110, 110, 0.616);
+        
+    }
+</style>
+
+<div class="fixed-top" style="top: 7rem; margin-left: 18rem;">
+    <div style="height: 600px;overflow-y: scroll;">
+        <div class="row">
+            <div class="col-md-3"><a class="text-white" style="font-size: 2rem;">All Sales Order</a></div>
+        </div>    
+            <div class="row mb-3">
+              <div class="col-md-5">
+                <input type="text" id="search" class="form-control bg-light text-dark" placeholder="Search.." autocomplete="off">
+
+              </div>
+              <div class="col-md-3"></div>
+              <div class="col-md-1 d-flex">
+                <div class="dropdown ">
+                  <a class="dropdown-toggle btn btn-secondary text-dark m-2" href="" data-toggle="dropdown">
+                    <i style="color: chocolate;" class="fa fa-filter"></i>
+                  </a>
+                  <div class="dropdown-menu m-1">
+                    <a class="dropdown-item" href="{% url 'view_sales_order_all' %}">All</a>
+    
+                    <a class="dropdown-item" href="{% url 'view_sales_order_Draft' %}">Draft</a>
+                    <a class="dropdown-item" href="{% url 'view_sales_order_approved' %}">Approved</a>
+                  </div>
+                </div>
+    
+                <a style="color: #ccc;background-color: chocolate;" class="btn btn-success m-2" href="{% url 'create_sales_order' %}">
+                  <i class="fa-solid fa-plus"></i>New
+              </a>
+              </div>
+            </div>
+          
+      
+    
+        <div class="row">
+            <div class="col-sm-12 col-md-11 col-lg-11">
+                <table class="table  text-white" id="myTable">
+                    <thead>
+                      <tr>
+                        <th>DATE</th>
+                        <th>SALES ORDER</th>
+                        <th>CUSTOMER NAME</th>
+                        <th>CUSTOMER MAIL</th>
+                        <th>STATUS</th>
+                        <th>REFERENCE</th>
+                        <th>PAYMENT</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in sale %}
+             
+                      <tr id="over">
+
+                        <td>{{i.sales_date}}</td>
+             
+                       <!-- <td onclick="location.href ='' " > {{v.Name}}</td> -->
+                        <td><a href="{% url 'sales_order_det' i.id %}" style="color: rgb(230, 171, 45);">{{i.sales_no}}</a></td>
+                        
+                        <td>{{i.customer.customerName}}</td>
+                        <td>{{i.customer.customerEmail}}</td>
+                        <td>{{i.status}}</td>
+                        <td>{{i.reference}}</td>
+                        <td>{{i.grandtotal}}</td>
+                        <td></td>
+        
+                       
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-12 col-md-1 col-lg-1"></div>
+
+        </div>
+      
+
+           
+        
+
+    </div>
+
+</div>
+
+
+
+
+<script>
+  var $rows = $('table tbody tr');
+  $('#search').keyup(function() {
+      var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+      
+      $rows.hide().filter(function() {
+          var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+          return ~text.indexOf(val);
+      }).show();
+  });
+
+  </script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+{% endblock %}

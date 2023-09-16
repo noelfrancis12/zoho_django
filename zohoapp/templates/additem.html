@@ -1,397 +1,668 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% load static %}
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-    <link rel="stylesheet" href="static/fonts/icomoon/style.css">
-    <link rel="stylesheet" href="static/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-	  <link rel="stylesheet" type="static/text/css" href="css/nunito-font.css">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="static/css/style.css"/>
-    <script src="https://kit.fontawesome.com/3b9793c077.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <title>Zoho Django</title>
-    <style>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  .open-button {
+    background-color: #ccc;
+    color: black;
+    padding: 5px 5px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: relative;
+    {% comment %} right: 250px;
+    bottom: 450px; {% endcomment %}
+    width: 180px;
+  }
 
-      body{
+  /* The popup form - hidden by default */
+  .form-popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f1f1f1;
+    border: 3px solid black;
+    z-index: 9999;
+    padding: 20px;
+    max-width: 300px;
+  }
 
-        background-image: url("{% static 'images/wallpaper1.jpg'%}");
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        background-attachment: fixed;
-      }
+  /* Full-width input fields */
+  .form-popup input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 20px 0;
+    border: none;
+    background: #f1f1f1;
+  }
 
-      .rounded-circle{
+  /* Set a style for the submit button */
+  .form-popup .btn {
+    background-color: #04aa6d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+  }
 
-        width: 60px;
-      }
+  /* Set a style for the close button */
+  .form-popup .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
 
-      h3{
+  /* Change the color of the close button on hover */
+  .form-popup .close:hover {
+    color: black;
+  }
 
-        font-size: 20px;
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        color: azure; 
-        justify-content: center;
-        text-transform: capitalize;
-      }
-      .navbar.vertical li.full-height {
-  height: 100%;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border-right: 1px solid #ccc;
+  .openbutton {
+    background-color: #ccc;
+    color: black;
+    padding: 5px 5px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: relative;
+    {% comment %} right: 80px;
+    bottom: 180px; {% endcomment %}
+    width: 180px;
+    z-index:9;
+  }
+
+  /* The popup form - hidden by default */
+  .form-popup1 {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f1f1f1;
+    border: 3px solid black;
+    z-index: 9999;
+    padding: 20px;
+    max-width: 300px;
+  }
+
+  /* Full-width input fields */
+  .form-popup1 input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 20px 0;
+    border: none;
+    background: #f1f1f1;
+  }
+
+  /* Set a style for the submit button */
+  .form-popup1 .btn.add-button {
+    background-color: #04aa6d;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Set a style for the close button */
+  .form-popup1 .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .form-popup1 .close:hover {
+    color: black;
+  }
+
+  /* Style for the highlighted account type options */
+  option.highlight-account-type {
+    background-color: #f3f3f3; /* Example background color */
+    color: #666; /* Example text color */
+    font-weight: bold; /* Example font weight */
+    /* Add any other styles you want to customize the look of the highlighted account type options */
+  }
   
-
-}
-
-.navbar.vertical li.full-height a {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  color: #ece3e3; /* Change to your desired link color */
-  padding: 1rem; /* Add padding to the link text to create clickable area */
-}
-.active{
-  color: #ccc;
-}
-.active :hover{
-  background-color: rgb(90, 90, 240);
-
-}
-label{
-    color: #ccc;
-}
-.popup{
-  height: 30rem;
-  width: 40rem;
-  background-color: rgb(228, 248, 248);
-  border-radius: 1rem;
-  position: absolute;
-  top: -15%;
-  left: 40%;
-  transform: translate(-50%,-50%)scale(0.1);
-  text-align: center;
-  padding: 0 5rem 5 rem;
-  color: black;
-  top: 50%;
-  visibility: hidden;
-  transform: translate(-50%,-50%)scale(0.1);
-
-}
-
-.open-popup{
-  top: 50%;
-  visibility: visible;
-  transform: translate(-50%,-50%)scale(1);
-  transition: transform 0.4s ,top 0.4s;
-
-}
-
-/* Style the button */
-.dropbtn {
-  background-color: #4CAF50;
-  color: white;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-}
-
-/* Style the dropdown content (hidden by default) */
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 160px;
-  z-index: 1;
-}
-
-/* Show the dropdown content when the button is clicked */
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* Style the links inside the dropdown */
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-/* Add a background color to the dropdown links on hover */
-.dropdown-content a:hover {
-  background-color: #ddd;
-}
-
+  /* Additional style for hovering over the highlighted account type options (optional) */
+  option.highlight-account-type:hover {
+    background-color: #f5f5f5; /* Example hover background color */
+    /* Add any other styles you want for the hover state */
+  }
+  .highlight-account-type {
+    text-align: left;
+    padding-left: 10px;
+  }
+  
 
 </style>
-</head>
-<body>
-    {% if user.is_authenticated %}
 
-    <div class="site-mobile-menu">
-        <div class="site-mobile-menu-header">
-          <div class="site-mobile-menu-close mt-3">
-            <span class="icon-close2 js-menu-toggle"></span>
-          </div>
-        </div>
-        <div class="site-mobile-menu-body"></div>
-      </div>
-      
-      <header class="site-navbar m-0 p-0" role="banner" style="top: 0rem;">
-  
-        <div class="container">
-          <div class="row align-items-center">
-            
-            <div class="col-11 col-xl-2">
-              <h1 class="mb-0 site-logo"><a href="{% url 'index' %}" class="text-white mb-0">Zoho Django</a></h1>
-            </div>
-            <div class="col-12 col-md-10 d-none d-xl-block">
-              <nav class="site-navigation position-relative text-right" role="navigation">
-  
-                <ul class="site-menu js-clone-nav mr-auto d-none d-lg-block">
-                
-                  <li class="dropdown"><a  href="" >
-                    {% if pat.profile_pic %}
-                      <img src="{{ pat.profile_pic.url }}" class="rounded-circle" >
-                    {% else %}
-                      <img src="{% static 'images/default.png' %}"  class="rounded-circle" >
-                    {% endif %}
 
-                    {% if company.comapny_name %}
-                      <h3> <b><em >{{ company.company_name }}  </em></b></h3>
-                    {% else %}
-                      <h3 ><b><em > Add Company</em></b></h3>
-                    {% endif %}
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-left">
-                    <a class="dropdown-item" href="#"><i class="bx bx-user"></i><span>Profile</span></a>
-                    <a class="dropdown-item" href="#"><i class="bx bx-tachometer"></i><span>Dashboard</span></a>
-                    <div class="dropdown-divider mb-0"></div>
-                    <a class="dropdown-item" href="{% url 'logout' %}"><i class="bx bx-power-off"></i><span>Logout</span></a>
-                </div>
-                  </li>
-                  <li><a href="{% url 'view_profile' %}"><i class="bx bx-user"></i><span>Profile</span></a></li>
-                  <li> <a href="{% url 'base' %}"><i class="bx bx-tachometer"></i><span>Dashboard</span></a></li>
-                  <li><a href="{% url 'logout' %}"><i class="bx bx-power-off"></i><span>Logout</span></a></li>
-
-                </ul>
-              </nav>
-            </div>
-  
-  
-            <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-white"><span class="icon-menu h3"></span></a></div>
-  
-            </div>
-  
-          </div>
-        </div>
-        
-      </header>
+<section >
+  <div class="row fixed-top  " style="top: 6rem; margin-left: 20rem;" >
     
-      <section>
-       <div class=" row  ml-4 " style="top: 7rem;">
-        <div class="col-md-2 " style="border-right: 1px solid white;height: 100vh;position: fixed;">
-          <h6 class="mb-4"><a class="active  " href="{% url 'base' %}"><i class="fa fa-fw fa-home mr-2 "></i>home</a> </h6>
-          <h6 class="mb-4"><a class="active  " href="{% url 'itemview' %}"><i class="fa-solid fa-sitemap mr-3 "></i>Items</a> <a class="ml-5 active" href="{% url 'additem' %}"><i class="fa-solid fa-plus "></i></a></h6>
-          <h6 class="mb-4"><a class="active  " href="#"><i class="fa-solid fa-building-columns mr-3"></i>Banking</a></h6>
-          <h6 class="mb-4"><a class="active  " href="#"><i class="fa-solid fa-cart-shopping mr-3"></i>Sales</a></h6>
-          <h6 class="mb-4"><a class="active  " href="#"><i class="fa-solid fa-basket-shopping mr-3"></i>Purchases</a></h6>
-          <h6 class="mb-4"><a class="active  " href="#"><i class="fa-solid fa-business-time mr-3 "></i>Time Tracking</a></h6>
-           <h6 class="mb-4"><a class="active  " href="#"><i class="fa-solid fa-user mr-3 "></i>Accountant</a></h6>
-           <h6 class="mb-4"><a class="active  " href="#"><i class="fa-solid fa-calendar-week mr-3"></i>Reports</a></h6>
-           <h6 class="mb-4"><a class="active  " href="#"><i class="fa-solid fa-file mr-3"></i>Documents</a></h6>
-            <h6 class="mb43"><a class="active  " href="#"><i class="fa-solid fa-money-bill mr-3 "></i>Payroll</a></h6>
-        </div>
-       
-        <div class="col-md-10 " style="margin-left: 16rem; position: fixed;">
+    <div class="col-md-12 " style="width: 100%;">
         <h3  class="mb-3  text-white  " style="font-size: 2rem;">New item</h3>     
     
-        <form action="{% url 'add' %}" method="post">
+        <div style="overflow-y: scroll;height: 600px;" >
+          <form action="{% url 'add' %}" method="post" id="Form">
             {% csrf_token %}
-
             <fieldset class="form-group">
-                <div class="row">
-                  <label class="col-form-label col-sm-2 pt-0">Type <i class="fa fa-question-circle"></i></label>
-                  <div class="col-sm-10 form-inline">
-                    <div class="form-check ">
-                      <input class="form-check-input" type="radio" name="type" id="gridRadios1" value="Goods" >
-                      <label class="form-check-label" for="gridRadios1">
-                        Goods
-                      </label>
-                    </div>
-                    <div class="form-check ml-5">
-                      <input class="form-check-input" type="radio" name="type" id="gridRadios2" value="Services">
-                      <label class="form-check-label" for="gridRadios2">
-                       Services
-                      </label>
-                    </div>
-                   
+              <div class="row">
+                <label class="col-form-label col-sm-2 pt-3">Type <i class="fa fa-question-circle"></i></label>
+                <div class="col-sm-10 form-inline">
+                  <div class="form-check ">
+                    <input required class="form-check-input " type="radio" name="type" id="gridRadios1" value="Goods" style="margin-left:5px;">
+                    <label class="form-check-label" for="gridRadios1">Goods</label>
                   </div>
+                  <div class="form-check ml-5">
+                    <input required class="form-check-input " type="radio" name="type" id="gridRadios2" value="Services" style="margin-left:50px;">
+                    <label class="form-check-label" for="gridRadios2">Services</label>
+                  </div>
+                        
                 </div>
-              </fieldset>
+              </div>
+            </fieldset>
             <div class="form-group row">
-              <label  class="col-sm-2 col-form-label">Name *</label>
+              <label  class="col-sm-2 col-form-label ">Name *</label>
               <div class="col-sm-10 col-md-7 col-9" style="margin-left: -2.2rem;">
-                <input type="text" class="form-control" name="name">
+                <input required type="text" class="form-control bg-white text-dark" name="name" id="nameInput">
               </div>
             </div>
             <div class="form-group row">
-              <label  class="col-sm-2 col-form-label">Unit <i class="fa fa-question-circle"></i></label>
+              <label class="col-sm-2 col-form-label">Unit <i class="fa fa-question-circle"></i></label>
               <div class="col-sm-10 col-md-7 col-9" style="margin-left: -2.2rem;">
-                <select  name="unit" class="form-control ">
-                    <option selected>select to add</option>
-                   {% for u in unit %}
-                   <option value="{{u.id}}">{{u.unit}}</option>
-                   {% endfor %}
-                  </select>               
-                 </div>
-            </div>
-    
-            <section>
-                <div class="row">
-                        <div class="col-md-6">
-                            <input type="checkbox" name="selling" checked> <label >selling  information</label>
-                            <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label">Selling price *</label>
-                                <div class="col-sm-10 col-md-7 col-9 ml-5">
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-prepend">
-                                          <div class="input-group-text">INR</div>
-                                        </div>
-                                        <input type="text" name="sel_price" class="form-control">
-                                      </div>
-                                </div>
-                              </div>
-                              <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label">Account *</label>
-                                <div class="col-sm-10 col-md-7 col-9 ml-5">
-                                    <select name="sel_acc" class="form-control">
-                                        {% for s in sale %}
-                                        <option value="{{s.id}}">{{s.Account_name}}</option>
-                                    
-                                        {% endfor %}
-                                       
-                                      </select>                                </div>
-                              </div>
-                              <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label">Description </label>
-                                <div class="col-sm-10 col-md-7 col-9 ml-5">
-                                  <input  type="text" name="sel_desc" class="form-control" >
-                                </div>
-                              </div>
-                             
-                        </div>
-                        <div class="col-md-6">
-                          <input type="checkbox" name="purchase" checked> <label for="">Purchase information</label>
-                            <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label">Cost Price *</label>
-                                <div class="col-sm-10 col-md-7 col-9">
-                                    <div class="input-group mb-2">
-                                        <div class="input-group-prepend">
-                                          <div class="input-group-text">INR</div>
-                                        </div>
-                                        <input type="text" class="form-control" name="cost_price" >
-                                      </div>
-                                </div>
-                              </div>
-                              <div class="form-group row in">
-                                <label  class="col-sm-2 col-form-label">Account *</label>
-                                <div class="col-sm-10 col-md-7 col-9">
-
-<script>
-  
-</script>
-
-                                    <select name="cost_acc" class="form-control">
-                                        {% for p in purchase %}
-                                        <option value="{{p.id}}">{{p.Account_name}}</option>
-                                        {% endfor %}
-                
-                                    </select>  
-                                   
-
-                                     </div>
-                                                   <button type="button" onclick="openpopup()">Ad Acoount</button>
-                              </div>
-                              <div class="form-group row">
-                                <label  class="col-sm-2 col-form-label">Description </label>
-                                <div class="col-sm-10 col-md-7 col-9">
-                                  <input  type="text" name="cost_desc" class="form-control"  >
-                                </div>
-                              </div>
-                        </div>
-                </div>
-            </section>
-           
-          <div class="form-inline">
-      <input type="submit"  class="mr-3 btn btn-success"  value="Save">
-      <input type="submit" class="btn btn-secondary but" value="Cancel">
+                  <select name="unit" class="form-control bg-white text-dark" id="unit">
+                      {% for u in unit %}
+                      <option value="{{u.id}}">{{u.unit}}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+              <button style="width: 5rem;" class="open-button" onclick="openForm()">Add Unit</button>
           </div>
-          </form>
 
+            <div class="form-group row">
+              <label  class="col-sm-2 col-form-label">HSN Code</label> 
+              <div class="col-sm-10 col-md-7 col-9"  style="margin-left: -2.2rem;" >
+                <input required type="number" class="form-control bg-white text-dark" name="hsn" id="myInputField" oninput="validateInput()">
+                <div id="validationResult"></div>
+              </div>
+            </div>
+            <script>
+              function validateSixDigits(field) {
+                // Define the regular expression pattern for exactly six digits
+                var pattern = /^\d{6}$/;
+              
+                // Check if the field matches the pattern
+                return pattern.test(field);
+              }
+              
+              function validateInput() {
+                var inputField = document.getElementById("myInputField");
+                var inputValue = inputField.value;
+              
+                var validationResultDiv = document.getElementById("validationResult");
+              
+                if (validateSixDigits(inputValue)) {
+                  validationResultDiv.textContent = "Valid: The field contains exactly six digits.";
+                } else {
+                  validationResultDiv.textContent = "Invalid: The field does not contain exactly six digits.";
+                }
+              }
+            
+            </script>
+            <div class="form-inline text-white">
+              <label class="text-danger mb-4 mr-4" for="">Tax Preference  :</label>
+              <p class="text-white  ">
+              <input type="radio"  name="radio" value="taxable" onclick="showAllSelect()" style="margin-left:40px;">  Taxable</p>
+              <p><input type="radio" name="radio" value="no-taxable" onclick="hideAllSelect()" style="margin-left:50px;"> None-Taxable </p><br><br>
+            </div>
+
+            <div class="row">
+              <div class="col-md-3">
+            
+                <div id="select1_div" style="display: none;">
+                  <label for="select1">Intra-State TAX</label>
+                  <select name="intra" class="form-control bg-white text-dark" id="select1">
+                    <option value="GST0[0%]">GST0[0%]</option>
+                    <option value="GST3[3%]">GST3[3%]</option>
+                    <option value="GST5[5%]">GST5[5%]</option>
+                    <option value="GST12[12%]">GST12[12%]</option>
+                    <option value="GST18[18%]">GST18[18%]</option>
+                    <option value="GST28[28%]">GST28[28%]</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div id="select2_div" style="display: none;">
+                  <label for="select2">Inter-State TAX</label>
+                  <select name="inter" class="form-control bg-white text-dark" id="select2">
+                    <option value="IGST0[0%]">IGST0[0%]</option>
+                    <option value="IGST5[5%]">IGST3[3%]</option>
+                    <option value="IGST5[5%]">IGST5[5%]</option>
+                    <option value="IGST12[12%]">IGST12[12%]</option>
+                    <option value="IGST18[18%]">IGST18[18%]]</option>
+                    <option value="IGST28[28%]">IGST28[28%]</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+      
+
+
+          <script>
+          function showAllSelect() {
+          var select1_div = document.getElementById("select1_div");
+          var select2_div = document.getElementById("select2_div");
+          select1_div.style.display = "block";
+          select2_div.style.display = "block";
+          }
+
+          function hideAllSelect() {
+          var select1_div = document.getElementById("select1_div");
+          var select2_div = document.getElementById("select2_div");
+          select1_div.style.display = "none";
+          select2_div.style.display = "none";
+          }
+          </script>
+          <div class="row">
+            <div class="col-md-6">
+              <input  type="checkbox" name="selling" checked> <label >selling  information</label><br><br>
+              <div class="form-group row">
+                <label  class="col-sm-2 col-form-label">Selling price *</label>
+                <div class="col-sm-12 col-md-7 col-9 ml-5">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">INR</div>
+                    </div>
+                    <input required type="text" name="sel_price" class="form-control bg-white text-dark">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label  class="col-sm-2 col-form-label">Account *</label>
+                <div class="col-sm-10 col-md-7 col-9 ml-5">
+                  <select name="sel_acc" class="form-control bg-white text-dark">
+                    
+                         
+                    
+                    {% for account_type in account_type %}
+                      <option value="" disabled class="btn btn text-dark highlight-account-type"><b>{{ account_type }}</b></option>
+                      {% for account in account %}
+                      {% if account.Account_type == account_type %}
+                      <option value="{{account.id}}">{{ account.Account_name }}</option>
+                      {% endif %}
+                      {% endfor %}
+                      {% endfor %}
+
+                  </select>                              
+                </div>
+              </div>
+              <div class="form-group row">
+                <label  class="col-sm-2 col-form-label">Description </label>
+                <div class="col-sm-10 col-md-7 col-9 ml-5">
+                  <input required  type="text" name="sel_desc" class="form-control bg-white text-dark" >
+                </div>
+              </div>
+                                    
+            </div>
+            <div class="col-md-6">
+              <input type="checkbox" name="purchase" checked> <label for="">Purchase information</label><br><br>
+              <div class="form-group row">
+                <label  class="col-sm-2 col-form-label">Cost Price *</label>
+                <div class="col-sm-10 col-md-7 col-9">
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">INR</div>
+                    </div>
+                    <input required type="text" class="form-control bg-white text-dark" name="cost_price" >
+                  </div>
+                </div>
+              </div>
+              <div class="form-group row in">
+                <label class="col-sm-2 col-form-label">Account *</label>
+                <div class="col-sm-10 col-md-7 col-9">
+                  <select name="cost_acc" class="form-control bg-white text-dark" id="myaccount">
+                    {% for account_type in account_types %}
+                    <option value="" disabled class="btn btn text-dark highlight-account-type"><b>{{ account_type }}</b></option>
+                    {% for account in accounts %}
+                    {% if account.Account_type == account_type %}
+                    <option value="{{account.id}}">{{ account.Account_name }}</option>
+                    
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                  </select>             
+
+                  </div>
+                <button id="showFormButton" style="width:5rem;" class="openbutton" onclick="showForm()">Add</button>
+              </div>
+              
+
+
+              <div class="form-group row">
+                <label  class="col-sm-2 col-form-label">Description </label>
+                <div class="col-sm-10 col-md-7 col-9">
+                  <input  type="text" name="cost_desc" class="form-control bg-white text-dark"  >
+                </div>
+              </div>
+            </div>
+            <fieldset class="form-group">
+              <div class="row">
+                <label class="col-form-label col-sm-2 pt-3">Activation tag<i class="fa fa-question-circle"></i></label>
+                <div class="col-sm-10 form-inline">
+                  <div class="form-check ">
+                    <input required class="form-check-input" type="radio" name="status" id="gridRadios1" value="Active"  style="margin-left:5px;" >
+                    <label class="form-check-label" for="gridRadios1">Activate</label>
+                  </div>
+                  <div class="form-check ml-5">
+                    <input required class="form-check-input" type="radio" name="status" id="gridRadios2" value="Inactive" style="margin-left:50px;">
+                    <label class="form-check-label" for="gridRadios2">Non-Activate</label>
+                  </div>
+                    
+                </div>
+              </div>
+            </fieldset>
+              <br><br>
+              <div class="row" >
+                <div class="col-md-10">
+                  {% comment %} <label><input type="checkbox" value="trackstate" name="trackstate" onclick="toggleForm()" style="display: none;">
+                 Track Inventory for this item</label> {% endcomment %}
+                  {% comment %} <input type="hidden" name="trackState" id="trackState" value="" unchecked> {% endcomment %}
+                  <label>
+                    <input type="checkbox" name="trackstate" value="trackstate" class=" bg-dark"  onclick="toggleFormFields()">
+                    Track Inventory for this item
+                  </label>
+                  <div id="formFields" style="display: none;"> 
+                    <div class="form-group row" >
+                      <label class="col-sm-2 col-form-label">Inventory Account *</label>
+                      <div class="col-sm-10 col-md-7 col-9" style="margin-left: -1rem;">
+                        <select class="form-select form-select-sm mt-3" name="invacc">
+                          <option>Choose..</option>
+                          <option value="inventory assets">Inventory Asset</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row ">
+                      <label class="col-sm-2 col-form-label">Opening Stock</label>
+                      <div class=" col-md-5">
+                        <input  type="number" class="form-control  bg-white text-dark"  name="openstock" value="0">
+                      </div>
+                      <div class="col-md-5  ">
+                        <div class="row align-items-center">
+                          <label class="col-sm-6 col-form-label">Opening Stock Rate per Unit</label>
+                          <div class="col-sm-6">
+                            <input type="number" class="form-control bg-white text-dark" name="inventoryaccntperunit"  value="0">
+                          </div>
+
+                        </div>
+                      </div>
+                      <fieldset class="form-group">
+                        <div class="row">
+                          <label class="col-form-label col-sm-2 pt-2">Activation tag<i class="fa fa-question-circle"></i></label>
+                          <div class="col-sm-10 form-inline">
+                            <div class="form-check ">
+                              <input  class="form-check-input" type="radio" name="satus" id="gridRadios1" value="Active"  style="margin-left:5px;" >
+                              <label class="form-check-label" for="gridRadios1">Activate</label>
+                            </div>
+                            <div class="form-check ml-5">
+                              <input  class="form-check-input" type="radio" name="satus" id="gridRadios2" value="Inactive"  style="margin-left:50px;">
+                              <label class="form-check-label" for="gridRadios2">Non-Activate</label>
+                            </div>
+                                        
+                          </div>
+                        </div>
+                      </fieldset>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <script>
+                function toggleFormFields() {
+                  var formFields = document.getElementById("formFields");
+                  var checkbox = document.querySelector("input[name=trackstate]");
+            
+                  if (checkbox.checked) {
+                    formFields.style.display = "block";
+                  } else {
+                    formFields.style.display = "none";
+                  }
+                }
+              </script>
+              <br><br> <br>
+          <div class="form-inline " style="margin-bottom: 200px;">
+            <button type="submit"  class="mr-3 btn btn-success"  value="Save">Save</button>
+            <button type="button" class="mr-3 btn btn-secondary " onclick="resetForm()" value="Cancel" style="margin-left:10px;">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+ </section>
+
+ <script>
+  function resetForm() {
+    document.getElementById("Form").reset();
+  }
+</script>
+  
+        
+                
+
+
+
+          
 <!-- ============================ modal for account adding  -->
 
+<div class="form-popup" id="myForm">
+  <form onsubmit="event.preventDefault(); addUnit();" class="form-container" id="unitForm">
+      {% csrf_token %}
+      <span class="close" onclick="closeForm()">&times;</span><br>
+      <h1 class="text-dark">Add Unit</h1>
 
-          <div class="popup" id="popup">
-           <div style="margin-top: 2rem;" class="display-flex">
-            <h4  >Add Account</h4>
-            <h6 class="float-right" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup()">X</h6>
-           </div>
-            
-            <form style="margin-top: 3rem;" action="{% url 'add_account' %}" method="post">
-              {% csrf_token %}
-              <label class="text-dark" >Accout type</label> <br>
-              <input  type="text" name="acc_type" id=""> <br>
-              <label class="text-dark" >Accout Name</label> <br>
-              <input type="text" name="acc_name" id=""> <br>
-              <label class="text-dark" >Accout Code</label> <br>
-              <input type="text" name="acc_code" id=""> <br>
-              <label class="text-dark" >Accout Description</label> <br>
-              <input type="text" name="acc_desc" id=""> <br> <br>
-              <input  style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="submit"  value="submit">
-            <button style="width: 5rem; height: 2rem; color: black;"  class="btn btn-secondary" type="submit" onclick="closepopup()"  >Canvel</button>
-            </form>
+      <label class="text-dark" for="unit"><b>Unit</b></label>
+      <input type="text" placeholder="Enter unit" id="unitName" name="unit_name" required>
+      <p class="text-dark">eg:KL,PCS,BOX,LTR</p>
+
+      <button type="submit" class="btn add-button">Add</button>
+  </form>
+</div>
 
 
-            <script>
-              let popup=document.getElementById("popup");
 
-              function openpopup(){
-                  popup.classList.add("open-popup");
-              }
-              function closepopup(){
-                  popup.classList.remove("open-popup");
-              }
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function addUnit() {
+    // Get the form and form data
+    let unitForm = document.getElementById("unitForm");
+    let formData = new FormData(unitForm);
 
-            </script>
-          </div>
+    // Send the form data through AJAX
+    $.ajax({
+        url: "{% url 'add_unit' %}",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            const unitName = response.unit_name;
+            const unitId = response.unit_id; // Assume the server returns the unit ID
 
-        
-    </div>
-        
-       </div>
+            // Handle the success response
+            console.log(response);
+
+            // Get the dropdown element
+            const dropdown = document.getElementById("unit");
+
+            // Create and add the new unit option
+            const newUnitOption = document.createElement("option");
+            newUnitOption.value = unitId;
+            newUnitOption.text = unitName;
+
+            // Add the new unit option to the dropdown
+            dropdown.add(newUnitOption);
+
+            // Select the newly added unit option to display it as the current selection
+            newUnitOption.selected = true;
+
+            // Close the form and perform any other actions
+            closeForm();
+        },
+        error: function (error) {
+            // Handle the error response
+            console.log(error);
+        }
+    });
+}
+
+function openForm() {
+    let formContainer = document.getElementById("myForm");
+    formContainer.style.display = "block";
+}
+
+function closeForm() {
+    let formContainer = document.getElementById("myForm");
+    formContainer.style.display = "none";
+}
+</script>
+
+<div class="form-popup1" id="myForm1" >
+  <form style="margin-top: 5rem;" onsubmit="event.preventDefault(); addAccount();" class="form-container" id="accountForm">
+    {% csrf_token %}
+    <span class="close" onclick="closeForm1()">&times;</span><br>
+    <h1 class="text-dark" >Add Account</h1><br>
     
-      
-    </section>
+    <label class="text-dark"><b>Account type</b></label>
+    <select class="form-select" aria-label="Default select example" name="acc_type">
+      <option selected></option>
+      <option value="EXPENCES">EXPENCES</option>
+      <option value="Cost Of Goods Sold">Cost Of Goods Sold</option>
+      <option value="Fixed Asset">Fixed Asset</option>
+    </select>
+    <label class="text-dark"><b>Account Name</b></label>
     
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-      
-    
-    {% endif %}
- 
-</body>
-</html>
+    <input type="text" placeholder="Enter account Name" id="unit" name="acc_name" required>
+    <label class="text-dark"><b>Description</b></label>
+    <input type="text" placeholder="Description"name="acc_desc">
+    <button type="submit" class="btn add-button" >Add</button>
+  
+  </form>
+</div>
 
 
 
+<script>
+  function addAccount() {
+    // Get the form and form data
+    let accountForm = document.getElementById("accountForm");
+    let formData = new FormData(accountForm);
+  
+    // Send the form data through AJAX
+    $.ajax({
+      url: "{% url 'add_account' %}",
+      type: "POST",
+      data: formData,
+      processData: false,
+      contentType: false,
+      success: function (response) {
+        const accountType = response.Account_type;
+        const accountName = response.Account_name;
+        const accountId = response.account_id; // Assume the server returns the account ID
+  
+        // Handle the success response
+        console.log(response);
+  
+        // Get the dropdown element
+        const dropdown = document.getElementById("myaccount");
+  
+        // Create and add the new account option
+        const newAccountOption = document.createElement("option");
+        newAccountOption.value = accountId;
+        newAccountOption.text = accountName;
+  
+        // Find the correct position to insert the new account option
+        let foundAccountType = false;
+        for (let i = 0; i < dropdown.options.length; i++) {
+          const option = dropdown.options[i];
+          if (option.disabled && option.innerText === accountType)   {
+            foundAccountType = true;
+            // Move to the next option to find the correct position within the account type
+            continue;
+          }
+          if (foundAccountType) {
+            if (!option.disabled) {
+              // Insert the new account option before the first non-disabled option within the account type
+              dropdown.add(newAccountOption, i);
+              break;
+            }
+          }
+        }
+  
+        // If the account type option doesn't exist, create and add it along with the new account option
+        if (!foundAccountType) {
+          const accountTypeOption = document.createElement("option");
+          accountTypeOption.text = accountType;
+          accountTypeOption.disabled = true;
+          accountTypeOption.className = "btn btn-dark text-light highlight-account-type";
+          dropdown.add(accountTypeOption);
+          dropdown.add(newAccountOption);
+        }
+  
+        // Select the newly added account option to display it as the current selection
+        newAccountOption.selected = true;
+  
+        // Close the form and perform any other actions
+        closeForm1();
+      },
+      error: function (error) {
+        // Handle the error response
+        console.log(error);
+      }
+    });
+  }
+  const dropdown = document.getElementById("myaccount");
+  dropdown.addEventListener("change", function () {
+  // Get the selected option from the dropdown
+  const selectedOption = dropdown.selectedOptions[0];
+  // Get the account ID from the selected option's value attribute
+  const selectedAccountId = selectedOption.value;
+
+  // Now you can use selectedAccountId for further processing or display
+  console.log("Selected Account ID:", selectedAccountId);
+});
+  
+function showForm() {
+  let formContainer = document.getElementById("myForm1");
+  formContainer.style.display = "block";
+}
+
+function closeForm1() {
+  let formContainer = document.getElementById("myForm1");
+  formContainer.style.display = "none";
+}
+
+</script>
+
+
+  
+
+  
+
+  
+
+  
+</section>
+{% endblock %}

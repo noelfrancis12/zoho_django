@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  table, th, td, tr {
+    color: white; 
+    border: 1px solid white;
+  }
+
+  .topnav {
+    background-color: #333;
+  }
+  
+  .a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .customize {
+    float: left;
+    text-align: center;
+    padding: 20px 130px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .topnav-right {
+    float: right;
+  }
+
+  .nav-item {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 4px 4px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .dropdown, .printdrop{
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 4px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .dropdown-item:hover{
+    color: white;
+  }
+
+  .printdrop:hover{
+    color: white;
+  }
+
+  .b {
+    float: left;
+    color: #f2f2f2;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .daterangepicker{
+    color: black;
+  }
+
+  .daterangepicker td.available, .daterangepicker th {
+    color: black;
+  }
+
+  @media print {
+    table, th, td, tr {
+      border: 1px solid black; /* Ensure black borders when printing */
+    }
+  }
+
+  #reportrange span, #selectedEndDate, .daterangepicker .ranges ul li {
+    font-size: 14px; /* Adjust the font size as needed */
+  }
+
+
+</style>
+
+<div class="container-fluid">
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <form class="form-inline">
+        <label class="mr-2" for="fromdate">From:</label>&nbsp;
+        <input type="date" class="form-control" id="fromdate" style="color: black !important;">
+        <label class="mx-2" for="todate">To:</label>
+        <input type="date" class="form-control" id="todate" style="color: black !important;">
+      </form>
+    </li>
+
+    <li class="nav-item dropdown" style="margin-left: 27.5vw; margin-top: -1rem;">
+      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="background: white; color: black;">
+        <i class="fa fa-file-excel"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" style="font-size:10px;" onclick="exportAsPDF()">PDF</a></li>
+        <li><a class="dropdown-item" style="font-size:10px;" onclick="exportAsXLS()">XLS (Microsoft Excel 1997-2004 Compatible)</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item dropdown" style="margin-top: -1rem;">
+      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="background: white; color: black;">
+        <i class="fa fa-print"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="printdrop" href="#" onclick="printPageContent()" style="font-size:10px;">Print Preference</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item">
+      <button type="button" onclick="history.go(-1);" class="btn btn-danger">&times;</button>
+    </li>
+  </ul>
+</div>
+
+<div class="container-fluid" id="container-to-print"> 
+  <div class="row pt-5">
+    <center>
+      <div class="col-md-4">
+        {% if company.company_name != None %}
+          <a class="text" style="font-size: 1rem; color: white;">{{ company.company_name }}</a><br>
+        {% else %}
+          <a class="text" style="font-size: 1rem; color: white;">Add Company</a><br>
+        {% endif %}
+        <a class="text" style="font-size: 1.5rem; color: white;">Stock Summery </a><br>
+        <h5 class="text" id="selectedEndDate"></h5><br>
+      </div>
+    </center>   
+  </div> 
+
+  <div style="overflow-x: auto; overflow-x: hidden;">
+    <div class="row pt-2">
+      <div class="col-sm-10 col-md-11 col-lg-12">
+        <table class="table" id="myTable" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>SL.no</th>
+              <th>Item Name</th>
+              <th>Sales Price</th>
+              <th>Purchase Price</th>
+              <th>Stock Quantity</th>
+              <th>Stock Value</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for d in data %}
+            <tr>
+              <td></td>
+              <td>{{ d.Name }}</td>
+              <td>{{ d.s_price }}</td>
+              <td>{{ d.p_price }}</td>
+              <td>{{ d.stock }}</td>
+              <td>{{ stockValue }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>  
+
+  <script>
+    // Get the table element by its ID
+    var table = document.getElementById("myTable");
+
+    // Get the table body
+    var tbody = table.getElementsByTagName("tbody")[0];
+
+    // Get all rows in the table body
+    var rows = tbody.getElementsByTagName("tr");
+
+    // Iterate through each row and set the serial number
+    for (var i = 0; i < rows.length; i++) {
+        // Get the first existing table cell (td) in the current row
+        var firstCell = rows[i].getElementsByTagName("td")[0];
+
+        // Set the serial number as the row number (plus 1) in the first cell
+        firstCell.textContent = i + 1;
+    }
+  </script>
+
+  <script>
+    function ApplyDateFilter() {
+      var fromDate = new Date(document.getElementById('fromdate').value);
+      var toDate = new Date(document.getElementById('todate').value);
+  
+      // Set the time part to the beginning and end of the day
+      fromDate.setHours(0, 0, 0, 0);
+      toDate.setHours(23, 59, 59, 999);
+  
+      var table = document.getElementById("myTable");
+      var tr = table.getElementsByTagName("tr");
+  
+      // Update the selectedEndDate div
+      var start = fromDate;
+      var end = toDate;
+      document.getElementById('selectedEndDate').textContent = 'From ' + start.toDateString() + ' to ' + end.toDateString();
+    }
+  
+    // Add event listeners to the date inputs to trigger ApplyDateFilter on change
+    document.getElementById('fromdate').addEventListener('change', ApplyDateFilter);
+    document.getElementById('todate').addEventListener('change', ApplyDateFilter);
+  
+    // Initialize the filter when the page loads (optional)
+    ApplyDateFilter();
+  
+    // Function to show full table when no dates are selected
+    function ShowFullTable() {
+      var table = document.getElementById("myTable");
+      var tr = table.getElementsByTagName("tr");
+  
+      for (var i = 1; i < tr.length; i++) {
+        tr[i].style.display = "";
+      }
+  
+      // Reset the selectedEndDate div
+      document.getElementById('selectedEndDate').textContent = '';
+    }
+  
+    // Call the function to show full table initially
+    ShowFullTable();
+  </script>
+
+
+
+  <script>
+    function printPageContent() {
+      const contentToPrint = document.getElementById('container-to-print');
+      const clonedContent = contentToPrint.cloneNode(true);
+
+      // Find all the elements with the class "text" within the cloned content
+      const textElements = clonedContent.querySelectorAll('.text');
+
+      // Set the text color to black for each element with the class "text"
+      textElements.forEach(element => {
+        element.style.color = '#000000';  // Text color (black)
+      });
+
+      // Set table styles to black
+      const tableElements = clonedContent.querySelectorAll('table, th, td, tr');
+      for (const element of tableElements) {
+      element.style.border = '1px solid black';
+      }
+  
+      // Print the cloned content
+      const printWindow = window.open('', '_blank');
+      printWindow.document.body.appendChild(clonedContent);
+      printWindow.print();
+      printWindow.close();
+    }
+  </script>
+
+
+  <script>
+    function exportAsXLS() {
+        const data = [
+            ['SL.no', 'Item Name', 'Sales Price', 'Purchase Price', 'Stock Quantity', 'Stock Value'],
+            ['Data 1', 'Data 2', 'Data 3', 'Data 4', 'Data 5', 'Data 6'],
+            // Add more rows as needed
+        ];
+    
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    
+        // Save the XLS file
+        XLSX.writeFile(wb, '{{ company.company_name }}_Stock_summery.xlsx');
+    }
+    
+    function exportAsPDF() {
+      const container = document.getElementById('container-to-print');
+    
+      // Save the original background color
+      const originalBackgroundColor = container.style.backgroundColor;
+    
+      // Set the container's background color to white
+      container.style.backgroundColor = 'white';
+    
+      // Apply styling changes to the container's content
+      const textWhiteElements = container.querySelectorAll('.text');
+      textWhiteElements.forEach(element => {
+        element.style.color = '#000000'; // Set text color to black
+      });
+    
+      const tableElements = container.querySelectorAll('table');
+      const tableCells = container.querySelectorAll('td, th');
+      const tableRows = container.querySelectorAll('tr');
+    
+      tableElements.forEach(table => {
+        table.style.backgroundColor = '#ffffff'; // Set background color to white
+        table.style.color = '#000000'; // Set text color to black
+      });
+    
+      tableCells.forEach(cell => {
+        cell.style.backgroundColor = '#ffffff'; // Set background color to white
+        cell.style.color = '#000000'; // Set text color to black
+        cell.style.border = '1px solid black'; // Add a black border
+      });
+    
+      tableRows.forEach(row => {
+        row.style.backgroundColor = '#000000'; // Set background color to black
+      });
+    
+      const pdfOptions = {
+        margin: 0,
+        filename: 'Stock_Summery.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' },
+      };
+    
+      // Generate PDF from the container
+      html2pdf().from(container).set(pdfOptions).save().then(() => {
+
+        // Restore the original background color
+        container.style.backgroundColor = originalBackgroundColor;
+
+        textWhiteElements.forEach(element => {
+          element.style.color = 'white'; // Restore original text color
+
+        // Remove the pdf-background class after generating the PDF
+        container.classList.remove('pdf-background');
+        });
+      });
+    }
+    
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var rows = document.querySelectorAll(".table tbody tr");
+    
+      rows.forEach(function(row) {
+        var quantity = parseFloat(row.querySelector("td:nth-child(5)").textContent); // Change index as needed
+        var purchasePrice = parseFloat(row.querySelector("td:nth-child(4)").textContent); // Change index as needed
+    
+        var stockValue = quantity * purchasePrice;
+    
+        var stockValueCell = row.querySelector("td:nth-child(6)"); // Stock Value <td>
+        stockValueCell.textContent = stockValue.toFixed(2);
+    
+        row.appendChild(stockValueCell);
+      });
+    });
+  </script>
+    
+
+{% endblock content %}

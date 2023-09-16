@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block content %}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+<section ><style>
+  .card-custom {
+    background-color: rgba(255, 255, 255, 0.5);
+   /* height: 400px; */
+
+}
+
+
+.card-text {
+    margin-bottom: 0.5rem;
+}
+.info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+}
+
+.label {
+    margin: 0;
+    width: 130px; 
+   
+}
+
+.value {
+    margin: 0;
+    flex: 1;
+    
+}
+.info-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+ .info-item h6.label {
+
+  margin-left: 10px;
+    display: inline-block;
+} 
+
+.info-item p.value {
+  /* margin: 0; */
+  margin-left: 10px;
+}
+
+
+
+</style>
+
+
+    <section>
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Left Side: Table -->
+          <div class="col-md-4" style="background-color: gray;">
+            <div class="row">
+              <div class="col-md-12">
+                <a class="text-white" style="font-size: 1.5rem;">All Expenses</a>
+              </div>
+            </div>
+            <!-- <div class="row">
+              <div class="col-md-12" style="margin-top: -3rem;">
+                <a style="color: #ccc;width: 4rem;height: 2rem;margin-top: 3rem;" class="btn btn-success justify-content-end d-flex align-items-start" 
+                  href="{%url 'save_expense'%}">New</a>
+                  <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off"
+                  style="width: 20%;">
+              </div>
+            </div> -->
+            <div class="row">
+              <div class="col-md-6">
+                  <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off">
+              </div>
+              <div class="col-md-6 d-flex justify-content-end align-items-start">
+                  <a style="color: #ccc;width: 4rem;height: 2rem;" class="btn btn-success" href="{%url 'save_expense'%}">New</a>
+              </div>
+          </div>
+            <div class="row">
+              <div class="col-md-12" style="background-color: gray;">
+                <table class="table table-responsive text-white" id="table">
+                  <thead>
+                    <tr>
+                      <th class="text-dark">Expense Accounts</th>
+    
+                    </tr>
+    
+                  </thead>
+                  <tbody>
+    
+                    {%for expense in expenses%}
+                    <tr>
+    
+                      <td><a class="text-white"
+                          href="{% url 'expense_details' expense.id %}">{{expense.expense_account}} <span class="d-flex justify-content-end align-items-start"> {{expense.amount}}</span></a></td>
+    
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>
+    
+              </div>
+            </div>
+          </div>
+    
+          <!-- Right Side: Card -->
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header" style="background-color: rgb(75, 75, 75);">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h5 class="card-title">{{expense.expense_account}}</h5>
+                    <h6 class="text-center" style="background-color: rgb(240, 161, 14); width:80px;">Overview</h6>
+                
+                  </div>
+                
+                    <div class="col-md-6 d-flex justify-content-end align-items-start p-2 gap-2">
+                      
+                          <a style="color: orange; width: 2rem; height: 2rem;" class="btn btn-warning text-dark p-2"
+                              href="{% url 'edit_expensee' expense.id %}">
+                              <i class="fa fa-pencil"></i>
+                          </a>
+                          <a href="{% url 'delet' expense.id %}" style="color: orange; height: 2rem; width: 2rem;"
+                              class="btn btn-warning text-dark p-2">
+                              <i class="fa fa-trash"></i>
+                          </a>
+                          <form method="post" enctype="multipart/form-data" id="upload-form" action="{% url 'upload_documents' expense_id=expense.id %}">
+                              {% csrf_token %}
+                              <input type="file" name="attachment" id="attachment" onchange="handleFileSelection(event)" style="display: none;">
+                              <a href="#" class="btn btn-warning text-dark file-button text-dark p-2" id="file-button" style="color: orange; height: 2rem; width: 2rem;">
+                                  <i class="fa fa-paperclip"></i>
+                              </a>
+                      </form>
+                  
+                    <script>
+                      document.getElementById('file-button').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.getElementById('attachment').click();
+                      });
+                    
+                      function handleFileSelection(event) {
+                        var input = event.target;
+                        var form = document.getElementById('upload-form');
+                        form.submit();
+                      }
+                    </script>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <!-- <div class="tabs" style="margin-top: 1rem;"> -->
+                <h3 class="text-center p-2">Expense Details</h3>
+                <div class="row">
+                  
+                  <div class="col-md-5">
+                    {% if expense.image %}
+                    <img src="{{ expense.image.url }}" alt="Expense Receipt" style="max-width: 200px; max-height: 200px;" class="p-2 text-center" >
+                    <br>
+                {% endif %}
+               <h4 class="p-2"> {{expense.expense_account}}</h4>
+                <div class="info-container">
+                <div class="info-item">
+                  <h6 class="label">Customer:</h6>
+                  <p class="value">{{expense.customer_name.customerName}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label" style="margin-left: 10px;">Vendor:</h6>
+                  <p class="value">{{expense.vendor.vendor_display_name}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label">Destination of Supply:</h6>
+                  <p class="value">{{expense.destination_of_supply}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label">Tax:</h6>
+                  <p class="value">{{expense.tax}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label">Invoice:</h6>
+                  <p class="value">{{expense.invoice}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label">Notes:</h6>
+                  <p class="value">{{expense.notes}}</p>
+                </div>
+                
+                {% if expense.reverse_charge %}
+                <div class="info-item">
+                 <h6 class="label">Reverse Charge:</h6>
+                   <p class="value">Applicable</p></div>
+                {%else%}
+                <div class="info-item">
+                  <h6 class="label">Reverse Charge:</h6>
+                    <p class="value"> Not Applicable</p>
+                </div>
+                {%endif%}
+                </div></div>
+                  <div class="col-md-7">
+                    <div class="card card-custom">
+    
+                      <div class="card-header">
+                        <h5 class="card-title">
+                          <div class="info-item">
+                            <h6 class="label">Amount:</h6>
+                            <p class="value" style="font-size: x-large;">{{expense.currency}} {{expense.amount}}</p>
+                          </div>
+                        </h5>
+                      </div>
+                      <div class="card-body">
+                        <div class="info-container">
+                          <!-- <div class="info-item">
+                            <h6 class="label">Expense Account:</h6>
+                            <p class="value">{{expense.expense_account}}</p>
+                          </div> -->
+                          <div class="info-item">
+                            <h6 class="label">Paid Through:</h6>
+                            <p class="value">{{expense.paid}}</p>
+                          </div>
+                          <div class="info-item">
+                            <h6 class="label">Expense Type:</h6>
+                            <p class="value">{{ expense.expense_type }}</p>
+    
+                          </div>
+                          <div class="info-item">
+                            <h6 class="label">
+                              {% if expense.expense_type == 'service' %}
+                              SAC:
+                              {% else %}
+                              HSN:
+                              {% endif %}
+                            </h6>
+                            <p class="value">
+                              {% if expense.expense_type == 'service' %}
+                              {{ expense.sac }}
+                              {% else %}
+                              {{ expense.hsn_code }}
+                              {% endif %}
+                            </p>
+                          </div>
+                          <div class="info-item">
+                            <h6 class="label">GST Treatment:</h6>
+                            <p class="value">{{expense.gst_treatment}}</p>
+                          </div>
+                          {% if expense.gstin %}
+                          <div class="info-item">
+                           <h6 class="label">GSTIN:</h6>
+                             <p class="value">{{ expense.gstin }}</p>
+                          {%else%}  
+                          <div class="info-item">
+                            <h6 class="label">GSTIN:</h6>
+                              <p class="value">Nil</p>
+                          {%endif%}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+     
+              </div>
+            </div>
+    
+    
+          </div>
+    
+        </div>
+          
+    
+  </section>
+  <script>
+    $(document).ready(function() {
+      var $rows = $('#table tbody tr');
+      $('#search').keyup(function() {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        $rows.show().filter(function() {
+          var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+          return !~text.indexOf(val);
+        }).hide();
+      });
+    });
+  
+  
+  // $('.dropdown-toggle').dropdown();
+  </script>
+       
+{%endblock%}

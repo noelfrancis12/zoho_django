@@ -1,0 +1,344 @@
+
+
+
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href='https://unpkg.com/css.gg@2.0.0/icons/css/trash.css' rel='stylesheet'>
+<script src="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+
+
+
+
+<style>
+    .card{
+        background: none;
+    }
+    tbody tr td{
+        border: none;
+        border-top: none;
+        border-style: none;
+        color:azure;
+        justify-content: center;
+    }
+    tr:hover{
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+   
+    ul.image-bullets {
+        list-style-type: none;
+        padding-left: 30px;
+    }
+
+    ul.image-bullets li:before {
+        content: "";
+        background-image: url('static/images/bullet.png');
+        background-size: 15px 15px;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 5px; 
+        margin-left: 26%;
+    }
+    .recurpoints ul li{
+        margin-bottom: 10px;
+    }
+
+    .flowchart {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px;
+        flex-direction: column;
+    }
+
+    .flowchart-item {
+        text-align: center;
+        padding: 10px;
+        background-color: lightblue;
+        border: 3px solid rgb(25, 91, 145);
+        border-radius: 5px;
+        width: 200px;
+        color: black;
+        font-size: 12px;
+        margin-top: 10px;
+    }
+
+    .flowchart-item i {
+        font-size: 15px;
+        color: #daa430;
+    }
+
+    .flowchart-connector {
+        flex-grow: 1;
+        height: 2px;
+        background-color: #f5f2f2;
+        color: #f1f1f1;
+        margin-top: 0%;
+    }
+
+    .box {
+        text-align: center;
+        padding: 10px;
+        background-color: lightblue;
+        border: 3px solid rgb(25, 91, 145);
+        border-radius: 5px;
+        width: 150px;
+        color: black;
+        font-size: 12px;
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .connector-line {
+        font-size: 0;
+        width: 1px;
+        height: 20px;
+        color: #fff;
+        background-color: #ebe8e8;
+        margin: auto;
+    }
+
+    .connector-line1 {
+        font-size: 0;
+        width: 1px;
+        height: 30px;
+        color: #fff;
+        background-color: #ebe8e8;
+        margin-bottom: 70px;
+        margin: auto;
+    }
+    .connector-line2 {
+        font-size: 0;
+        width: 1px;
+        height: 20px;
+        color: #fff;
+        background-color: #ebe8e8;
+        margin: auto;
+    }
+
+    .line {
+        content: "";
+        margin-top: 1px;
+        width: 34%;
+        height: 1px;
+        color: #f1f1f1;
+        background-color: #fff;
+        margin-right: 80px;
+    }
+
+    .branch {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
+
+    .branch .connector {
+        width: 0;
+        height: 50px;
+        border-top: 2px solid black;
+    }
+
+    .branch .box {
+        margin-top: 10px;
+    }
+    .btn{
+        color: rgb(218, 164, 48);
+        outline-color: azure;
+        border: 2px solid rgb(25, 91, 145);
+    }
+    .btn:hover{
+        color: darkslategray;
+        background-color: lightblue;
+        outline: none;
+        
+    }
+    a{
+        list-style: none;
+        color: azure;
+    }
+     a:hover{
+        color: rgb(218, 164, 48);
+     }
+     ::-webkit-scrollbar {
+        width: 5px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+    
+</style>
+<div class="container-fluid containerprof" >
+    
+    
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h2 class="mb-0 text-uppercase text-right">All Vendor Credits</h2>
+                        </div>
+                        <div class="col-md-2">
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card radius-15 mb-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class=" col-md-3">
+                    
+                        <!-- <div class="d-flex"> -->
+                            <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off">
+                        <!-- </div> -->
+                        
+
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3">
+                        
+                        <!-- <a class="btn text-center px-3 py-2 " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        role="button"><i class="fa fa-filter mx-3"></i>
+                        </a>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item" href="{% url 'recurring_bill' %}">All</a>
+                            <a class="dropdown-item" href="{% url 'recur_custasc' %}">Customer A-Z</a>
+                            <a class="dropdown-item" href="{% url 'recur_custdesc' %}">Customer Z-A</a>
+                            <a class="dropdown-item" href="{% url 'recur_vendorasc' %}">Vendor A-Z</a>
+                            <a class="dropdown-item" href="{% url 'recur_vendordesc' %}">Vendor Z-A</a>
+                            <a class="dropdown-item" href="{% url 'recur_profileasc' %}">Profile A-Z</a>
+                            <a class="dropdown-item" href="{% url 'recur_profiledesc' %}">Profile Z-A</a>
+
+                        </div> -->
+                        <a href="{% url 'add_vendor_credits' %}" class="btn fa fa-plus text-right px-3 py-2" role="button">
+                            <span class="mt-2">&nbsp;&nbsp;NEW</span>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="container-fluid">
+                    <table class="table table-responsive-md mt-4" id="table">
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>VENDOR NAME</th>
+                                <th>VENDOR EMAIL</th>
+                                <th>TAX AMOUNT</th>
+                                <th>AMOUNT</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in recur_bill %}
+                            <tr >
+                                <th><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vendor_date }}</a></th>
+                                <td><a href="{% url 'view_vendor_credits' r.id %}"> 
+                                    <span>{{ r.vendor_name.split.0 }}</span>
+                                    <span>{{ r.vendor_name.split.1 }}</span>
+                                    <span style="display: none;">{{ r.vendor_name.split.2 }}</span></a></td>
+                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.vendor_email }}</a></td>
+                                <td class="text-capitalize"><a href="{% url 'view_vendor_credits' r.id %}">{{ r.tax_amount }}</a></td>
+                                <td><a href="{% url 'view_vendor_credits' r.id %}">{{ r.grand_total|floatformat:2 }}</a></td>
+                                <td class="text-right">
+                                    <a href="{% url 'view_vendor_credits' r.id %}" 
+                                    data-toggle="tooltip" data-placement="top" title="Delete Recurring Expense">
+                                            <i class="gg-trash text-center text-danger"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>       
+        <hr>
+        <div class="card radius-15 mt-5">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3 class="mb-0 text-center">Life cycle of a Vendor Credit</h3>
+                    <br>
+                    <div class="flowchart">
+                        <div class="flowchart-item text-uppercase" style="width: 200px;">
+                            <i class="fa-sharp fa-solid fa-bag-shopping" style="color: #daa430;"></i> PRODUCT RETURNED/CANCELLED
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flowchart-item text-uppercase" style="width: 210px;">
+                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> CREDIT NOTE RECEIVED
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flowchart-item text-uppercase" style="width: 210px;">
+                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> RECORD VENDOR CREDITS
+                        </div>
+                        <div class="connector-line"></div>
+        
+                        <div class="connector-line"></div>
+                        <div class="line" style="margin-top: 1px; width: 34%; height: 1px; color: #f1f1f1; background-color: #fff; margin-right: 80px;"></div>
+        
+                        <div class="connector-line2"></div>
+        
+                        <div class="branches" style="display: flex; flex-direction: row; margin-top: -31px;">
+                            <div class="branch">
+                                <div style="margin-right: -100px; margin-top: -10px;"></div>
+                                <div class="box" style="margin-right: 30px;">APPLY TO FUTURE BILLS</div>
+                            </div>
+                            <div class="branch">
+                                <div style="margin-top: -10px; margin-left: 80px;"></div>
+                                <div class="box" style="margin-left: 100px;">RECORD REFUND</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var $rows = $('#table tbody tr');
+    $('#search').keyup(function() {
+      var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+      $rows.show().filter(function() {
+        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+        return !~text.indexOf(val);
+      }).hide();
+    });
+  });
+
+
+$('.dropdown-toggle').dropdown();
+
+
+// $(document).ready(function(){
+//     var $rows = $('#table tbody tr');
+//     $('#search').keydown(function() {
+//         var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+//         console.log(val)
+        
+//         $rows.show().filter(function() {
+//             var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+//             return !~text.indexOf(val);
+//         }).hide();
+//     });
+// });
+</script>
+{% endblock %}

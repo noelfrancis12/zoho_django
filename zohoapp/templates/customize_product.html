@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+<link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<style>
+
+.container-fluid {
+  display: flex;
+}
+
+.container-left {
+  width: 100vw;
+  height: 100vh;
+  flex: 20;
+}
+
+.container-right {
+  width: 100vw;
+  height: 100vh;
+  flex: 80;
+  display: flex;
+  flex-direction: column;
+}
+.navbar-brand, .nav-item {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+/* List group styling */
+
+.list-group-item:hover {
+  background-color: #f0f0f0;
+}
+
+.daterangepicker{
+  color: black;
+}
+
+</style>
+
+
+<ul class="nav nav-pills">
+  <li class="nav-item">
+    <a href="#home" class="a">
+      <i class="fa fa-bars" style="font-size:25px;"></i>
+    </a>
+  </li>
+
+  <a class="navbar-brand me-auto " href="#" style="font-size:25px;">Customize Report</a>
+
+  <li class="nav-item" style="height:4vh; width:4vw;">
+    <button type="button" onclick="history.go(-1);" style="height:5vh; width:2.5vw;">&times;</button>
+  </li>
+</ul>
+
+
+<div class="container-fluid">
+  <div class="container-left">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="list-group">
+        <a href="{{ url1 }}" class="list-group-item list-group-item-action d-flex justify-content-center" aria-current="true">General</a>
+        <a href="{{ url2 }}" class="list-group-item list-group-item-action d-flex justify-content-center" aria-current="true">Show / Hide Columns</a>
+      </div>
+    </div>
+  </div>
+
+      <div class="container-right pt-2" style="padding: 30px">
+        <label for="">Date Range</label>&nbsp;
+        <div id="reportrange" style="background: white; color: black; cursor: pointer; padding: 5px 10px; border: 1px solid black; width: 35%;">
+          <i class="fa fa-calendar"></i>&nbsp;
+          <span></span> <i class="fa fa-caret-down"></i>
+        </div><br><br>
+
+
+        <form id="form1" class="right-side" method="post" action="">
+        {% csrf_token %} 
+        <div class="col">
+          <h4>Advanced Filters</h4>
+          <div id="row">
+            <div class="form-row">
+          </div>
+   
+          <div id="newinput"></div>
+            <a href="#" id="rowAdder">
+              <span class="bi bi-plus">
+              </span>Add more
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+  
+    function addNewRow() {
+      const newRow = `
+      <div class="form-row pt-2">
+        <select name="" class="option-select" style="width: 15vw;color: black; height: 5vh;">
+          <option class="row d-flex justify-content-left mt-90" hidden selected>options</option>
+          {% for i in item %}
+          <option class="row d-flex justify-content-left mt-90" >{{ i.Name }}</option>
+          {% endfor %}
+        </select>
+        &nbsp  &nbsp
+        <select name="" id="" style="width: 15vw;color: black; height: 5vh;">
+          <option value="" hidden>select</option>
+          <option value="">is</option>
+          <option value="">is not</option>
+        </select> 
+        &nbsp &nbsp
+        <textarea name="fb_text" class="item-textarea" cols="30" rows="2" style="height:5vh; display:none;"></textarea>
+        &nbsp&nbsp
+        <div class="input-group-prepend">
+          <button class="btn btn-danger" id="DeleteRow" type="button">
+            <i class="bi bi-trash"></i>  
+          </button>
+        </div>
+      </div>
+      `;
+      $('#newinput').append(newRow);
+    }
+  
+    $('#rowAdder').on('click', function () {
+      addNewRow();
+    });
+  
+    $(document).on('click', '#DeleteRow', function () {
+      $(this).closest('.form-row').remove();
+    });
+  
+    $(document).on('change', '.option-select', function () {
+      const selectedOption = $(this).val();
+      const textarea = $(this).closest('.form-row').find('.item-textarea');
+      if (selectedOption !== '') {
+        textarea.show();
+      } else {
+        textarea.hide();
+      }
+    });
+  });
+  </script>
+
+  <script>
+    $(function() {
+      var start = moment().subtract(29, 'days');
+      var end = moment();
+  
+      function cb(start, end, label) {
+        $('#reportrange span').text(label);
+        $('#selectedEndDate').text(start.format('MMMM D, YYYY')+'  to  '+end.format('MMMM D, YYYY'));
+      }
+  
+      $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+          'Today': [moment(), moment()],
+          'This Week': [moment().startOf('week'), moment().endOf('week')],
+          'This Month': [moment().startOf('month'), moment().endOf('month')],
+          'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+          'This Year': [moment().startOf('year'), moment().endOf('year')],
+          'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Previous Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+          'Previous Quarter': [moment().subtract(1, 'quarter').startOf('quarter'), moment().subtract(1, 'quarter').endOf('quarter')],
+          'Previous Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
+        },
+        opens: 'left',
+        showCustomRangeLabel: true,
+        singleDatePicker: false,
+        showDropdowns: true,
+        alwaysShowCalendars: false,
+        linkedCalendars: true, // Set linkedCalendars to true
+      }, cb, function(start, end, label) {
+        if (label === 'Custom') {
+          // Show the calendar only when "Custom" range is selected
+          $(this.element).data('daterangepicker').show();
+        } else {
+          // Update the <h5> tag when a new date range is selected
+          $('#selectedEndDate').text(start.format('MMMM D, YYYY')+ '' +'to'+ '' +end.format('MMMM D, YYYY'));
+        }
+      });
+  
+      $('.custom-caret i').click(function() {
+        $('#reportrange').data('daterangepicker').toggle();
+      });
+  
+      cb(start, end, 'Today');
+    });
+  </script>
+
+{% endblock content %}

@@ -1,0 +1,685 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<style>
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: rgb(231, 221, 221);
+  border-color: rgb(25, 21, 21);
+
+}
+  
+  h2{
+    font-size: small;
+    font-family: 'Segoe UI', Tahoma,;
+    color:#dfe4e9;
+  }
+table {
+  font-family: arial, sans-serif;
+
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid rgb(28, 25, 25);
+  text-align:center;
+  padding: 10px;
+  color:#e5d7d7;
+  font-weight: 100;
+  font-size: small;
+  font-family: 'Segoe UI', Tahoma,;
+}
+table,tr {
+  border: hidden;
+
+}
+tr:nth-child(odd) {
+  color:#e5d7d7;
+  background-color:#201919 ;
+}
+tr:nth-child(even) {
+  color:#100e0e;
+  background-color: #0b09092a;
+}
+
+
+
+  #aover{
+    color: rgb(214, 141, 5);
+  }
+/* #aover:hover{
+  font-weight: bold;
+} */
+tr:hover{
+  background-color: #090909;
+  font-weight: bold;
+
+}
+
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: rgb(108, 108, 104);
+
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #e0dcdc;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    #selected-area{
+        font-size: 20px;
+    }
+  
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: none;
+  background-color: #131111;
+ 
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border-right: #696565;
+  outline: none;
+  cursor: pointer;
+  padding: 20px 20px;
+  transition: 0.3s;
+  font-size: 15px;
+  color: #ddd;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #85868a;
+  color: #1f1c1c;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+
+  color: WHITE;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+ 
+  border-top: none;
+ 
+}
+
+    
+</style>
+<script> 
+  $(document).ready(function(){
+    $("#flip").click(function(){
+      $("#panel").slideToggle("slow");
+    });
+  });
+  </script>
+    <script> 
+      $(document).ready(function(){
+        $("#flip1").click(function(){
+          $("#panel1").slideToggle("slow");
+        });
+      });
+      </script>
+
+
+<!-- Include jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Include jQuery.table2excel plugin -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery-table2excel@1.1.0/dist/jquery.table2excel.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<style>
+ .inputdate {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.inputdate1 {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Style for calendar icon */
+.ui-datepicker-trigger {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+/* Style for the datepicker dropdown */
+.ui-datepicker {
+  font-size: 14px;
+}
+.hide-calendar .ui-datepicker-calendar {
+    display: none;
+  }
+
+/* Style for the datepicker header */
+.ui-datepicker-header {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+/* Style for the datepicker days */
+
+
+/* Style for the datepicker navigation buttons */
+.ui-datepicker-prev, .ui-datepicker-next {
+  background-color: #555;
+  color: #fff;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+}
+#selectedFromDate,
+  #selectedToDate {
+    display: inline-block;
+    margin-right: 5px; /* Add space between the two h5 tags */
+  }
+    .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+    .bar .left{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.bar .left input{
+    height: 5vh;
+}
+.btn {
+  background-color: white;
+  border: none;
+  color: green;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: white;
+}
+</style>
+
+<div class="page-content">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <body>
+    
+
+  <div class="card-body">
+    <div class="bar">
+     
+        <div class=" left">
+            <div class="px-2">
+              <label style="text-align:left ">From</label>
+              <input id="inputdate" id="datepicker" class="inputdate"   value="DD-MM-YYYY" /> 
+            </div>
+            <div  class="px-2">
+              <label style="text-align:left ">To</label>
+              <input id="inputdate1"  class="inputdate1"  value="DD-MM-YYYY"/>
+              
+            </div>
+
+        </div>
+
+  
+               
+                <div class="right">
+                  <button  class="btn btn_print btn-outline-info"    style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-print" style="transform: translateX(-40%);"></i></button>
+                  <button class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')" style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-file-excel"></i></button>                       
+                  <button class="btn" ><a onclick ="javascript:history.go(-1);" class="fa fa-close" style="background: white; color: rgb(16, 135, 46);"></a></button>
+                </div>
+            </div>
+    
+              <div class="card-body">
+                  <div class="card-title">
+                    <div  style="top: 7rem; " >
+                      <center>
+                        <div class="row">
+                          {% if company.company_name != None %}
+                           <div  ><h4 class="text text-light"  style="font-size: 30px;"
+                            >{{company.company_name }}
+                            {% else %}
+                             Add Company</h4>
+                    
+                            </div>
+                            {% endif %}
+                           <div ><h2 class="align-text-top" style="font-size: 35px;">GSTR1- REPORT </h2></div>
+                           <h5 class="text text-light" id="selectedFromDate"></h5>-
+                           <h5 class="text text-light" id="selectedToDate"></h5>
+                    
+                            </div>
+                        </div>   
+                      </center>
+                       
+                         
+                      <hr>
+                  </div>
+              </div>
+          </div>
+             
+                <div class="row">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+                              
+          <script type="text/javascript">
+            $(document).ready(function ($) {
+                console.log('print');
+
+                $(document).on('click', '.btn_print', function (event) {
+                    console.log('print1');
+                    event.preventDefault();
+                    // var printContent = document.getElementById("pdf-card").innerHTML;
+                    // var originalContents = document.body.innerHTML;
+
+                    // // Create a <div> container for centering
+                    // var containerDiv = document.createElement("div");
+                    // containerDiv.style.textAlign = "center"; // Center-align the content
+
+                    // // Create the <h1> element
+                    // var h1Element = document.createElement("h1");
+                    // h1Element.textContent = "GSTR-3B REPORT"; // Replace "Title" with your desired title text
+
+                    // // Append the <h1> element to the container
+                    // containerDiv.appendChild(h1Element);
+
+                    // // Insert the container and the print content
+                    // containerDiv.innerHTML += printContent;
+                    // document.body.innerHTML = containerDiv.outerHTML;
+
+                    // window.print();
+
+                    // // Restore the original contents (excluding the container)
+                    // document.body.innerHTML = originalContents;
+                    const pdfCard = document.getElementById('pdf-card').cloneNode(true);
+
+                    // Create a new window for printing
+                    const printWindow = window.open('', '');
+
+                    const pageTitle = printWindow.document.createElement('h1');
+                    pageTitle.textContent = ''; // Replace 'Page Title' with your desired title text
+                    pageTitle.style.textAlign = 'center';
+                    pageTitle.style.color = 'black';
+
+                    // Append the <h1> element to the new window's body
+                    printWindow.document.body.appendChild(pageTitle);
+
+
+                    // Append the cloned 'pdf-card' div to the new window
+                    printWindow.document.body.appendChild(pdfCard);
+
+                    // Ensure the styles are preserved by copying CSS from the original document
+                    const stylesheets = document.styleSheets;
+                    for (let i = 0; i < stylesheets.length; i++) {
+                        const stylesheet = stylesheets[i];
+                        if (stylesheet.href) {
+                            const link = printWindow.document.createElement('link');
+                            link.rel = 'stylesheet';
+                            link.href = stylesheet.href;
+                            printWindow.document.head.appendChild(link);
+                        }
+                    }
+
+                    // Trigger the print dialog for the new window
+                    printWindow.print();
+
+                    // Close the new window after printing
+                    printWindow.close();
+
+
+                });
+
+            });
+        </script>
+     
+     </div>
+     <script>
+      $(document).ready(function($) {
+          $(".table-row").dblclick(function() {
+              window.document.location = $(this).data("href");
+          });
+      });
+  </script>
+    
+  <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+  <script type="text/javascript">function ExportToExcel(type, fn, dl) {
+         var elt = document.getElementById('tbl_exporttable_to_xls');
+         var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+         return dl ?
+           XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+           XLSX.writeFile(wb, fn || ('gstr1_s2.' + (type || 'xlsx')));
+      }
+      </script>
+      
+   </nav>
+
+   
+                  
+ 
+  
+
+   <div class="container-fluid" id="tbl_exporttable_to_xls"> 
+
+  <div id="contentToExport">
+   
+    
+         
+  <div class="col-md-12 " style="width: 100%;">
+ 
+    <div class="tab">
+      <button class="col-6 text-center"class="tablinks" onclick="openCity(event, 'sale')" id="defaultOpen">Sale</button>
+      <button class="col-6 text-center" class="tablinks" onclick="openCity(event, 'Sale Return')" >Sale Return</button>
+      
+    </div>
+     
+    <div  id="pdf-card" >
+      <div id="sale" class="tabcontent" >
+        <div class="tm-page-content">
+        <div class="table-responsive"> 
+          <div class="tab-pane active" id="1" data-title="Sale">  
+  <table class="table  text-white " id="myTable" style="width: 100%;">
+  <thead>
+    <tr >
+  
+    
+        <th colspan="5" style="font-weight: 500; text-align: center;"><b>Invoice Details	</b></th>
+        <th  style="font-weight: 500; text-align:right;"><b>Tax Rate		</b></th>
+        <th >Cess Rate</th>
+                            <th >Taxable Value</th>
+                            <th colspan="4" >Amount</th>
+                            <th >Place Of Supply(Name Of State)
+                            </th>
+      </tr>
+  <tr >
+    <th>GSTIN/UIN</th>
+    <th>Party Name</th>
+    
+    <td>Invoice No.</td>
+    <td>Date</td>
+    <td>Value</td>
+    <td></td>
+    <td></td>   
+    <td></td>
+    <th style="text-align: center;">Integrated</th>
+    <th style="text-align: center;">Central Tax</th>
+    <th style="text-align: center;">State/UT Tax</th>
+    <th style="text-align: center;">Cess</th>
+    <td></td>
+  </tr>
+</thead>
+<tbody>
+  <tr class="text-center">
+  
+    {% for p in data %} 
+                     
+    <td>{{p.customer.GSTIN}}</td>
+    <td>{{p.customer.customerName}}</td>
+    <td>{{p.invoice_no}}</td>
+    <td>{{p.inv_date}}</td>
+    <td>{{p.grandtotal}}</td>
+    <td>0</td>
+    <td>0</td> 
+
+    
+    
+
+    
+
+
+
+    <td>{{p.subtotal}} </td>
+
+    <td>{{p.igst}}</td>
+    <td>{{p.cgst}}</td>
+    <td>{{p.sgst}}</td>
+    <td>0</td>
+
+
+    
+   
+    <td>{{p.customer.placeofsupply}}</td>
+
+</tr>                        
+{% endfor %}    
+
+</tbody>
+<tbody>
+<tr class="text-center">
+
+{% for r in invoices %} 
+
+    <td>{{r.cust_name.GSTIN}}</td>
+    <td>{{r.cname}}</td>
+    <td>{{r.order_num}}</td>
+    <td>{{r.start}}</td>
+    <td>{{r.total}}</td>
+    <td>0</td>
+    <td>0</td> 
+
+    
+    
+
+    
+
+
+
+    <td>{{r.sub_total}} </td>
+
+    <td>{{r.igst}}</td>
+    <td>{{r.cgst}}</td>
+    <td>{{r.sgst}}</td>
+    <td>0</td>
+
+
+    
+   
+    <td>{{r.p_supply}}</td>
+
+</tr>                        
+{% endfor %}  
+</tbody>
+<tbody>  
+<tr class="text-center">   
+{% for i in reinv %} 
+
+<td>{{i.customer_name.GSTIN}}</td>
+<td>{{i.customer_name.customerName}}</td>
+<td>{{i.retainer_invoice_number}}</td>
+<td>{{i.retainer_invoice_date}}</td>
+<td>{{i.total_amount}}</td>
+<td>0</td>
+<td>0</td> 
+
+
+
+
+
+
+
+
+<td>0</td>
+
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+
+
+
+
+<td>{{i.customer_name.placeofsupply}}</td>
+
+</tr>                        
+{% endfor %}    
+</tbody>
+</table></div></div></div></div>
+
+
+<div id="Sale Return" class="tabcontent" >
+ 
+  <div class="table-responsive" >
+
+
+<table class="table  text-white " style="width: 100%;" id="myTable">
+
+    <tr >
+  
+    
+        <th colspan="7" style="font-weight: 500; text-align: center;"><b>Cr. Note Details	</b></th>
+        <th  style="font-weight: 500; text-align:right;"><b>Tax Rate		</b></th>
+        <th >Cess Rate</th>
+                            <th >Taxable Value</th>
+                            <th colspan="4" >Amount</th>
+                            <th >Place Of Supply(Name Of State)
+                            </th>
+      </tr>
+  <tr >
+    <td>GSTIN/UIN</td>
+    <td>Party Name</td>
+    
+    <td>Invoice No.</td>
+    <td>Invoice Date	</td>
+    <td>Note No.</td>
+    <td>Note Date	</td>
+    <td>Value	</td>   
+    <td></td>
+    <td></td>
+    <td></td>
+    <td style="text-align: center;">Integrated</td>
+    <td style="text-align: center;">Central Tax</td>
+    <td style="text-align: center;">State/UT Tax</td>
+    <td style="text-align: center;">Cess</th>
+    <td></td>
+  </tr>
+ 
+ 
+
+   
+   
+
+    <tr class="text-center">
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+    
+     <td></td>
+    <td></td>
+    <td></td>
+
+    <td></td>
+    <td></td>
+    <td></td>
+  
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    
+
+  </tr>
+ 
+</table>
+</div></div>
+
+
+</div></div></div></div>
+<script>
+  function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  // Get the element with id="defaultOpen" and click on it
+document.getElementById("defaultOpen").click();
+  </script>
+
+
+<!-- REQUIRED FOR MONTH & YEAR PICKER -->
+<script>
+  $('.inputdate').datepicker( {
+             changeMonth: true,
+             changeYear: true,
+             showButtonPanel: true,
+             dateFormat: 'dd MM yy',
+             onSelect: function(dateText, inst) {
+       $('#selectedFromDate').text('From'+'  ' + dateText);
+     }
+         });
+         $('.inputdate1').datepicker( {
+              changeMonth: true,
+              changeYear: true,
+              showButtonPanel: true,
+              dateFormat: 'dd MM yy',
+              onSelect: function(dateText, inst) {
+       $('#selectedToDate').text('To'+'  ' + dateText);
+     }
+          });
+ </script>
+ 
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+</style>
+  
+    {% endblock %}
+
+
+
+
+
+

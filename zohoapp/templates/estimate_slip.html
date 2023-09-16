@@ -1,0 +1,669 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+    crossorigin="anonymous"></script>
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/JavaScript-autoComplete/1.0.4/auto-complete.min.js"
+    integrity="sha512-LwZthDLbb+dritfG9jbFyY1ClYqlkF4I9foqo+783wcl6EPR+kE3uqb0OPsieHt4pFH4HVduwX6rTTDmCaC20g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://fontawesome.com/icons/pencil?f=classic&s=solid"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+<style>
+
+    .modal{
+      z-index: 9999;
+      overflow: scroll;
+    }
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: rgb(252, 236, 217);
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    #tr_data:hover{
+    background-color: #757575;
+  }
+</style>
+
+<!-- <script>
+
+
+    async function generatePDF() {
+        // document.getElementById("downloadButton").innerHTML = "Currently downloading, please wait";
+        console.log('pdf');
+        //Downloading
+        var downloading = document.getElementById("whatToPrint");
+        var doc = new jsPDF('l', 'pt');
+
+        await html2canvas(downloading, {
+            //allowTaint: true,
+            //useCORS: true,
+            // width: 600
+
+        }).then((canvas) => {
+            //Canvas (convert to PNG)
+            doc.addImage(canvas.toDataURL("image/png"), 'PNG', 15, 10, 700, 850);
+        })
+
+
+
+        doc.save("Document.pdf");
+
+
+        //End of downloading
+
+        // document.getElementById("downloadButton").innerHTML = "Click to download";
+    }
+
+
+</script> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<!-- <script>
+
+    $(document).on('click', '.btn_print', function (event) {
+        event.preventDefault();
+
+        // get the content to print
+        var content = document.getElementById("whatToPrint");
+
+        // create a blob object from the content
+        var blob = new Blob([content.outerHTML], { type: "text/html" });
+
+        // show the Save As dialog box
+        if (window.showSaveFilePicker) {
+            // if the browser supports the method
+            window.showSaveFilePicker().then(function (fileHandle) {
+                // write the blob to the file
+                fileHandle.createWritable().then(function (writer) {
+                    writer.write(blob);
+                    writer.close();
+                });
+            });
+        } else {
+            // if the browser doesn't support the method, fall back to a normal download
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "file.html";
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    });
+</script> -->
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        console.log('print');
+
+        $(document).on('click', '.btn_print', function (event) {
+            console.log('print1');
+            event.preventDefault();
+
+            //credit : https://ekoopmans.github.io/html2pdf.js
+
+            var element = document.getElementById('whatToPrint');
+
+            //easy
+            //html2pdf().from(element).save();
+
+            //custom file name
+            //html2pdf().set({filename: 'code_with_mark_'+js.AutoCode()+'.pdf'}).from(element).save();
+
+
+            //more custom settings
+            var opt =
+            {
+                margin: 1,
+                filename: 'estimate_' + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+
+            // New Promise-based usage:
+            html2pdf().set(opt).from(element).save();
+
+
+        });
+
+
+
+    });
+</script>
+
+
+
+
+<!-- <script>
+
+    function uplodfile() {
+        console.log('upload');
+
+        async function generatePDF() {
+            // document.getElementById("downloadButton").innerHTML = "Currently downloading, please wait";
+
+            //Downloading
+            var downloading = document.getElementById("whatToPrint");
+            var doc = new jsPDF('l', 'pt');
+
+            await html2canvas(downloading, {
+                //allowTaint: true,
+                //useCORS: true,
+                // width: 600
+
+            }).then((canvas) => {
+                //Canvas (convert to PNG)
+                doc.addImage(canvas.toDataURL("image/png"), 'PNG', 15, 10, 700, 850);
+            })
+
+
+
+            data = doc.save("Document.pdf");
+
+
+            //End of downloading
+
+            // document.getElementById("downloadButton").innerHTML = "Click to download";
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "/estimate_pdf/",
+            processData: false,
+            contentType: false,
+            data: data,
+            success: function (res) {
+                console.log(res)
+            }
+
+
+        })
+    }
+
+</script> -->
+
+
+
+<div style="top: 7rem; ">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row  mx-2">
+                <div class="col-md-6 py-2"><a class="text-white" style="font-size: 1.5rem;"> All Estimates</a></div>
+                <div class="col-md-6 form-inline justify-content-end py-2">
+                    <a style="color: white; background-color: rgb(210, 132, 30);" class="btn mr-1"
+                        href="{% url 'newestimate' %}"><i class="fa-solid fa-plus "></i>New</a>
+                    <!-- <div class="dropdown rounded" style="color: white; background-color: rgb(210, 132, 30);">
+                        <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown">
+
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Create Estimate</a>
+                            <a class="dropdown-item" href="#">Create Estimate (Pre GST)</a>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-md-8 col-lg-8">
+                    <input type="text" id="search" class="form-control text-dark mb-2 mt-2" placeholder="search......">
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4 mt-2">
+                    <div class="dropdown ms-2 pt-1">
+                        <a class="dropdown-toggle btn btn-secondary text-dark pt-2 pb-2" href="" data-toggle="dropdown">
+                          <i style="color: chocolate;" class="fa fa-filter"></i>
+                        </a>
+                        <div class="dropdown-menu m-1">
+                          <a class="dropdown-item" href="{% url 'estimateslip' estimate.id %}">All</a>
+            
+                          <a class="dropdown-item" href="{% url 'filter_by_draft_estimate_view' estimate.id %}">Draft</a>
+                          <a class="dropdown-item" href="{% url 'filter_by_sent_estimate_view' estimate.id %}">Sent</a>
+                        </div>
+                      </div>
+                </div>
+            </div>
+            <div class="pt-3 ps-2 " style="height: 600px; overflow-y: scroll;overflow-x: hidden;">
+                <table class="text-white" style="width: 100%; ">
+                    {% for estimate in all_estimates %}
+                    <tbody id="table">
+                    <tr id="tr_data" class="clickable-row border-bottom" style="cursor: pointer;" data-href="{% url 'estimateslip' estimate.id %}">
+                        <td>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5 style="color: rgb(218, 143, 5);">{{estimate.customer_name}}</h5>
+                                </div>
+                                <div class="col-md-6 text-right" style="color: rgb(218, 143, 5);">&#x20B9;{{estimate.total}}.00</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p>{{estimate.estimate_no}}</p>
+                                </div>
+                                <div class="col-md-3 text-left">
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <p>{{estimate.status}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+
+                            </div>
+                        </td>
+                    </tr>
+                   
+                </tbody>
+
+                    {% endfor %}
+                </table>
+               
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="row  mx-2 py-3" style="background-color: rgba(136, 136, 135, 0.5)">
+                <div class="col-md-5 text-light" style="font-size: 2.5rem;">
+                    {{estimate.estimate_no }}</div>
+                <div class="col-md-7 text-white text-right my-auto " style="text-align: end;">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <a href="{% url 'estimateslip' estimate.id %}" class="btn btn-sm ms-1  text-white"
+                        style="background-color:  rgb(212, 139, 3);border-radius: 5px;" data-toggle="tooltip" title="Back">
+                        <i class="fas fa-arrow-left"></i></a>
+                        <a href="{% url 'editestimate' estimate.id %}" class="btn btn-sm ms-1  text-white"
+                        style="background-color:  rgb(212, 139, 3);border-radius: 5px;" data-toggle="tooltip" title="Edit">
+                            <i class="fas fa-pencil-alt"></i>                     </a>
+                        <a href="" class="btn btn-sm text-white ms-1 btn_print" style="background-color:  rgb(212, 139, 3);border-radius: 5px;"
+                            data-toggle="tooltip" title="PDF" id="pdf">
+                            <i class="far fa-file-pdf"></i></a>
+                        <a href="" class="btn btn-sm text-white ms-1 btn_print" style="background-color:  rgb(212, 139, 3);border-radius: 5px;"
+                            data-toggle="tooltip" title="Print">
+                            <i class="fa fa-print"></i></a>
+                        <a href="{% url 'emailattachment' %}" class="btn btn-sm text-white ms-1"
+                        style="background-color:  rgb(212, 139, 3);border-radius: 5px;" data-toggle="tooltip" title="Email">
+                            <i class="fas fa-envelope"></i></a>
+                        <!-- <a href="" class="btn btn-sm text-white ms-1" data-toggle="tooltip" data-toggle="modal" data-target="#cmnts"><i class="fas fa-comment-dots"></i></a> -->
+
+
+                        <div class="dropdown m-0 p-0 ms-1" title="comments" style="background-color:  rgb(212, 139, 3);border-radius: 5px;">
+                            <a href=" " class=" fas fa-comment-dots dropdown-toggle  btn-sm text-white ms-1"  
+                                data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true" aria-expanded="false"> 
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
+                                <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
+                                 data-target="#cmnts"><i class="fa-solid fa fa-plus"></i>Add</a>
+                                <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
+                                data-target="#cmt_list"><i class="fas fa-list"></i>&nbsp;View List</a>
+                                        
+                            </div>
+                        </div>
+                        
+                        <!-- <button  class="btn btn-sm text-white ms-1"
+                        style="background-color:  rgb(212, 139, 3);border-radius: 5px;" data-toggle="tooltip" title="Comments" onclick="comment_list()">
+                            <i class="fas fa-comment-dots"></i></button> -->
+                        
+                    </div>
+                    <!-- <a href="{% url 'converttoinvoice' estimate.id %}" class="btn btn-sm text-white "
+                        style="background-color: rgb(210, 132, 30);" onclick="return confirm('Do you want to convert this estimate to an invoice?');">
+                        Convert to Invoice</a> -->
+                        <a href="" class="btn btn-sm text-white " data-toggle="tooltip" title="Convert to invoice"
+                        style="background-color: rgb(210, 132, 30);" onclick="return confirm('Do you want to convert this estimate to an invoice?');">
+                        <i class="fas fa-file-invoice"></i></a>
+                    <a href="{% url 'deleteestimate' estimate.id %}" class="btn btn-sm text-white" title="Delete" style="background-color:  rgb(212, 139, 3);border-radius: 5px;" 
+                    onclick="return confirm('Do you want to Delete this Estimate?');"><i class="fas fa-trash-alt"></i></a>
+                </div>
+            </div>
+
+            <div id="div_estimate" class="mx-2 my-4 p-4 "
+                style="background-color: rgba(124, 124, 123, 0.507); height: 600px; overflow-y: scroll;">
+                <div class="slip p-5 convert_to_pdf bg-light" id="whatToPrint"
+                    style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
+                    <div class="row ">
+                        <div class="col-md-6 ">
+                            <h2 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h2>
+                            <h6 class="text-dark">{{ company.address }}</h6>
+                            <h6 class="text-dark">{{ company.city }},{{ company.state }}</h6>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <h1 class="text-dark" style="font-size: 3rem; ">ESTIMATE</h1>
+                            <h6 class="text-dark">Estimate Number : {{estimate.estimate_no }}</h6>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row ">
+                        <div class="col-md-6 mt-auto">
+                            <h6 class="text-dark">Bill To</h6>
+                            <h6 style="color: rgb(218, 142, 3);">{{ estimate.customer_name }} <br><span class="text-dark">{{ estimate.customer.customerEmail }}</span> </h6>
+                        </div>
+                        <div class="col-md-6 text-right mt-auto">
+                            <h6 class="text-dark ">Order Date : {{ estimate.estimate_date }}</h6>
+                        </div>
+                    </div>
+                    <table class="table mt-2 " style="border-color: black;">
+                        <thead >
+                            <tr>
+                                <th style="color: black;">#</th>
+                                <th style="width: 30rem;color: black;">Item</th>
+                                <th class="text-right;" style="color: black;">Quantity</th>
+                                <th class="text-right;" style="color: black;">Rate</th>
+                                <th class="text-right;" style="color: black;">Discount</th>
+                                <th class="text-right;" style="color: black;">Tax</th>
+                                <th class="text-right;" style="color: black;">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ item.item_name }}</td>
+                                <td class="text-right">{{ item.quantity }}</td>
+                                <td class="text-right">{{ item.rate|floatformat:1 }}</td>
+                                <td class="text-right">{{ item.discount|floatformat:1 }}</td>
+                                <td class="text-right">{{ item.tax_percentage }}</td>
+                                <td class="text-right">{{ item.amount|floatformat:1 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <table class="table  mt-2">
+                                <tr>
+                                    <td class=" text-dark" style="font-weight: bold;">Sub-Total:</td>
+                                    
+                                    <td class="text-right" style="text-align: end;">{{ estimate.sub_total|floatformat:1}}</td>
+                                </tr>
+                                {% if estimate.cgst != 0 %}
+                                <tr>
+                                    <td class="text-right text-dark">CGST:</td>
+                                    <td class="text-right" style="text-align: end;">{{ estimate.cgst|floatformat:1}}</td>
+                                </tr>
+                                {% endif %}
+                                {% if estimate.sgst != 0 %}
+                                <tr>
+                                    <td class="text-right text-dark">SGST:</td>
+                                    <td class="text-right" style="text-align: end;">{{ estimate.sgst|floatformat:1}}</td>
+                                </tr>
+                                {% endif %}
+                                {% if estimate.igst != 0 %}
+                                <tr>
+                                    <td class="text-right text-dark">IGST:</td>
+                                    <td class="text-right" style="text-align: end;">{{ estimate.igst|floatformat:1}}</td>
+                                </tr>
+                                {% endif %}
+                                {% if estimate.shipping_charge != 0 %}
+                                <tr>
+                                    <td class="text-right text-dark">Shipping Charge:</td>
+                                    <td class="text-right" style="text-align: end;">{{ estimate.shipping_charge|floatformat:1}}</td>
+                                </tr>
+                                {% endif %}
+                                {% if estimate.adjustment != 0 %}
+                                <tr>
+                                    <td class="text-right text-dark">Adjustment:</td>
+                                    <td class="text-right" style="text-align: end;">{{ estimate.adjustment|floatformat:1}}</td>
+                                </tr>
+                                {% endif %}
+                                <tr>
+        
+                                    <td class="text-right text-warning" style="font-weight: bold;">Total:</td>
+                                    <!-- <td class="text-right text-dark "></td>
+                                    <td class="text-right text-dark"></td>
+                                    <td class="text-right text-dark"></td> -->
+                                    <td class="text-right " style="font-weight: bold;text-align: end;">{{ estimate.total|floatformat:1}}</td>
+                                </tr>
+        
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+                <!-- <button id="generate-pdf">Generate PDF</button> -->
+
+                <h4 class="text-light pt-5">More Information</h4>
+                <h6 class="text-light">Sales Person: Xyz</h6>
+            </div>
+            
+
+
+           
+    <!-- comment modal -->
+
+    <div class="modal fade " id="cmnts"
+    style="width: 750px; margin-left: 350px; justify-content: center; overflow: hidden;">
+    <div class="modal-dialog modal-xl m-5 p-5">
+        <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+            <div class="modal-header " style="background: rgb(32, 35, 37);">
+                <h5 class="m-3 text-uppercase text-light">Enter Comment</h5>
+                <button type="button" class="close text-dark bg-none" data-dismiss="modal"
+                    aria-label="Close">&times;</button>
+
+            </div>
+            <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow: hidden;">
+                <div class="card p-0 m-0">
+                    <form action="{% url 'add_est_comment' estimate.id %}" method="post" class="needs-validation" novalidate autocomplete="off"
+                        id="modalComment">
+                        {% csrf_token %}
+                        <div class="row mt-2">
+                            <div class="col-md-6 mt-2">
+                                <textarea class="form-control text-dark bg-light" id="comment" name="comments" required
+                                    style="height: 200px; width: 520px;"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <div class="d-flex">
+                                    <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3" type="submit">Save </button>
+                                    <button type="button"
+                                        class="close btn save_btn rounded-pill text-grey w-50 my-4"
+                                        data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">Cancel</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-4"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ....................................  comment list modal ................ -->
+
+<div class="modal fade " id="cmt_list"
+style="width: 750px; margin-left: 350px; justify-content: center; overflow: hidden;">
+<div class="modal-dialog modal-dialog-scrollable modal-xl m-5 p-5">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+        <div class="modal-header " style="background: rgb(32, 35, 37);">
+            <h5 class="m-3 text-uppercase text-light">LIST</h5>
+            <button type="button" class="close text-dark bg-none" data-dismiss="modal"
+                aria-label="Close">&times;</button>
+
+        </div>
+        <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow-x: hidden;">
+            <div class="card p-0 m-0">
+
+                <div class="row mt-3">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="p-2">
+                            <table class="table table-bordered" style="table-layout: fixed;">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="background-color:rgb(218, 143, 3) ;color: white;">Comments</th>
+                                    </tr>
+                                </thead>
+                                {% for comt in est_comments %}
+                                <tbody>
+                                    <tr>
+                                        <!-- <td><input type="text" value="{{ comt.comments }}" style="width: 100%;height: 20px;"></td> -->
+                                        <td><textarea name="" id="" cols="80" rows="5" style="border: none;background-color:transparent ;color: white;">{{ comt.comments }}</textarea></td>
+                                    </tr>
+                                </tbody>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+    </section>
+
+
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script>
+    // Add click event listener to all rows with class "clickable-row"
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+        row.addEventListener('click', () => {
+            // Get the URL from the "data-href" attribute
+            const url = row.getAttribute('data-href');
+            // Navigate to the URL
+            window.location.href = url;
+        });
+    });
+</script>
+
+<script>
+
+    function print() {
+        var content = document.getElementById("whatToPrint");
+        var printWindow = window.open('', 'PrintWindow');
+        printWindow.document.write('<html><head><title>Print Selected Area</title></head><body>' + content + '</body></html>');
+        printWindow.print();
+        printWindow.close();
+
+
+    }
+
+
+
+
+    // function saveAsPDF() {
+    //     const element = document.getElementById("whatToPrint");
+    //     const opt = {
+    //         margin: 1,
+    //         filename: "estimate.pdf",
+    //         image: { type: "jpeg", quality: 0.98 },
+    //         html2canvas: { scale: 2 },
+    //         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    //         output: "save", // this option tells html2pdf to save the file instead of downloading it
+    //         outputParam: "D:/sumi/Altos/zoho_django (1)/zoho_django/media/image/estimate.pdf" // this is the path where the file will be saved
+    //     };
+    //     html2pdf().set(opt).from(element).save();
+    // }
+
+    // function ConvertToPDF() {
+    //     var doc = new jsPDF();
+    //     var HTMLelement = $(".convert_to_pdf").html();
+    //     doc.fromHTML(HTMLelement, 10, 10, {
+    //         'width': 190
+    //     });
+    //     doc.save('estimateslip.pdf');
+    // }
+
+
+</script>
+<script>
+    function openFilePicker() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.pdf'; // set the file type filter to only allow PDF files
+        input.addEventListener('change', () => {
+            const file = input.files[0];
+            // send the selected file to the server via AJAX
+            const formData = new FormData();
+            formData.append('file', file);
+            $.ajax({
+                url: '/send_email/',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alert('File uploaded successfully');
+                },
+                error: function (xhr, status, error) {
+                    alert('Error uploading file: ' + error);
+                }
+            });
+        });
+        input.click();
+    }
+</script>
+
+<script>
+    var $rows = $('#table tr');
+    $('#search').keyup(function() {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        
+        $rows.hide().filter(function() {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return ~text.indexOf(val);
+        }).show();
+    });
+  
+  </script>
+  <script>
+    function comment_list()
+    {
+        document.getElementById("div_estimate").style.display="none";
+        document.getElementById("comments_fieldset1").style.display="block";
+        document.getElementById("comments_fieldset").style.display="none";
+
+    }
+    function create_comment()
+    {
+        document.getElementById("div_estimate").style.display="none";
+        document.getElementById("comments_fieldset").style.display="block";
+        document.getElementById("comments_fieldset1").style.display="none";
+    }
+  </script>
+{% endblock %}

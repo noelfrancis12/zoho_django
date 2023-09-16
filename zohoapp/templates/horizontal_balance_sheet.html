@@ -1,0 +1,665 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>  
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/css/pikaday.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/pikaday.min.js"></script>
+</head>
+
+<style>
+
+    table {
+        width: 100%;
+        }
+
+    th,td {
+        text-align: left;
+        color: white;
+    }
+
+    td {
+        border: none;
+    }
+
+    table,th{
+        border: 1pt solid white;
+    }
+
+    th i{
+        font-size: 200%;
+        color: white;
+    }
+
+    .right{
+        text-align: right;
+        border-right: 1pt solid white;
+    }
+
+    .border_right{
+        border-right: 1pt solid white;
+    }
+
+    table a:hover{
+        background-color:#007bff;
+        color:#007bff;
+    }
+
+    table a:active{
+        background-color: #007bff;
+    }
+
+    .myDiv:target{
+        display:block !important;
+    }
+
+    .myd{
+        display:none;
+        padding:10px;
+        margin-top:20px;
+    }  
+
+    #custom-dropdown-btn{
+        background-color: white;
+        width: 96%;
+        height: 4vh;
+        text-align: left;
+    }
+
+    #date-options{
+        background-color: white;
+        width: 96%;
+        margin-top: 1vh;
+        margin-left: 4vh;
+        border-radius: 10px;
+    }
+
+    #date-options a{
+        color: #060606;
+    }
+
+    #date-options a:hover{
+        background-color: white;
+    }
+
+    .div-option:hover{
+        background-color: #007bff;
+    }
+
+    .dropdown-item:hover{
+        background-color: white;
+    }
+
+    #furplus, #funplus,#totalfur,#totalfun{
+        display: none;
+    }
+
+    #furminus,#funminus,#furplus,#funplus a:hover{
+        background-color:transparent;
+    }
+
+    .close-button{
+        font-size: 2vh; 
+        font-weight: 100;
+    }
+
+    .close-button:hover{
+        color: blue;
+    }
+
+    table a{
+        color:white
+    }
+
+    table a:hover{
+        color:rgb(184, 121, 4);
+        background-color: transparent;
+    }
+
+    .customize:hover{
+        background-color: transparent;
+    }
+
+    @media print{
+        body{
+            visibility: hidden;
+        }
+        
+        #printdiv{
+            visibility: visible;
+        }
+    }
+
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="custom-dropdown">
+                <div class="d-flex">
+                    <i class="fa fa-calendar" aria-hidden="true" style="font-size: 4vh; color: white;"></i>&nbsp;
+                    <a id="custom-dropdown-btn" href="#" class="btn bg-white text-dark" style="font-size: 1vw; height: 30px;"></a>
+                </div>
+                <div id="datepicker-container" style="display: none;">
+                    <div id="date-options" style="display: none;">
+                        <a class="date-option" href="#"><div class="div-option">Today</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Week</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Month</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Quarter</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Year</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Yesterday</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Previous Week</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Previous Month</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Previous Quarter</div></a>
+                        <a id="datepicker" href="#"><div class="div-option">Custom</div></a>
+                    </div>
+                </div>
+            </div><br><br>
+        </div>
+        <div class="col-md-5" >
+            <button class="btn btn-light"><a class="text-dark customize" href="{% url 'load_customize_report_hbs' %}"><i class="fa fa-cog">&nbsp;</i>Customize Report</a></button>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class=" col-md-1 d-flex" >            
+            <button class="btn btn-light" type="button" style="height: 30px;" onclick="display()">
+                <i class="fa fa-print">&nbsp;Print</i>
+            </button>
+        </div>
+        <div class="col-md-1 d-flex">
+            <button class="btn btn-light" type="button" style="height: 30px;" onclick="exportToPDF()">
+                <i class="fa fa-file-pdf-o" aria-hidden="true">&nbsp;PDF</i>
+            </button>
+        </div>
+        <div class="col-md-2 d-flex">
+            <button class="btn btn-light dropdown-toggle" type="button" id="exportDropdown2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 30px;">
+                <i class='fas fa-file-export'></i> Export
+            </button>
+            <div class="dropdown-menu " aria-labelledby="exportDropdown2">
+                <a class="dropdown-item" href="#" onclick="exportToExcel()">XLS (Excel)</a>
+            </div>&nbsp;&nbsp;&nbsp;
+            <a href="{% url 'report_inventory_view' %}" class="btn btn-light close-button" style="height: 30px;">
+                X 
+             </a>
+        </div>
+    </div>
+
+    <div class="row" id="pdfdiv">
+        <div class="row bg-dark" id="printdiv" style="border-radius: 3vh; width: 77vw;">
+            <h3 style="text-align: center; margin-top: 2vh;">{{company.company_name}}</h3>
+            <h1 style="text-align: center;">Horizontal Balance Sheet</h1>
+            <h6 style="text-align: center;">Basis: Cash</h6>
+            <h6 style="text-align: center;">As of <span id="todaydate"></span></h6> <br>
+            <div class="table-responsive">
+                <div class="container-fluid">
+                    <table class="table" style="border-color: white;">
+                        <tbody>
+                            <tr>
+                                <td style="vertical-align: top; width: 50%;">
+                                    <div class="text-uppercase" style="text-align: center; color: grey; font-size: 2rem; font-weight: 500;">
+                                        Liabilities &amp; Equities  
+                                        <p style="border-bottom: 1px solid white; margin-left: -2vh; margin-right: -2vh; margin-top: 2vh;"></p>
+                                    </div>
+                                    <div> 
+                                        <span class="text-uppercase" style="font-size: large;">Current Liabilities</span>
+                                        <div><br><br>
+                                            <div>
+                                                • Employee Reimbursements 
+                                                <a style="float: right;"href="#">0</a> 
+                                            </div><br>
+                                            <div>
+                                                • HMRC-PAYE (0 ) 
+                                                <a style="float: right;" href="#">0</a>
+                                            </div><br>
+                                            <div>
+                                                • Opening Balance Adjustments 
+                                                <a style="float: right;" href="#">0</a> 
+                                            </div><br>
+                                            <div>
+                                                • Output VAT 
+                                                <a style="float: right;" href="#">0</a> 
+                                            </div><br>
+                                            <div>
+                                                • Unearned Revenue 
+                                                <a style="float: right;" href="#">0</a>
+                                            </div><br>
+                                            <div>
+                                                • VAT MOSS Payable 
+                                                <a style="float: right;" href="#">0</a>
+                                            </div><br>
+                                            <div>
+                                                • VAT Payable 
+                                                <a style="float: right;" href="#">0</a> 
+                                            </div><hr>
+                                            <div class="text-right text-uppercase " style=" float: right;"> 
+                                                Total Current Liabilities&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+                                            </div><br><br>
+                                        </div>
+                                    </div>
+                                    <div> 
+                                        <span class="text-uppercase" style="font-size: large;"><br>Other Liabilities</span>
+                                        <div>
+                                            <div><br><br>
+                                                • Tag Adjustments 
+                                                <a style="float: right;" href="#">0</a> 
+                                            </div><hr>
+                                            <div class="text-right text-uppercase " style=" float: right;"> 
+                                                Total Other Liabilities&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 
+                                            </div><br><br><br>
+                                        </div>
+                                    </div>
+                                    <div> 
+                                        <span class="text-uppercase" style="font-size: large;">Equities</span>
+                                        <div>
+                                            <div><br><br>
+                                                • Current Year Earnings 
+                                                <a style="float: right;" href="#">0</a> 
+                                            </div><br>
+                                            <div>
+                                                • Opening Balance Offset 
+                                                <a style="float: right;" href="#">0</a>
+                                            </div><br>
+                                            <div>
+                                                • Owner's Equity 
+                                                <a style="float: right;" href="#">0</a> 
+                                            </div><br>
+                                            <div>
+                                                • Retained Earnings <span style="float: right;">0</span>
+                                            </div><hr>
+                                            <div class="text-right text-uppercase " style=" float: right;"> 
+                                                Total Equities&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td style=" border-left: 1pt solid white; width: 50%;">
+                                    <div class="text-uppercase"  style="text-align: center; color: grey; font-size: 2rem; font-weight: 500;">
+                                        Assets
+                                        <p style="border-bottom: 1px solid white; margin-left: -2vh; margin-right: -2vh; margin-top: 2vh;"></p>
+                                    </div>
+                                    <div> 
+                                        <span class="text-uppercase" style="font-size: large;">Current Assets</span><hr>
+                                        <div>
+                                            <div><br>
+                                                <div style="font-size: medium;"  > Bank </div><hr>
+                                                <div>
+                                                    • Bank Acc 1
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • Bank Of America
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • Eur Bank Acc
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • New Acc 1
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+
+                                                <div class="text-right" style=" float: right;">
+                                                        Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+                                                </div><br><br>
+                                                <p style="border-bottom: 1px dotted white; "></p>
+
+                                            </div>
+                                            <div>
+                                                <div style="font-size: medium;" > Cash </div><hr>
+                                                <div>
+                                                    • Petty Cash 
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • Undeposited Funds 
+                                                    <a style="float: right;" href="#">0</a>
+                                                </div><br>
+                                                <div class="text-right" style=" float: right;">
+                                                    Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+                                                </div><br><br>
+                                                <p style="border-bottom: 1px dotted white; "></p>
+                                            </div>
+                                            <div>
+                                                <div style="font-size: medium;" > Other Current Assets </div><br>
+                                                <div>
+                                                    • Advance Tax 
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • Employee Advance 
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • Input VAT 
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • Sales to Customers (Cash) 
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div class="text-right" style=" float: right;">
+                                                    Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+                                                </div><br><br>
+                                                <p style="border-bottom: 1px dotted white; "></p>
+                                            </div>
+                                            <div>
+                                                <div style="font-size: medium;" > Other Assets </div><br>
+                                                <div>
+                                                    • Error ( Error ) 
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • GoCardless Clearing 
+                                                    <a style="float: right;" href="#">0</a> 
+                                                </div><br>
+                                                <div>
+                                                    • GoCardless Clearing - EUR 
+                                                    <a style="float: right;" href="#">0</a>
+                                                </div><br>
+                                                <div>
+                                                    • GoCardless Clearing - GBP 
+                                                    <a style="float: right;" href="#">0</a>
+                                                </div><br>
+                                                <div>
+                                                    • Inventory Asset 
+                                                    <a style="float: right;" href="#">0</a>
+                                                </div><br>
+                                                <div class="text-right" style="float: right;">
+                                                    Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0
+                                                </div><br><br>
+                                                <p style="border-bottom: 1px dotted white; "></p>
+                                            </div>
+                                            <div class="text-right text-uppercase " style=" float: right;"> 
+                                                Total Current Assets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 
+                                            </div><br><br><br>
+                                        </div>
+                                    </div>
+                                    <div> 
+                                        <span class="text-uppercase" style="font-size: large;">Fixed Assets</span><br><br><br>
+                                        <div>
+                                            <div> 
+                                                <a class="btn" style="border: 2px solid white; font-size: x-small;" id="furplus" onclick="openfur()">+</a>
+                                                <a class="btn" style="border: 2px solid white; font-size: x-small;" id="furminus" onclick="closefur()">-</a>
+                                                    Furniture and Equipment
+                                                <a href="#" style="float: right;" id="furvalue">  0 </a>
+                                                <a href="#" style="float: right;"  id="totalfur">  0 </a>
+                                            </div><br><br>
+                                            <div id="furdiv1"> 
+                                                &nbsp;&nbsp;&nbsp;&nbsp; 
+                                                &nbsp;&nbsp;&nbsp;&nbsp; 
+                                                <a class="btn" style="border: 2px solid white; font-size: x-small;" id="funplus" onclick="openfun()">+</a>
+                                                <a class="btn" style="border: 2px solid white; font-size: x-small;" id="funminus" onclick="closefun()">-</a>
+                                                Fun ( 0 ) 
+                                                <a style="float: right;" href="#" id="funvalue"> 0 </a>
+                                                <a style="float: right;" href="#" id="totalfun"> 0 </a>
+                                            </div><br>
+                                            <div id="fundiv1">
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                bugfix account (0) 
+                                                <a style="float: right;" href="#">0</a>
+                                            </div><br>
+                                            <div style=" float: right;" id="fundiv2"> 
+                                                Total for Fun
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                                <a href="#">0</a>
+                                            </div><br><br>
+                                            <div style=" float: right;" id="furdiv2"> 
+                                                Total for Furniture and Equipment
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                                                <a href="#" style="float: right;">0</a>
+                                            </div><br><br>
+                                            <div class="text-right text-uppercase " style=" float: right;"> 
+                                                Total Fixed Assets&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: large; width: 50%; border-top:1pt solid white;" > 
+                                    TOTAL LIABILITIES &amp; EQUITIES <span style="float: right;"></span>
+                                </td>
+                                <td style="font-size: large; width: 50%; border-left: 1pt solid white; border-top:1pt solid white;" > 
+                                    TOTAL ASSETS <span style="float: right;">0</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table><br>
+                    <div>
+                        <p>
+                            <small>**Amount is displayed in your base currency</small>&nbsp;
+                            <span class="badge text-semibold badge-success d-inline">INR</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function openfur(){
+        $("#furdiv1").show()
+        $("#furdiv2").show()
+        $("#furplus").hide()
+        $("#furminus").show()
+        $("#totalfur").hide()
+        $("#furvalue").show()
+        $("#fundiv1").hide()
+        $("#fundiv2").hide()
+        $("#funplus").show()
+        $("#funminus").hide()
+    }
+
+    function closefur(){
+        $("#furdiv1").hide()
+        $("#furdiv2").hide()
+        $("#furplus").show()
+        $("#furminus").hide()
+        $("#totalfur").show()
+        $("#furvalue").hide()
+        $("#fundiv1").hide()
+        $("#fundiv2").hide()
+    }
+
+    function openfun(){
+        $("#fundiv1").show()
+        $("#fundiv2").show()
+        $("#funplus").hide()
+        $("#funminus").show()
+        $("#totalfun").hide()
+        $("#funvalue").show()
+    }
+
+    function closefun(){
+        $("#fundiv1").hide()
+        $("#fundiv2").hide()
+        $("#funplus").show()
+        $("#funminus").hide()
+        $("#totalfun").show()
+        $("#funvalue").hide()
+    }
+
+    function display() {
+        var printContents = document.getElementById("printdiv").innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+        $('#exportDropdown1').dropdown()
+
+    }
+
+    function exportToPDF(){
+        var content = document.getElementById('pdfdiv');
+        html2pdf()
+        .from(content)
+        .save('report.pdf')
+    }
+
+    // Function to save Excel using XLSX
+    function exportToExcel() {
+        var table = document.querySelector('table');
+        var ws = XLSX.utils.table_to_sheet(table);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, 'report.xlsx');
+    }
+
+    // Initialize Pikaday date picker
+    const weekday = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var nowDate = new Date(); 
+
+    const picker = new Pikaday({
+        field: document.getElementById('datepicker'),
+        format: 'MM/DD/YYYY', // You can change the date format
+        onSelect: function(date) {
+            
+            // document.getElementById('custom-dropdown-btn').textContent =  "Custom";
+            document.getElementById('custom-dropdown-btn').textContent =  picker.toString();
+            document.getElementById('todaydate').textContent =  picker.toString().slice(4);
+            document.getElementById('datepicker-container').style.display = 'none';
+            document.getElementById('date-options').style.display = 'none';
+        }
+    });
+
+    // Handle custom dropdown button click
+    const customDropdownBtn = document.getElementById('custom-dropdown-btn');
+    const datepickerContainer = document.getElementById('datepicker-container');
+    const dateOptions = document.getElementById('date-options');
+
+    customDropdownBtn.addEventListener('click', function() {
+        if (datepickerContainer.style.display === 'none') {
+            datepickerContainer.style.display = 'block';
+            dateOptions.style.display = 'block';
+        } else {
+            datepickerContainer.style.display = 'none';
+            dateOptions.style.display = 'none';
+        }
+    });
+
+    // Close date picker if clicking outside
+    document.addEventListener('click', function(event) {
+        if (!datepickerContainer.contains(event.target) && event.target !== customDropdownBtn) {
+            datepickerContainer.style.display = 'none';
+            dateOptions.style.display = 'none';
+        }
+    });
+
+    // Add date option handlers
+    const dateOptionButtons = document.querySelectorAll('.date-option');
+    
+    dateOptionButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const optionText = button.textContent;
+            switch (optionText) {
+                case 'Today':
+                    picker.setDate(new Date());
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Today";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Week':
+                    // Set date to the start of the week (Sunday)
+                    const today = new Date();
+                    today.setDate(today.getDate() - today.getDay());
+                    picker.setDate(today);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Week";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Month':
+                    // Set date to the 1st day of the current month
+                    const firstDayOfMonth = new Date();
+                    firstDayOfMonth.setDate(1);
+                    picker.setDate(firstDayOfMonth);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Month";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Quarter':
+                    // Calculate the start date of the current quarter
+                    const quarterStartMonth = Math.floor(new Date().getMonth() / 3) * 3;
+                    const firstDayOfQuarter = new Date(new Date().getFullYear(), quarterStartMonth, 1);
+                    picker.setDate(firstDayOfQuarter);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Quarter";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';                        
+                    break;
+
+                case 'This Year':
+                    // Set date to January 1st of the current year
+                    const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1);
+                    picker.setDate(firstDayOfYear);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Year";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Yesterday':
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    picker.setDate(yesterday);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Yesterday";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Week':
+                    // Set date to the start of the previous week (Sunday)
+                    const prevWeekStart = new Date();
+                    prevWeekStart.setDate(prevWeekStart.getDate() - prevWeekStart.getDay() - 7);
+                    picker.setDate(prevWeekStart);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Week";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Month':
+                    // Set date to the 1st day of the previous month
+                    const prevMonth = new Date();
+                    prevMonth.setDate(1);
+                    prevMonth.setMonth(prevMonth.getMonth() - 1);
+                    picker.setDate(prevMonth);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Month";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Quarter':
+                    // Calculate the start date of the previous quarter
+                    const prevQuarterStartMonth = Math.floor(new Date().getMonth() / 3) * 3 - 3;
+                    const prevQuarterStart = new Date(new Date().getFullYear(), prevQuarterStartMonth, 1);
+                    picker.setDate(prevQuarterStart);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Quarter";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+                    
+                default:
+                    break;
+            }
+            document.getElementById('datepicker-container').style.display = 'none';
+            document.getElementById('date-options').style.display = 'none';
+        });
+    });
+
+    var formdate = "{{newdate}}";
+    if(formdate){
+        document.getElementById('custom-dropdown-btn').innerHTML= formdate
+        document.getElementById('todaydate').innerHTML= formdate
+    }else{
+        document.getElementById('custom-dropdown-btn').innerHTML= weekday[nowDate.getDay()]+" "+month[nowDate.getMonth()]+" "+nowDate.getDate()+" "+ nowDate.getFullYear(); 
+        document.getElementById('todaydate').innerHTML= nowDate.getDate() +" "+ month[nowDate.getMonth()]+" "+ nowDate.getFullYear(); 
+    };
+
+</script>
+
+{% endblock %}

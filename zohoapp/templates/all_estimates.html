@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+<style>
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  #tr_data:hover{
+    background-color: #757575;
+  }
+</style>
+
+
+<div style="top: 7rem;">
+
+  <section id="estimates_section">
+    <div class="row  mx-2">
+      <div class="col-md-6 py-2"><a class="text-white" style="font-size: 1.5rem;"> All Estimates</a></div>
+      <div class="col-md-6 form-inline justify-content-end py-2">
+        <!-- <a style="color: white; background-color: rgb(210, 132, 30);" class="btn mr-1" href="{% url 'newestimate' %}"><i
+            class="fa-solid fa fa-plus " ></i>New</a> -->
+        
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-md-5 col-lg-5">
+        <input type="text" id="search" class="form-control bg-light text-dark" placeholder="Search.." autocomplete="off">
+      </div>
+      <div class="col-sm-6 col-md-4 col-lg-4"></div>
+      <div class="col-sm-1 col-md-1 col-lg-1">
+        <div class="col-md-1 ">
+          <div class="dropdown " >
+            <a class="dropdown-toggle btn btn-secondary text-dark pt-2 pb-2" href="" data-toggle="dropdown">
+              <i style="color: chocolate;" class="fa fa-filter"></i>
+            </a>
+            <div class="dropdown-menu m-1">
+              <a class="dropdown-item" href="{% url 'allestimates' %}">All</a>
+
+              <a class="dropdown-item" href="{% url 'filter_by_draft' %}">Draft</a>
+              <a class="dropdown-item" href="{% url 'filter_by_sent' %}">Sent</a>
+            </div>
+          </div>
+
+          
+        </a>
+        </div>
+      </div>
+      <div class="col-sm-5 col-md-2 col-lg-2">
+        <a  style="color: white; background-color: rgb(210, 132, 30);height:35px;" class="btn mr-1 pt-2" href="{% url 'newestimate' %}"><i
+          class="fa-solid fa fa-plus " ></i>New</a>
+      </div>
+    </div>
+
+    <div class="col-sm-12 mt-5">
+      <table id="estimates-table" class="table  text-white text-center" style="cursor: pointer;">
+        <thead>
+          <tr>
+            <th>DATE</th>
+            <th>ESTIMATE NUMBER</th>
+            <th>REFERENCE NUMBER</th>
+            <th>CUSTOMER NAME</th>
+            <th>CUSTOMER MAIL ID</th>
+            <th>STATUS</th>
+            <th>AMOUNT</th>
+          </tr>
+        </thead>
+        <tbody id="table">
+          {% for estimate in estimates %}
+          <tr id="tr_data" class="clickable-row" data-href="{% url 'estimateslip' estimate.id %}">
+            <td>{{estimate.estimate_date}}</td>
+            <td>{{estimate.estimate_no}}</td>
+            <td>{{estimate.reference}}</td>
+            <td>{{estimate.customer_name}}</td>
+            <td>{{estimate.customer.customerEmail}}</td>
+            <td>{{estimate.status}}</td>
+            <td>{{estimate.total}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+
+      </table>
+</div>
+  </section>
+
+
+  
+</div>
+
+
+<script>
+  // Add click event listener to all rows with class "clickable-row"
+  const rows = document.querySelectorAll('.clickable-row');
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      // Get the URL from the "data-href" attribute
+      const url = row.getAttribute('data-href');
+      // Navigate to the URL
+      window.location.href = url;
+    });
+  });
+</script>
+
+<script>
+  var $rows = $('#table tr');
+  $('#search').keyup(function() {
+      var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+      
+      $rows.hide().filter(function() {
+          var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+          return ~text.indexOf(val);
+      }).show();
+  });
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+{% endblock %}

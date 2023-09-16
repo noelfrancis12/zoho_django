@@ -1,0 +1,639 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+<style>
+    * {
+
+        font-family: "Gill Sans", sans-serif;
+        color: white;
+    }
+
+    .list {
+        background-color: rgb(29, 29, 29);
+    }
+
+    .overview {
+        background-color: black;
+    }
+
+    .searchbar,
+    .overview .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        /* margin: 0 1rem; */
+    }
+
+    .searchbar .btn {
+        width: 5vw;
+        background-color: rgb(28, 117, 233);
+        font-size: 1vw;
+        color: rgb(255, 255, 255);
+    }
+
+    .table .bold {
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .table tr:hover {
+        background-color: rgb(19, 19, 19);
+    }
+
+    .overview .bar .btn {
+        background-color: rgb(238, 164, 27);
+        color: #ffff;
+        padding: .3rem .3rem;
+        align-items: center;
+    }
+
+    .overview .bar .btn:hover,
+    .overview .bar .btn i:hover {
+        background-color: rgb(182, 180, 178);
+        color: #000000;
+    }
+
+    .p-name {
+        height: 2.5vw;
+    }
+
+    #div-to-pdf .p-info label,
+    #div-to-pdf .bank-div label {
+        color: #ffffff;
+        font-size: .8rem;
+    }
+
+    #div-to-pdf .gen-info label {
+        color: #000000;
+        font-size: .8rem;
+    }
+
+    #div-to-pdf .gen-info .bold {
+        color: #000000;
+        font-size: 1rem;
+    }
+
+    .div-to-pdf div {
+        color: #000000;
+    }
+
+
+    #div-to-pdf .p-info .bold,
+    #div-to-pdf .bank-div .bold {
+        font-size: 1rem;
+        color: #ffffff;
+        /* font-weight: bold; */
+    }
+
+    .modal {
+        z-index: 9999;
+        overflow: scroll;
+    }
+
+    .right .dropdown-menu {
+        width: 30vw;
+    }
+
+    .modal-backdrop {
+        background-color: rgb(0, 0, 0);
+    }
+
+    .modal .table th {
+        color: #ffffff;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+        width: 50vw;
+        height: auto !important;
+        margin: auto;
+    }
+</style>
+<section>
+    <div class="row p-3">
+        <div class="list col-4 col-lg-4 col-md-3  col-sm-2 py-3">
+            <div class="header">
+                <h5>EMPLOYEES</h5>
+            </div>
+            <div class="searchbar">
+                <input class="form-control" type="text" placeholder="Search by Name" name="search" id="search"
+                    onkeyup="searchFunction()"
+                    style="color: rgb(255, 255, 255);background: transparent;margin-right: 5px;">
+                <a class="btn btn-outline-primary mx-1" href="" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false" role="button">
+                    <i class="fa fa-filter"></i>
+                </a>
+                <div class="dropdown-menu ">
+                    <a class="dropdown-item" href="javascript:sortTable(0)">Name A-Z</a>
+                    <a class="dropdown-item" href="javascript:rsortTable(0)">Name Z-A</a>
+                </div>
+                <a class="btn btn-outline-primary mr-1" href="{% url 'payroll_create' %}"><i class="fa fa-plus"></i></a>
+            </div>
+            <hr>
+            <table class="table table-borderless" id="mytable">
+                <tr></tr>
+                {% for i in pay %}
+                <tr class='clickable-row' data-href="{% url 'payroll_view' i.id %}">
+                    <td class="pt-2">
+                        <p class="bold">{{i.first_name}} {{i.last_name}}</p>
+                        <p>{{ i.joindate}}</p>
+
+                    </td>
+                    <td class="pt-2">{{ i.salary}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="overview col-8 col-lg-8 col-md-9  col-sm-10 py-3">
+            <div id="overview">
+                <div class="p-name">
+                    <h3 class="px-2 pb-2" id="id1">{{p.first_name}} {{p.last_name}}</h3>
+                </div>
+
+                <div class="bar pt-3">
+                    <div class="left">
+                        <a class="btn mx-1" href="#home">Overview</a>
+                    </div>
+                    <div class="right">
+                        <a class="btn ml-1" href="{% url 'payroll_edit' p.id %}" data-toggle="tooltip" title="Edit"><i
+                                class="fas fa-edit"></i></a>
+                        <a class="btn btn_print ml-1" href="" id="convertToPDFButton" data-toggle="tooltip"
+                            title="Pdf"><i class="mdi mdi-file-pdf"></i></a>
+                        <!-- onclick="generatePDF()" -->
+                        
+                        <script type="text/javascript">
+                            $(document).ready(function ($) {
+                                console.log('print');
+
+                                $(document).on('click', '.btn_print', function (event) {
+                                    console.log('print1');
+                                    event.preventDefault();
+                                    var element = document.getElementById('div-to-pdf');
+                                    var opt =
+                                    {
+                                        margin: 1,
+                                        filename: 'employee' + '.pdf',
+                                        image: { type: 'jpeg', quality: 0.98 },
+                                        html2canvas: { scale: 2 },
+                                        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+                                    };
+                                    html2pdf().set(opt).from(element).save();
+
+                                });
+
+                            });
+                        </script>
+                        
+                        <a class="btn ml-1" href="" id="dd1" data-bs-toggle="dropdown" aria-haspopup="true"
+                            data-toggle="tooltip" title="Download Attachments" aria-expanded="false" role="button">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        <div class="dropdown-menu">
+                            {% if attach %}
+                            <table class="table table-borderless">
+                                {% for a in attach %}
+                                <tr>
+                                    <td>{{forloop.counter}}.</td>
+                                    <td><a href="{% url 'file_download' a.id %}">{{a.attachment.name}}</a></td>
+                                    <td><a href="{% url 'deletefile' a.id %}"><i class="fas fa-trash"></i></a></td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                            {% else %}
+                            <div class="text-center">No Attachment found</div>
+                            {% endif %}
+                        </div>
+
+                        <a class="btn ml-1" href="{% url 'payroll_delete' p.id %}" data-toggle="tooltip"
+                            title="Delete"><i class="fa fa-trash"></i></a>
+                        <a class="btn ml-1" href="" data-toggle="modal" data-target="#commentModal"
+                            data-toggle="tooltip" title="comment"><i class="far fa-comment"></i></a>
+                        <label for="file-input" class="btn ml-1 border-0" data-toggle="tooltip"
+                            title="Upload Attachments">
+                            <i class="fas fa-paperclip"></i>
+                        </label>
+                        <input id="file-input" type="file" name="file" style="display:none;" onchange="uploadFile()">
+                        <a class="btn ml-1" href="{% url 'payroll_active' p.id %}" id="sts">{{p.status}}</a>
+                    </div>
+                </div>
+                <hr>
+                
+
+                <div class="div-to-pdf row" id="div-to-pdf" style="height: 100%;background-color: burlywood">
+                    <div class="bar pt-2 pb-4">
+                        <div class="left text-uppercase" style="font-size: 1rem;font-weight: 600;"> {{p.designation}}
+                        </div>
+                        <div class="right" style="font-size: 1rem;font-weight: 600;">Emp no: {{p.emp_number}} <br>join
+                            Date: {{p.joindate}}</div>
+                    </div>
+
+                    <div class="row text-center">
+                        <h3 style="color: #000000;">EMPLOYEE DETAILS
+                            <hr>
+                        </h3>
+                    </div>
+                    <div class="gen-info col-6 " style="padding-left: 3rem;">
+                        <div class="photo text-center py-3" style="height: 30vh;">
+                            <a href="{% url 'img_download' p.id %}" download>
+                                <img class="img-fluid" src="{{p.image.url}}" alt="" width="150px" name="img">
+                            </a>
+
+                        </div>
+                        <div class="row text-center">
+                            <h5 class="h4 text-dark">{{p.title}} {{p.first_name}} {{p.last_name}}</h5>
+                            <div class="h5">({{p.alias}}) {{p.gender}}</div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col-4"><label for="">Email :</label></div>
+                            <div class="col-8">
+                                <p class="bold">{{p.email}}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4"><label for="">Phone :</label></div>
+                            <div class="col-8">
+                                <p class="bold">{{p.Phone}}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-5"><label for="">Location :</label></div>
+                            <div class="col-7">
+                                <p class="bold">{{p.location}}</p>
+                            </div>
+                        </div>
+
+                        <div class="h4 mt-3">More info
+                            <hr>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-7"><label for="">Emergency Contact number :</label></div>
+                            <div class="col-5">
+                                <p class="bold">{{p.emergency_phone}}</p>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-7"><label for="">Permanent Address :</label></div>
+                            <div class="col-5">
+                                <p class="bold" style="max-width: 10rem;word-wrap: break-word;">{{p.permanent_address}}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-7"><label for="">Temperory Address :</label></div>
+                            <div class="col-5">
+                                <p class="bold" style="max-width: 10rem;word-wrap: break-word;">{{p.address}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-info col-6 my-2" style="height: 100%;">
+                        <div class="card" style="background-color: rgb(110, 61, 46); padding:1rem;">
+                            <div class="row my-2">
+                                <div class="col-4"><label for="">Salary :</label></div>
+                                <div class="col-8">
+                                    <p class="h3">{{p.salary}} INR</p>
+                                </div>
+                            </div>
+                            <hr>
+                            <!-- <div class="card-title my-2">General information <hr></div> -->
+
+                            <div class="row mt-4">
+                                {% if p.isTDS == 'Percentage' %}
+                                <div class="col-5"><label for="">TDS %</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.TDS}} %</p>
+                                </div>
+                                {% elif p.isTDS == 'Amount' %}
+                                <div class="col-5"><label for="">TDS amount</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.TDS}} ₹</p>
+                                </div>
+                                {% else %}
+                                <div class="col-5"><label for="">TDS </label></div>
+                                <div class="col-7">
+                                    <p class="bold">nill</p>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">Gender :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.gender}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">Date of birth :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.dob}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">Parent Name :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.parent}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">Spouse :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.spouse_name}}</p>
+                                </div>
+                            </div>
+                            <div class="card-title h4 mt-4">Statutary Information
+                                <hr>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">Income Tax Number :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.ITN}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">Aadhar Number :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.Aadhar}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">Universal Account Number(UAN) :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.UAN}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">PR Account Number(PRAN) :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.PRAN}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-5"><label for="">PF Account Number(PFN) :</label></div>
+                                <div class="col-7">
+                                    <p class="bold">{{p.PFN}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for bank in b %}
+                    <div class="row m-1">
+                        <div class="card bank-div" style="background-color: rgb(78, 72, 53);width: 100%;">
+                            <h4 class="text-center mt-4">Bank Details
+                                <hr>
+                            </h4>
+                            <div class="row mt-2 px-5">
+                                <div class="col-6"><label for="">Account Number</label></div>
+                                <div class="col-6">
+                                    <p class="bold">{{bank.acc_no}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2 px-5">
+                                <div class="col-6"><label for="">Bank</label></div>
+                                <div class="col-6">
+                                    <p class="bold">{{bank.bank_name}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2 px-5">
+                                <div class="col-6"><label for="">IFSC</label></div>
+                                <div class="col-6">
+                                    <p class="bold">{{bank.IFSC}}</p>
+                                </div>
+                            </div>
+                            <div class="row mt-2 px-5">
+                                <div class="col-6"><label for="">Branch Name</label></div>
+                                <div class="col-6">
+                                    <p class="bold">{{bank.branch}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- </div> -->
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    <!-- Modal -->
+    <!-- Add Comments Modal -->
+    <div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background-color: #3b3b3b;">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Add Comments</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form action="{% url 'add_payrollcomment' p.id %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <textarea type="text" class="form-control text-dark" name="comments"></textarea>
+                        <div class="container-fluid">
+
+                            <table class="table  mt-4">
+                                <thead>
+                                    <tr>
+                                        <th>sl no.</th>
+                                        <th>Comments</th>
+                                        <th>Delete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for c in com %}
+                                    <tr class="table-row">
+                                        <td>{{forloop.counter }}</td>
+                                        <td>{{c.comment}}</td>
+                                        <td><a class="text-danger"
+                                                href="{% url 'delete_payrollcomment' c.id  %}">Delete</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Check if the cookie name matches the CSRF cookie name
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    function uploadFile() {
+        const fileInput = document.getElementById("file-input");
+        const file = fileInput.files[0];
+        const csrfToken = getCookie('csrftoken')
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        fetch("/payroll_file/{{p.id}}", {
+            method: "POST",
+            headers: { 'X-CSRFToken': csrfToken },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle the response from the server (if needed)
+                console.log(data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    }
+
+
+
+</script>
+<script>
+
+    jQuery(document).ready(function ($) {
+        $(".clickable-row").click(function () {
+            window.location = $(this).data("href");
+        });
+    });
+
+    function searchFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("search");
+        filter = input.value.toLowerCase();
+        table = document.getElementById("mytable");
+        tr = table.getElementsByTagName("tr");
+        // input.style.borderColor = "green";
+        for (i = 0; i < tr.length; i++) {
+            let rowVisible = false;
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j]) {
+                    txtValue = td[j].textContent || td[j].innerText;
+                    if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                        rowVisible = true;
+                        break;
+                    }
+                }
+            }
+
+            // Show/hide the row based on the search results
+            tr[i].style.display = rowVisible ? "" : "none";
+        }
+    }
+</script>
+<script>
+    function sortTable(columnIndex) {
+        let sortAscending = false
+        const table = document.getElementById("mytable");
+        const rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+        rows.sort((row1, row2) => {
+            const cellValue1 = row1.cells[columnIndex].textContent.toLowerCase();
+            const cellValue2 = row2.cells[columnIndex].textContent.toLowerCase();
+
+            if (cellValue1 < cellValue2) {
+                return -1;
+            } else if (cellValue1 > cellValue2) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+
+        // Clear the table body
+        while (table.rows.length > 1) {
+            table.deleteRow(1);
+        }
+
+        // Append the sorted rows back to the table
+        rows.forEach(row => table.appendChild(row));
+        sortAscending = !sortAscending;
+    }
+
+    function rsortTable(columnIndex) {
+        let sortAscending = false
+        const table = document.getElementById("mytable");
+        const rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+        rows.sort((row1, row2) => {
+            const cellValue1 = row1.cells[columnIndex].textContent.toLowerCase();
+            const cellValue2 = row2.cells[columnIndex].textContent.toLowerCase();
+
+            if (sortAscending) {
+                if (cellValue1 < cellValue2) {
+                    return -1;
+                } else if (cellValue1 > cellValue2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            } else {
+                if (cellValue1 > cellValue2) {
+                    return -1;
+                } else if (cellValue1 < cellValue2) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        // Clear the table body
+        while (table.rows.length > 1) {
+            table.deleteRow(1);
+        }
+
+        // Append the sorted rows back to the table
+        rows.forEach(row => table.appendChild(row));
+
+        // Toggle the sorting order for the next click
+        sortAscending = !sortAscending;
+    }
+
+</script>
+<!-- <script>
+    function generatePDF() {
+        const container = document.getElementById('div-to-pdf');
+        const options = {
+            filename: 'employee.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            htmt2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().from(container).set(options).save();
+    };
+
+
+</script> -->
+
+{% endblock %}
+
+<!-- edit com attach dele active/inactive -->

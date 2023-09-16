@@ -1,0 +1,630 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  table, th, td, tr {
+    color: white; 
+    border: 1px solid white;
+  }
+
+  .topnav {
+    background-color: #333;
+  }
+  
+  .a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .customize {
+    float: left;
+    text-align: center;
+    padding: 20px 130px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .topnav-right {
+    float: right;
+  }
+
+  .nav-item {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 4px 4px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .dropdown, .printdrop{
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 4px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .dropdown-item:hover{
+    color: white;
+  }
+
+  .printdrop:hover{
+    color: white;
+  }
+
+  .b {
+    float: left;
+    color: #f2f2f2;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  .daterangepicker{
+    color: black;
+  }
+
+  .daterangepicker td.available, .daterangepicker th {
+    color: black;
+  }
+
+  @media print {
+    table, th, td, tr {
+      border: 1px solid black; /* Ensure black borders when printing */
+    }
+  }
+
+  #reportrange span, #selectedEndDate, .daterangepicker .ranges ul li {
+    font-size: 14px; /* Adjust the font size as needed */
+  }
+
+  .filter-dropdown {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1;
+    border-radius: 10%;
+  }
+  .filter-option,
+  .filter-value {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 1px;
+  }
+
+  .filter-buttons {
+      display: flex;
+      justify-content: space-between;
+  }
+
+  .filter-buttons button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+  }
+
+  .apply-filter {
+      background-color: #4caf50;
+      color: white;
+  }
+
+  .clear-filter {
+      background-color: #f44336;
+      color: white;
+  }
+
+
+</style>
+
+
+<div class="container-fluid">
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+      <form class="form-inline">
+        <label class="mr-2" for="fromdate">From:</label>&nbsp;
+        <input type="date" class="form-control" id="fromdate" style="color: black !important;">
+        <label class="mx-2" for="todate">To:</label>
+        <input type="date" class="form-control" id="todate" style="color: black !important;">
+      </form>
+    </li>
+
+    <li class="nav-item dropdown" style="margin-left: 27.5vw; margin-top: -1rem;">
+      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="background: white; color: black;">
+        <i class="fa fa-file-excel"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" style="font-size:10px;" onclick="exportAsPDF()">PDF</a></li>
+        <li><a class="dropdown-item" style="font-size:10px;" onclick="exportAsXLS()">XLS (Microsoft Excel 1997-2004 Compatible)</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item dropdown" style="margin-top: -1rem;">
+      <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="background: white; color: black;">
+        <i class="fa fa-print"></i>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a class="printdrop" href="#" onclick="printPageContent()" style="font-size:10px;">Print Preference</a></li>
+      </ul>
+    </li>
+
+    <li class="nav-item">
+      <button type="button" onclick="history.go(-1);" class="btn btn-danger">&times;</button>
+    </li>
+  </ul>
+</div>
+
+<div class="container-fluid" id="container-to-print"> 
+  <div class="row pt-5">
+    <center>
+      <div class="col-md-4">
+        {% if company.company_name != None %}
+          <a class="text" style="font-size: 1rem; color: white;">{{ company.company_name }}</a><br>
+        {% else %}
+          <a class="text" style="font-size: 1rem; color: white;">Add Company</a><br>
+        {% endif %}
+        <a class="text" style="font-size: 1.5rem; color: white;">Sale Order</a><br>
+        <h5 class="text" id="selectedEndDate"></h5><br>
+      </div>
+    </center>   
+  </div> 
+
+
+  <div style="overflow-x: auto; overflow-x: hidden;">
+    <div class="row pt-2">
+      <div class="col-sm-10 col-md-11 col-lg-12">
+        <table class="table" id="myTable" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>DATE <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>ORDER NO <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>NAME <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>DUE DATE <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>STATUS <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>TYPE <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>TOTAL <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>ADVANCE <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+              <th>BALANCE <i class="fas fa-filter filter-button"></i>
+                <div class="filter-dropdown">
+                  <select class="filter-option">
+                    <option value="contains">Contains</option>
+                    <option value="exact-match">Excat Match</option>
+                  </select><br>
+                  <input type="text" class="filter-value"><br>
+                  <button class="apply-filter btn-primary">Apply</button>
+                  <button class="clear-filter btn-primary">Clear</button>
+                </div><br>
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for d in data %}
+            <tr>
+              <td>{{ d.sales_date }}</td>
+              <td>{{ d.sales_no }}</td>
+              <td>{{ d.customer.customerName }}</td>
+              <td>{{ d.ship_date }}</td>
+              <td></td>
+              <td>{{ d.customer.customerType }}</td>
+
+              <td>{{ d.subtotal }}</td>
+              <td></td>
+              <td></td>
+            </tr>
+            
+          </tbody>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
+</div>  
+
+
+<script>
+  function ApplyDateFilter() {
+    var fromDate = new Date(document.getElementById('fromdate').value);
+    var toDate = new Date(document.getElementById('todate').value);
+
+    // Set the time part to the beginning and end of the day
+    fromDate.setHours(0, 0, 0, 0);
+    toDate.setHours(23, 59, 59, 999);
+
+    var table = document.getElementById("myTable");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < tr.length; i++) {
+      var row = tr[i];
+      var td = row.getElementsByTagName("td")[0]; // Assuming the date is in the first column.
+
+      if (td) {
+        var txtValue = td.textContent || td.innerText;
+        var check = new Date(txtValue);
+
+        // Set the time part of check to match the format of fromDate and toDate
+        check.setHours(0, 0, 0, 0);
+
+        if (check >= fromDate && check <= toDate) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      }
+    }
+    // Update the selectedEndDate div
+    var start = fromDate;
+    var end = toDate;
+    document.getElementById('selectedEndDate').textContent = 'From ' + start.toDateString() + ' to ' + end.toDateString();
+  }
+
+  // Add event listeners to the date inputs to trigger ApplyDateFilter on change
+  document.getElementById('fromdate').addEventListener('change', ApplyDateFilter);
+  document.getElementById('todate').addEventListener('change', ApplyDateFilter);
+
+  // Initialize the filter when the page loads (optional)
+  ApplyDateFilter();
+
+  // Function to show full table when no dates are selected
+  function ShowFullTable() {
+    var table = document.getElementById("myTable");
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 1; i < tr.length; i++) {
+      tr[i].style.display = "";
+    }
+
+    // Reset the selectedEndDate div
+    document.getElementById('selectedEndDate').textContent = '';
+  }
+
+  // Call the function to show full table initially
+  ShowFullTable();
+</script>
+
+
+
+
+
+  <script>
+    function printPageContent() {
+      const contentToPrint = document.getElementById('container-to-print');
+      const clonedContent = contentToPrint.cloneNode(true);
+
+      // Find all the elements with the class "text" within the cloned content
+      const textElements = clonedContent.querySelectorAll('.text');
+      const filterDropdowns = clonedContent.querySelectorAll('.filter-dropdown');
+
+
+      // Set the text color to black for each element with the class "text"
+      textElements.forEach(element => {
+        element.style.color = '#000000';  // Text color (black)
+      });
+
+      //Set the dropdown element with th "none"
+      filterDropdowns.forEach(dropdown => {
+        dropdown.style.display = 'none';
+      });
+  
+
+      // Set table styles to black
+      const tableElements = clonedContent.querySelectorAll('table, th, td, tr');
+      for (const element of tableElements) {
+      element.style.border = '1px solid black';
+      }
+  
+      // Print the cloned content
+      const printWindow = window.open('', '_blank');
+      printWindow.document.body.appendChild(clonedContent);
+      printWindow.print();
+      printWindow.close();
+    }
+  </script>
+
+
+  <script>
+    function exportAsXLS() {
+        const data = [
+            ['DATE', 'ORDER NO', 'NAME', 'DUE DATE', 'STATUS', 'TYPE', 'TOTAL', 'ADVANCE', 'BALANCE'],
+            ['Data 1', 'Data 2', 'Data 3', 'Data 4', 'Data 5', 'Data 6', 'Data 7', 'Data 8', 'Data 9'],
+            // Add more rows as needed
+        ];
+    
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    
+        // Save the XLS file
+        XLSX.writeFile(wb, 'sales_order.xlsx');
+    }
+    
+    function exportAsPDF() {
+      const container = document.getElementById('container-to-print');
+    
+      // Save the original background color
+      const originalBackgroundColor = container.style.backgroundColor;
+    
+      // Set the container's background color to white
+      container.style.backgroundColor = 'white';
+    
+      // Apply styling changes to the container's content
+      const textWhiteElements = container.querySelectorAll('.text');
+      textWhiteElements.forEach(element => {
+        element.style.color = '#000000'; // Set text color to black
+      });
+    
+      const tableElements = container.querySelectorAll('table');
+      const tableCells = container.querySelectorAll('td, th');
+      const tableRows = container.querySelectorAll('tr');
+    
+      tableElements.forEach(table => {
+        table.style.backgroundColor = '#ffffff'; // Set background color to white
+        table.style.color = '#000000'; // Set text color to black
+      });
+    
+      tableCells.forEach(cell => {
+        cell.style.backgroundColor = '#ffffff'; // Set background color to white
+        cell.style.color = '#000000'; // Set text color to black
+        cell.style.border = '1px solid black'; // Add a black border
+      });
+    
+      tableRows.forEach(row => {
+        row.style.backgroundColor = '#000000'; // Set background color to black
+      });
+    
+      const pdfOptions = {
+        margin: 0,
+        filename: 'Sales_order.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a3', orientation: 'landscape' },
+      };
+    
+      // Generate PDF from the container
+      html2pdf().from(container).set(pdfOptions).save().then(() => {
+
+        // Restore the original background color
+        container.style.backgroundColor = originalBackgroundColor;
+
+        textWhiteElements.forEach(element => {
+          element.style.color = 'white'; // Restore original text color
+
+        // Remove the pdf-background class after generating the PDF
+        container.classList.remove('pdf-background');
+        });
+      });
+    }
+    
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $('.filter-button').on('click', function() {
+        $(this).closest('th').find('.filter-dropdown').toggle();
+      });
+  
+      $('.apply-filter').on('click', function() {
+        const $table = $('#myTable');
+        const columnIndex = $(this).closest('th').index();
+        const filterOption = $(this).siblings('.filter-option').val();
+        const filterValue = $(this).siblings('.filter-value').val().trim();
+  
+        $table.find('tbody tr').hide();  // Hide all rows
+  
+        if (filterOption === 'exact-match') {
+          applyExactMatchFilter($table, columnIndex, filterValue);
+        } else if (filterOption === 'contains') {
+          applyContainsFilter($table, columnIndex, filterValue);
+        }
+
+        // Close the filter dropdown
+        $(this).closest('.filter-dropdown').hide();
+      });
+  
+      $('.clear-filter').on('click', function() {
+        $('#myTable tbody tr').show();
+        $(this).siblings('.filter-option').val('contains');
+        $(this).siblings('.filter-value').val('');
+  
+        // Close the filter dropdown
+        $(this).closest('.filter-dropdown').hide();
+      });
+    });
+  
+    function applyExactMatchFilter($table, columnIndex, filterValue) {
+      $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+        if ($(this).text().trim() === filterValue) {
+          $(this).parent().show();
+        }
+      });
+    }
+  
+    function applyContainsFilter($table, columnIndex, filterValue) {
+      $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+        if ($(this).text().toLowerCase().includes(filterValue.toLowerCase())) {
+          $(this).parent().show();
+        }
+      });
+    }
+  
+  </script>
+  
+
+{% endblock content %}
+
+
+{% comment %}
+# code for exact-match, contains, greater-than, lesser-than, equal-to in table filter
+
+ <script>
+  $(document).ready(function() {
+    $('.filter-button').on('click', function() {
+      $(this).closest('th').find('.filter-dropdown').toggle();
+    });
+
+    $('.apply-filter').on('click', function() {
+      const $table = $('#myTable');
+      const columnIndex = $(this).closest('th').index();
+      const filterOption = $(this).siblings('.filter-option').val();
+      const filterValue = $(this).siblings('.filter-value').val().trim();
+
+      $table.find('tbody tr').hide();  // Hide all rows
+
+      if (filterOption === 'exact-match') {
+        applyExactMatchFilter($table, columnIndex, filterValue);
+      } else if (filterOption === 'contains') {
+        applyContainsFilter($table, columnIndex, filterValue);
+      } else if (filterOption === 'equal-to') {
+        applyEqualToFilter($table, columnIndex, filterValue);
+      } else if (filterOption === 'greater-than') {
+        applyGreaterThanFilter($table, columnIndex, filterValue);
+      } else if (filterOption === 'less-than') {
+        applyLessThanFilter($table, columnIndex, filterValue);
+      }
+
+      // Close the filter dropdown
+      $(this).closest('.filter-dropdown').hide();
+    });
+
+    $('.clear-filter').on('click', function() {
+      $('#myTable tbody tr').show();
+      $(this).siblings('.filter-option').val('contains');
+      $(this).siblings('.filter-value').val('');
+
+      // Close the filter dropdown
+      $(this).closest('.filter-dropdown').hide();
+    });
+  });
+
+  function applyExactMatchFilter($table, columnIndex, filterValue) {
+    $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+      if ($(this).text().trim() === filterValue) {
+        $(this).parent().show();
+      }
+    });
+  }
+
+  function applyContainsFilter($table, columnIndex, filterValue) {
+    $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+      if ($(this).text().toLowerCase().includes(filterValue.toLowerCase())) {
+        $(this).parent().show();
+      }
+    });
+  }
+
+  function applyEqualToFilter($table, columnIndex, filterValue) {
+    $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+      if (parseFloat($(this).text().trim()) === parseFloat(filterValue)) {
+        $(this).parent().show();
+      }
+    });
+  }
+
+  function applyGreaterThanFilter($table, columnIndex, filterValue) {
+    $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+      if (parseFloat($(this).text().trim()) > parseFloat(filterValue)) {
+        $(this).parent().show();
+      }
+    });
+  }
+
+  function applyLessThanFilter($table, columnIndex, filterValue) {
+    $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+      if (parseFloat($(this).text().trim()) < parseFloat(filterValue)) {
+        $(this).parent().show();
+      }
+    });
+  }
+</script> {% endcomment %}

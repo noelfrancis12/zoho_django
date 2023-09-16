@@ -1,0 +1,166 @@
+
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+
+        <title>template file</title>
+
+        <style>
+            .container-fluid{
+                width: 100%;
+            }
+           
+        </style>
+<body>
+    <div class="vendor-name" style="margin-top: 20px;">
+        <h5>{{ payment.vendor.first_name }} &nbsp;{{ payment.vendor.last_name }}</h5>
+    </div>
+
+    <div class="container-fluid  text-dark" style=" margin-top: 40px; background-color: azure;"  >
+        <div class="row">
+            <div class="col-lg-9">
+            </div>
+            <div class="col-lg-3 ">
+                <!-- <div class="icons text-left" style=" font-size: 25px; ">                    
+                    <a href="#" class="text-danger editoption" style="margin-right: 10px;" ><i class="fa fa-edit"></i></a>
+
+                    <a href="#" class="text-dark" onclick="convertToPDF()" style="margin-right: 10px;"><i
+                            class="fa fa-file-pdf"></i></a>
+                    <a href="#" class="text-primary" onclick="printPage()" style="margin-right: 10px;"><i
+                            class="fa fa-print"></i></a>
+                    
+                    <a href="{% url 'delete_payment' payment.id %}" class="text-warning" style="margin-right: 10px;" ><i
+                            class="fa fa-trash"></i></a>
+                </div> -->
+            </div>
+        </div>
+
+        
+<section id="container" style="height: 1000px;" >
+
+        <div class="heading text-center" style="margin-top: 20px; ">
+            <h2>Payment Made</h2>
+        </div>
+        <div class="row"style="margin-top: 60px;">
+            <div class="col-sm-6">
+        <div class="vendor-name" style="margin-top: 20px;">
+            <h5>{{ payment.vendor.first_name }} &nbsp;{{ payment.vendor.last_name }}</h5>
+        </div>
+            <div class="email" style="margin-top: 40px; width: 100%;">
+                <h5>Email: <span>{{ payment.vendor.vendor_email }}</span></h5>
+            </div>
+            
+           
+           <div class="date" style="margin-top: 40px;">
+                <h5>Payment Date: <span>{{ payment.date }}</span></h5>
+            </div> 
+            
+        
+        
+        <div class="paid" style="margin-top: 40px;">
+            <h5 >Payment Method: <span>{{ payment.payment.option }}</span></h5>
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        
+        <div class="address" style="margin-top: 40px;">
+           <h4><span>{{company.company_name }}</span></h4>
+         
+        </div>
+        <div class="gst" style="margin-top: 40px;">
+         <h5>{{company.address}}</h5>   
+
+        </div>
+        <div class="gst" style="margin-top: 40px;">
+         <h5>{{company.city}}</h5>
+        </div>
+        <div class="gst" style="margin-top: 40px;">
+         <h5>{{company.state}}</h5>
+        </div>
+    </div>
+    </div>
+        <table id="vendorTable" class="table text-center" style="width:100%;  margin-top: 60px; padding: 20px; ">
+            <thead style="background-color: #Fdd960;">
+                <tr>
+                    <th  class="text-dark">Amount Received</th>
+                    <th class="text-dark">Openning Balance</th>
+                    <th  class="text-dark">Current Balance</th>
+                    
+                    
+                </tr>
+            </thead>
+                <tbody>
+                    <tr>
+                        <td  class="text-dark">₹{{ payment.amount }}</td>
+                        <td  class="text-dark">₹{{ payment.balance }}</td>
+                       <td  class="text-dark">₹{{ payment.current_balance }}</td> 
+                    </tr>
+                    
+
+                </tbody>
+            
+        </table>
+        <footer style="margin-top: 60px; width: 100%; height: auto; padding-bottom: 20px;  color: #111;" >
+            <h5 class="text-center" style="font-size: 15px;">© Zho Books 2023 | Info park kakkanad kochi, Ernamkulam, kerala India 12345 | Phone: (123) 456-7890 | Email: info@zohodjango.com</h5>
+        </footer>
+    </section>
+    
+    </div>
+
+</body>
+
+<script>
+   function printPage() {
+    window.print();
+}
+function convertToPDF(){
+    const container = document.getElementById('container');
+
+    const options = {
+        filename: 'payment.pdf',
+        image:{type:'jpeg',quality:0.98},
+        htmt2canvas:{scale:2},
+        jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}
+    };
+    html2pdf().from(container).set(options).save();
+}
+$(document).ready(function() {
+    // Click event handler for the "Edit" button with class editoption
+    $('.editoption').click(function() {
+        // Delay execution of the edit logic to ensure the list item is active
+        setTimeout(handleEditOption, 50);
+    });
+
+    // Click event handler for list items in the list-group
+    $('.list-group').on('click', '.list-item', function() {
+        // Remove the 'active' class from other list items and add it to the clicked one
+        $('.list-item').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    // Common edit logic function
+    function handleEditOption() {
+        var selectedJournalId = $('.list-item.active').data('journal-id');
+        if (selectedJournalId !== undefined) {
+            var editUrl = "{% url 'payment_edit' %}?payment_id=" + selectedJournalId;
+            window.location.href = editUrl;
+        } else {
+            // Show an error message or handle the situation when selectedJournalId is undefined
+            console.error("Error: Selected Journal ID is undefined.");
+        }
+    }
+});
+
+
+</script>
+
+</html>
+{% endblock %}

@@ -1,10 +1,10 @@
 {% extends 'home.html' %}
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="static/css/style.css"/>
+
 
 <style>
-*,
+ *,
 *:before,
 *:after {
     box-sizing: border-box;
@@ -18,13 +18,9 @@ h2{
 }
 
 body {
-    background-image: url("static/images/wallpaper.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 100%;
-    background-attachment: fixed;
+    background-color: black;
 
-}
+} 
 
 input,
 .register {
@@ -40,13 +36,16 @@ input,
     text-align: center;
 }
 
+@media (min-width:820px) and (max-width:1600px) {
+    
+
 .cont {
     border-radius: 20px;
     overflow: hidden;
-    position: relative;
+    position: fixed;
     width: 900px;
     height: 550px;
-    margin: 0 auto 100px;
+    margin: 10px auto 120px;
     background: rgb(32, 35, 37);
     /* box-shadow: -10px -10px 15px rgba(255, 255, 255, 0.3), 10px 10px 15px rgba(70, 70, 70, 0.15), inset -10px -10px 15px rgba(255, 255, 255, 0.3), inset 10px 10px 15px rgba(70, 70, 70, 0.15); */
 }
@@ -111,7 +110,7 @@ input,
     top: 0;
     width: 900px;
     height: 100%;
-    background-image: url("ext.jpg");
+    /* background-image: url("ext.jpg"); */
     opacity: .8;
     background-size: cover;
     -webkit-transition: -webkit-transform 1.2s ease-in-out;
@@ -315,11 +314,204 @@ input {
     transform: translate3d(0, 0, 0);
 }
 
+
+.large-screen {
+    display: block;
+}
+
+    .small-screen {
+    display: none;
+}
+}
+@media (min-width:350px) and (max-width: 800px) {
+    .large-screen {
+        display: none;
+        }
+
+    .small-screen {
+    display: block;
+    }
+
+    .cont {
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        width: 350px;
+        height:400px;
+        margin: 100px 10px auto 0px ;
+        padding: 0;
+        
+        background: rgb(32, 35, 37);
+    }
+
+    .form {
+        position: relative;
+        width: 350px;
+        height: 100%;
+        padding: 50px 30px 0; 
+    }
+
+    .sub-cont{
+        border-radius: 20px;
+        overflow: hidden;
+        position:relative;
+        margin: 100px 10px auto 0px ;
+        width: 350px;
+        height: 700px;
+        background: rgb(32, 35, 37);
+        padding: 0%;
+    }
+
+    h2 {
+        width: 100%;
+        font-size: 26px;
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        width: 260px;
+        margin: 25px auto 0;
+        text-align: center;
+    }
+
+    label span {
+        font-size: 12px;
+        color: #cfcfcf;
+        text-transform: uppercase;
+    }
+
+    input {
+        display: block;
+        width: 100%;
+        margin-top: 5px;
+        padding-bottom: 5px;
+        font-size: 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        text-align: center;
+        color: azure;
+    }
+
+    .forgot-pass {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 12px;
+        color: #cfcfcf;
+    }
+
+    .register {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        background: rgb(218, 164, 48);
+        text-transform: uppercase;
+        display: block;
+        margin: 0 auto;
+        width: 260px;
+        height: 36px;
+        border-radius: 30px;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+    }
+}
+
+@media (min-width:200px) and (max-width: 350px) {
+    .large-screen {
+        display: none;
+        }
+
+    .small-screen {
+    display: block;
+    }
+
+    .cont {
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        width: 320px;
+        height:400px;
+        margin: 100px 10px auto 0px ;
+        padding: 0;
+        background: rgb(32, 35, 37);
+    }
+
+    .form {
+        position: relative;
+        width: 320px;
+        height: 100%;
+        padding: 25px 10px 0px 10px; 
+    }
+
+    .sub-cont{
+        border-radius: 20px;
+        overflow: hidden;
+        position:relative;
+        margin: 100px 10px auto 0px ;
+        width: 320px;
+        height: 700px;
+        background: rgb(32, 35, 37);
+        padding: 0%;
+    }
+
+    h2 {
+        width: 100%;
+        font-size: 26px;
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        width: 260px;
+        margin: 25px auto 0;
+        text-align: center;
+    }
+
+    label span {
+        font-size: 12px;
+        color: #cfcfcf;
+        text-transform: uppercase;
+    }
+
+    input {
+        display: block;
+        width: 100%;
+        margin-top: 5px;
+        padding-bottom: 5px;
+        font-size: 16px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        text-align: center;
+        color: azure;
+    }
+
+    .forgot-pass {
+        margin-top: 15px;
+        text-align: center;
+        font-size: 12px;
+        color: #cfcfcf;
+    }
+
+    .register {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        background: rgb(218, 164, 48);
+        text-transform: uppercase;
+        display: block;
+        margin: 0 auto;
+        width: 260px;
+        height: 36px;
+        border-radius: 30px;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+    }
+}
+
+
+
 </style>
 
-<div class="container p-5 mt-4">
+<div class="container p-5 mt-4 large-screen">
     <div class="cont">
-        <!-- <div class="form sign-in"> -->
             <form class="form sign-in" action="{% url 'login' %}" method="post" autocomplete="off">
               
                 {% csrf_token %}
@@ -335,7 +527,7 @@ input {
                     </label>
                   
                   <input type="submit" name="login" class="register" value="Login">
-                  
+                  <div class="col-md-8 pt-4 text-center"> <a href="/forgotpassword" class="text-warning">Forgot Password?</a></div>
               </form>
          
         <!-- </div> -->
@@ -344,13 +536,15 @@ input {
                 <div class="img__text m--up">
                  
                     <!-- <h3>Don't have an account? Please Sign up!<h3> -->
-                        <h3>Zoho Django is even better with an account<h3></h3>
+                        <h3>Zoho is even better with an account<h3></h3>
+                        <img width="100%" src="{% static 'images/pnglogin.png.png' %}" alt="">
                 </div>
                 <div class="img__text m--in">
                 
-                    <h3>Welcome back to Zoho Django<h3>
+                    <h3>Welcome back to Zoho<h3>
+                        <img width="100%" src="{% static 'images/pngreg.png' %}" alt="">
                 </div>
-                <div class="img__btn">
+                <div class="img__btn mt-5">
                     <span class="m--up">Sign Up</span>
                     <span class="m--in">Sign In</span>
                 </div>
@@ -382,15 +576,76 @@ input {
                 <label>
                   <input type="password" name="cpassword" id="comfirm-password" class="input-text" placeholder="Comfirm Password" required>
                 </label>
-                <input type="submit" name="register" class="register" value="Register">
+                <input type="submit" name="register" class="register mt-2 pt-0" value="Register">
                 
             </form>
         </div>
     </div>
   </div>
+
+
+  <div class="container mt-4 small-screen">
+    <div class="cont" id="cont">
+            <form class="form sign-in" action="{% url 'login' %}" method="post" autocomplete="off">
+              
+                {% csrf_token %}
+    
+                  <h2>Login</h2>
+               
+                    <label>
+                      <input type="text" name="emailorusername" id="your-email" class="input-text" placeholder="Email Address/Username" required >
+                    </label>
+                               
+                  <label>
+                      <input type="password" name="password" id="password" class="input-text" placeholder="Password" required>
+                    </label>
+                  
+                  <input type="submit" name="login" class="register" value="Login">
+                  <div class="col-md-8 pt-4 text-center"> <a href="/forgotpassword" class="text-warning">Forgot Password?</a></div>
+                  <div class="bg-light">New User?<a href="#sub-cont" class="text-warning">Signup</a></div>
+              </form>
+         
+        </div>
+        <div class="sub-cont mt-5 pt-5" id="sub-cont">
+          
+            <form class="form sign-up m-2 p-0" action="{% url 'register' %}" method="post" autocomplete="off">
+              
+              {% csrf_token %}
+
+                <h2>Register</h2>
+                <label>
+                    <input type="text" name="fname" id="first-name" class="input-text" placeholder="First Name" required>
+                </label>
+                <label>
+                  <input type="text" name="lname" id="last-name" class="input-text" placeholder="Last Name" required>
+                </label>
+                <label>
+                    <input type="text" name="uname" id="uname" class="input-text" placeholder="User Name" required >
+                  </label>
+                  <label>
+                    <input type="text" name="email1" id="your-email" class="input-text" placeholder="Email Address" required pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}">
+                  </label>
+                  <label>
+                    <input type="text" name="phone" id="phone" class="input-text" placeholder="Contact Number" required >
+                  </label>
+                  
+                <label>
+                    <input type="password" name="password" id="password" class="input-text" placeholder="Password" required>
+                  </label>
+                <label>
+                  <input type="password" name="cpassword" id="comfirm-password" class="input-text" placeholder="Comfirm Password" required>
+                </label>
+                <input type="submit" name="register" class="register" value="Register">
+                <div class="bg-light">Already have account?<a href="#cont" class="text-warning">Login</a></div>
+
+            </form>
+        </div>
+    
+  </div>
+
     <script>
         document.querySelector('.img__btn').addEventListener('click', function() {
             document.querySelector('.cont').classList.toggle('s--signup');
         });
     </script>
-      {% endblock %}
+{% endblock %}

@@ -1,0 +1,426 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<style>
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: white;
+  border-color: white;
+
+}
+#over td {
+  border-color: white;
+}
+
+ th, td,tr {
+  padding: 10px;
+  text-align: center;
+ border: 1px solid white;
+ border-color: white;
+}
+
+.table thead {
+  color: #fff;
+}
+
+#over:hover {
+  background-color: rgba(110, 110, 110, 0.616);
+
+}
+/* Style for calendar input fields */
+.inputdate {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.inputdate1 {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Style for calendar icon */
+.ui-datepicker-trigger {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+/* Style for the datepicker dropdown */
+.ui-datepicker {
+  font-size: 14px;
+}
+.hide-calendar .ui-datepicker-calendar {
+    display: none;
+  }
+
+/* Style for the datepicker header */
+.ui-datepicker-header {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+/* Style for the datepicker days */
+
+
+/* Style for the datepicker navigation buttons */
+.ui-datepicker-prev, .ui-datepicker-next {
+  background-color: #555;
+  color: #fff;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+}
+#selectedFromDate,
+  #selectedToDate {
+    display: inline-block;
+    margin-right: 5px; /* Add space between the two h5 tags */
+  }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<br> 
+ <div class="container-fulid" style="height:2% ;">
+ <nav class="nav nav-pills navbar-expand-lg navbar-light " id="navabars">
+  <!-- Navbar brand or logo -->
+  <a class="navbar-brand" href="#"></a>
+
+  <!-- Navbar content -->
+ 
+  <div id="datepicker"><input id="inputdate" class="inputdate" type="text" placeholder="From "></div>
+   &nbsp;      
+  <div id="datepicker"><input id="inputdate1" class="inputdate1" type="text" placeholder="To "></div>
+        
+
+  <li class="nav-item " style="padding-left:720px ;">
+    <a class="nav-link "  href="#" role="button" aria-expanded="false" style="background: white; color: black;width: 5%;"  onclick="printPageContent()"><i class="fas fa-print"style="color:black;transform: translateX(-40%);"></i></a>
+
+      
+
+  </li>
+
+
+  <li class="nav-item " style="padding-left:5px ;">
+    <a class="nav-link " id="" href="#" role="button" aria-expanded="false" style="background: white; color: black;width:5%;"  onclick="exportAsExcel()"><i class="fas fa-file-excel" style="color:black;transform: translateX(-40%);"></i></a>
+
+    
+  </li>
+  
+  <li class="nav-item">
+    <input type="button" value="X" onclick="javascript:history.go(-1);" class="btn btn-tansperent" style="font-size: 20px;"> 
+
+   </li>
+      </ul>
+  </div>
+</nav>
+<div id="contentToExport"> 
+   <div  style="top: 7rem; " ><br><br>
+  <center>
+    <div class="row">
+      {% if company.company_name != None %}
+       <div  ><h4 class="text text-light" 
+        >{{company.company_name }}
+        {% else %}
+         Add Company</h4>
+
+        </div>
+        {% endif %}
+       <div ><a class="text text-light" style="font-size: 2rem; white-space: nowrap;color: white;"><h2>GSTR2 REPORT </h2></a></div>
+              <h5 class="text text-light" id="selectedFromDate"></h5>
+              <h5 class="text text-light" id="selectedToDate"></h5>
+
+        </div>
+    </div>   
+  </center>
+
+
+   <div class="row text-light" >
+    <div class="col text-light">
+      <div class="table-resposive " style="overflow-x: auto ;border-radius: 10px;  ">
+        <table class="table  text-white" id="myTable" style="width: 100%;">
+            <thead >
+                <tr class="table" >
+                    
+                    <th class="table text-primary" colspan="5" style="text-align: center;">BILLS DETAILS</th>
+                    <th class="table text-primary" colspan="" style="text-align: center;">RATE</th>
+                    <th class="table text-primary" colspan="" style="text-align: center;">CESS RATE</th>
+                    <th class="table text-primary" colspan="" style="text-align: center;">TAXABLE VALUE</th>
+                    <th class="table text-primary" colspan="" style="text-align: center;">REVERSE CHARGE</th>
+                    <th class="table text-primary" colspan="4" style="text-align: center;">AMOUNT</th>
+                     <th class="table text-primary" colspan="" style="text-align: right;">PLACE OF SUPPLY(Name of State)</th>
+
+                     
+              
+                  
+                </tr>
+              <tr class="table text-light" >
+                <th class="table text-primary" style="border-color: white;">GSTIN/UIN</th>
+                <th class="table text-primary" style="border-color: white;">Party Name</th>
+                <th class="table text-primary" style="border-color: white;">No</th>
+                <th class="table text-primary"style="border-color: white;">Date</th>
+                <th class="table text-primary" style="border-color: white;">Value</th>
+                <th colspan="4"style="border-color: white;"></th>
+               
+               
+                <th class="table text-primary"rowspan=""style="border-color: white;">Integrated Tax</th>
+                <th class="table text-primary"style="border-color: white;">Central Tax</th>
+                <th class="table text-primary"style="border-color: white;">State/UT Tax</th>
+                <th class="table text-primary"style="text-align:left;border-color: white;">Cess</th>
+              </tr>
+            </thead>
+            <tbody class=" text-light">
+              {%for i in purchase %}
+              
+             
+              <tr id="over">
+              
+                <td class="table ">{{i.vendor_gst_no}}</td>
+                
+                <td class="table">{{i.vendor_name}}</td>
+                <td class="table">{{i.bill_no}}</td>
+                <td class="table">{{i.bill_date}}</td>
+
+                <td class="table" id="value">{{i.total}}</td>
+                
+                <td class="table rate-column">  {%for p in purchases %}
+                  {% if p.purchase_bill_id == i.id %}
+
+                  <span class="rate-value">{{p.tax_percentage}}</span> 
+                   {%endif%}
+                   {%endfor%}</td>
+                <td class="table">0</td>
+                <td class="table" id="taxablevalue">{{i.sub_total}}</td>
+                <td class="table">N</td>
+                <td class="table" id="integratedTax">{{i.igst}}</td>
+                <td class="table" id="centralTax">{{i.cgst}}</td>
+                <td class="table" id="stateTax">{{i.sgst}}</td>
+                <td class="table"id="cess">0</td>
+                <td class="table">{{i.source_of_supply}}</td>
+
+
+               
+              </tr>
+              {%endfor%}  
+              {%for r in recur_bills %}
+              
+
+             
+              <tr id="over">
+              
+       
+             
+                <td class="table ">{{r.vendor_gst_number}}</td>
+               
+               
+               
+                <td class="table"><span id="vendor_name_{{ forloop.counter }}">{{r.vendor_name}}</span></td>
+                <td class="table">null</td>
+                <td class="table">{{r.start_date}}</td>
+
+                <td class="table" id="value">{{r.grand_total}}</td>
+                
+                <td class="table rate-column">  {%for p in recur_add_bills %}
+                  {% if p.recur_bills_id == r.id %}
+
+                  <span class="rate-value">{{p.tax|floatformat:0}}</span> 
+                   {%endif%}
+                   {%endfor%}</td>
+                <td class="table">0</td>
+                <td class="table" id="taxablevalue">{{r.sub_total}}</td>
+                <td class="table">N</td>
+                <td class="table" id="integratedTax">{{r.igst|floatformat:1|default:"0.0"}}</td>
+                <td class="table" id="centralTax">{{r.cgst|default:"0.0"}}</td>
+                <td class="table" id="stateTax">{{r.sgst|default:"0.0"}}</td>
+                <td class="table"id="cess">0</td>
+                <td class="table">{{r.source_supply}}</td>
+
+
+               
+              </tr>
+              
+              {%endfor%}    
+            </tbody>
+            
+            <tfoot>
+              <tr>
+                <th class="text-success">Total</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th id="valueTotal" class="text-danger" ></th>
+                <th colspan="2"></th>
+                <th id="taxable"class="text-danger"></th>
+                <th colspan="1" ></th>
+                <th id="integratedTaxTotal"class="text-danger"></th>
+                <th id="centralTaxTotal"class="text-danger"></th>
+                <th id="stateTaxTotal"class="text-danger"></th>
+                <th id="cessTotal" class="text-danger"></th>
+                <th></th>
+              </tr>
+            </tfoot>
+          
+
+        </table>
+      </div>
+        <br><br><br><br><br>
+    </div>
+
+   
+
+</div>
+
+
+
+
+
+
+</div>
+ </div>
+</div>
+ 
+
+</div>
+<script>
+  $(document).ready(function() {
+    // Loop through all the vendor name spans
+    $('span[id^="vendor_name_"]').each(function() {
+      var vendorName = $(this).text(); // Get the vendor name text
+      // Remove numbers using regular expression
+      var cleanedVendorName = vendorName.replace(/\d+/g, '');
+      $(this).text(cleanedVendorName); // Set the cleaned vendor name back to the span
+    });
+  });
+</script>
+<script>
+  $(document).ready(function() {
+  $('.rate-column').each(function() {
+    var rates = [];
+    $(this).find('.rate-value').each(function() {
+      var rate = $(this).text().trim();
+      if (rates.indexOf(rate) === -1) {
+        rates.push(rate);
+      }
+    });
+    $(this).text(rates.join(', '));
+  });
+});
+  </script>
+<script>
+  function printPageContent() {
+    const contentToPrint = document.getElementById('contentToExport');
+    const clonedContent = contentToPrint.cloneNode(true);
+
+    // Find all the elements with the class "text" within the cloned content
+    const textElements = clonedContent.querySelectorAll('.text');
+    const tableElements = clonedContent.querySelectorAll('.table');
+
+    // Set the text color to black for each element with the class "text"
+    textElements.forEach(element => {
+      element.style.color = '#000000';  // Text color (black)
+    });
+    tableElements.forEach(element => {
+      element.style.color = '#000000';
+      element.style.border ='1px solid';
+      
+    });
+
+    // Print the cloned content
+    const printWindow = window.open('', '_blank');
+    printWindow.document.body.appendChild(clonedContent);
+    printWindow.print();
+    printWindow.close();
+  }
+</script>
+<script>
+  function exportAsExcel() {
+    const table = document.getElementById('myTable'); // Replace 'myTable' with your table's ID
+    const wb = XLSX.utils.table_to_book(table);
+  
+    // Loop through each sheet in the workbook
+    wb.SheetNames.forEach(sheetName => {
+      const sheet = wb.Sheets[sheetName];
+  
+      // Loop through all cells to format date values
+      for (const cellAddress in sheet) {
+        if (sheet.hasOwnProperty(cellAddress)) {
+          const cell = sheet[cellAddress];
+          if (cell.t === 'd') { // Check if cell contains a date
+            cell.z = 'yyyy-mm-dd'; // Set the desired date format
+          }
+        }
+      }
+    });
+  
+    XLSX.writeFile(wb, '{{company.company_name}}.xlsx');
+  }
+  </script>
+  <script>
+// Calculate and update the totals
+function updateTotals() {
+  let valueTotal = 0;
+  let integratedTaxTotal = 0;
+  let centralTaxTotal = 0;
+  let stateTaxTotal = 0;
+  let cessTotal = 0;
+  let taxable = 0;
+
+  const rows = document.querySelectorAll('#myTable tbody tr');
+  rows.forEach(row => {
+    valueTotal += parseFloat(row.querySelector('#value').textContent);
+    taxable += parseFloat(row.querySelector('#taxablevalue').textContent);
+    integratedTaxTotal += parseFloat(row.querySelector('#integratedTax').textContent);
+    centralTaxTotal += parseFloat(row.querySelector('#centralTax').textContent);
+    stateTaxTotal += parseFloat(row.querySelector('#stateTax').textContent);
+    cessTotal += parseFloat(row.querySelector('#cess').textContent);
+  });
+
+  // Update the total cells in the footer
+  document.querySelector('#valueTotal').textContent = valueTotal.toFixed(2);
+  document.querySelector('#taxable').textContent = taxable.toFixed(2);
+  document.querySelector('#integratedTaxTotal').textContent = integratedTaxTotal.toFixed(2);
+  document.querySelector('#centralTaxTotal').textContent = centralTaxTotal.toFixed(2);
+  document.querySelector('#stateTaxTotal').textContent = stateTaxTotal.toFixed(2);
+  document.querySelector('#cessTotal').textContent = cessTotal.toFixed(2);
+}
+
+// Call the function to calculate and update totals when the page loads
+window.onload = updateTotals;
+</script> 
+<script>
+ $('.inputdate').datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'dd MM yy',
+            onSelect: function(dateText, inst) {
+      $('#selectedFromDate').text('From'+'  ' + dateText);
+    }
+        });
+        $('.inputdate1').datepicker( {
+             changeMonth: true,
+             changeYear: true,
+             showButtonPanel: true,
+             dateFormat: 'dd MM yy',
+             onSelect: function(dateText, inst) {
+      $('#selectedToDate').text('To'+'  ' + dateText);
+    }
+         });
+</script>
+
+
+
+
+
+{%endblock%}                               

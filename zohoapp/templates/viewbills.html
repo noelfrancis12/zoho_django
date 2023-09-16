@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+  .d-flex {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the spacing between the input and button */
+}
+</style>
+<!-- <div class="fixed-top  " style="top: 7rem; margin-left: 20rem;"> -->
+
+<section id="estimates_section">
+
+  <h1 class="p-3">All Purchase Bills</h1>
+  <div class="row ">
+
+    <div class="col-md-4 py-3 d-flex align-items-center">
+      <input type="text" class="form-control text-dark bg-white" id="search" placeholder="search...">
+    </div>
+    
+   
+    <div class="col-md-6 py-2 d-flex justify-content-end">
+      <select id="selectOption" class="btn btn-outline-warning dropdown-toggle "
+              aria-label=".form-select-lg example"  name="type">
+              <option value="1" selected>All Bills</option>
+              <option value="2">Customer A-Z</option>
+              <option value="3">Vendor A-Z</option>
+      </select>
+  </div>
+  <div class="col-md-2 py-3">
+    <a href="{% url 'new_bill' %}" class="btn btn-outline-warning py-2" style="width: 120px;" ><i class="fa-solid fa-plus "> New</i></a>
+  </div>
+
+
+    
+
+    <!-- <div class="col-md-2 form-inline justify-content-left py-3">
+      <a style="color: white; background-color: rgb(210, 132, 30);" class="btn " href="{% url 'new_bill' %}" 
+      style="width: 30%; margin-top: 8px;"><i class="fa-solid fa-plus "></i>New</a>
+      
+    </div> -->
+  </div>
+
+  <div class="col-sm-12 mt-4" >
+    <table id="estimates-table" class="table  text-white text-center">
+      <thead>
+        <tr>
+          <th>DATE</th>
+          <th>BILL NUMBER</th>
+          <th>ORDER NUMBER</th>
+          <th>CUSTOMER NAME</th>
+          <th>VENDOR NAME</th>
+          <th>STATUS</th>
+          <th>AMOUNT</th>
+        </tr>
+      </thead>
+      <tbody id="myTable">
+        {% for bill in bills %}
+        <tr class="clickable-row" data-href="{% url 'bill_view' bill.id %}">
+          <td>{{bill.bill_date}}</td>
+          <td>{{bill.bill_no}}</td>
+          <td>{{bill.order_number}}</td>
+          <td>{{bill.customer_name}}</td>
+          <td>Mr.{{bill.vendor_name}}</td>
+          <td>{{bill.status}}</td>
+          <td>{{bill.total}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+
+    </table>
+  </div>
+</section>
+
+
+
+</div>
+
+
+<script>
+  // Add click event listener to all rows with class "clickable-row"
+  const rows = document.querySelectorAll('.clickable-row');
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      // Get the URL from the "data-href" attribute
+      const url = row.getAttribute('data-href');
+      // Navigate to the URL
+      window.location.href = url;
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    $("#search").on("keyup", function () {
+      var value = $(this).val().toLowerCase();
+      $("#myTable tr").filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function() {
+      $('#selectOption').change(function() {
+          var selectedValue = $(this).val();
+          
+          if (selectedValue === "1") {
+              window.location.href = "{% url 'view_bills' %}";
+          } else if (selectedValue === "2") {
+              window.location.href = "{% url 'customerAtoZ_bills' %}";
+          } else if (selectedValue === "3") {
+              window.location.href = "{% url 'vendorAtoZ_bills' %}";
+          }
+      });
+  });
+</script>
+
+
+{% endblock %}

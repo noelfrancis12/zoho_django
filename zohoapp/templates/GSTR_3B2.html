@@ -1,0 +1,663 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+  
+  h2{
+    font-size: small;
+    font-family: 'Segoe UI', Tahoma,;
+    color:#dfe4e9;
+  }
+table {
+  font-family: arial, sans-serif;
+
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #1f1c1c;
+  text-align: left;
+  padding: 4px;
+  color:#e5d7d7;
+  font-weight: 100;
+  font-size: small;
+  font-family: 'Segoe UI', Tahoma,;
+}
+table,tr {
+  border: hidden;
+ 
+}
+tr:nth-child(odd) {
+  background-color:white;
+}
+tr:nth-child(even) {
+  background-color: #1f1d1d2a;
+}
+
+
+
+  #aover{
+    color: rgb(214, 141, 5);
+  }
+/* #aover:hover{
+  font-weight: bold;
+} */
+tr:hover{
+  background-color: rgb(146, 137, 137);
+  font-weight: bold;
+
+}
+
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: rgb(108, 108, 104);
+
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #e0dcdc;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    #selected-area{
+        font-size: 20px;
+    }
+  
+
+
+    
+</style>
+
+
+        
+
+<style>
+ /* Style for calendar input fields */
+.inputdate {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+.inputdate1 {
+  width: 150px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Style for calendar icon */
+.ui-datepicker-trigger {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+/* Style for the datepicker dropdown */
+.ui-datepicker {
+  font-size: 14px;
+}
+.hide-calendar .ui-datepicker-calendar {
+    display: none;
+  }
+
+/* Style for the datepicker header */
+.ui-datepicker-header {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+}
+
+/* Style for the datepicker days */
+
+
+/* Style for the datepicker navigation buttons */
+.ui-datepicker-prev, .ui-datepicker-next {
+  background-color: #555;
+  color: #fff;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+}
+#selectedFromDate,
+  #selectedToDate {
+    display: inline-block;
+    margin-right: 5px; /* Add space between the two h5 tags */
+  }
+    .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+    .bar .left{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.bar .left input{
+    height: 5vh;
+}
+.btn {
+  background-color: white;
+  border: none;
+  color: green;
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: white;
+}
+@media print {
+        body * {
+            visibility: hidden;
+        }
+
+        header {
+            display: none;
+        }
+
+        .print-only * {
+            visibility: visible;
+            
+        }
+
+        .print-only {
+            color: black;
+            /* position: absolute; */
+
+            /* position: fixed; */
+            left: 0;
+            top: 0;
+            right: 0;
+            height: auto;
+            /* page-break-before: always;
+            page-break-inside: avoid; */
+        }
+
+        @page {
+            size: 100%;
+            margin: 0;
+            height: auto;
+        }
+
+        .print-only .table {
+            border-collapse: collapse;
+            width: 100%;
+            /* Set the width to 100% of the printed page */
+            margin: 0;
+            /* Remove margins to maximize the width */
+        }
+
+        .print-only th,
+        .print-only td {
+            padding: 8px;
+            /* Add padding for better readability */
+            text-align: center;
+            /* Center-align text in cells */
+        }
+
+    }
+</style>
+
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<body>
+  <div class="page-content">
+   
+        <div class="card-body">
+            <div class="card-title">
+  <div class="card-body">
+    <div class="bar">
+     
+        <div class=" left">
+            <div class="px-2">
+              <label style="text-align:left ">From</label>
+              <input id="inputdate" id="datepicker" class="inputdate"   value="DD-MM-YY" /> 
+            </div>
+            <div  class="px-2">
+              <label style="text-align:left ">To</label>
+              <input id="inputdate1"  class="inputdate1"  value="DD-MM-YY"/>
+              
+            </div>
+
+        </div>
+
+  
+               
+                <div class="right">
+                 
+                  <button  class="btn btn_print btn-outline-info"  style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-print"></i></button>
+                  <button class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')" style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-file-excel"></i></button>                       
+                  
+                    <button class="btn" ><a onclick ="javascript:history.go(-1);" class="fa fa-close" style="background: white; color: rgb(16, 135, 46);"></a></button>
+            
+                </div>
+            </div>
+           
+        
+              <div class="card-body" id="container-to-print"  id="pdf-card" >
+                  <div class="card-title">
+                    <div  style="top: 7rem; " >
+                      <center>
+                        <div class="row">
+                          {% if company.company_name != None %}
+                           <div  ><h4 class="text text-light"  style="font-size: 30px;"
+                            >{{company.company_name }}
+                            {% else %}
+                             Add Company</h4>
+                    
+                            </div>
+                            {% endif %}    
+
+                           <div ><h2 class="align-text-top" style="font-size: 35px;">GSTR3B-REPORT </h2></div>
+                           <h5 class="text text-light" id="selectedFromDate"></h5>-
+                           <h5 class="text text-light" id="selectedToDate"></h5>
+                    
+                            </div>
+                        </div>   
+                      </center>
+                       
+                         
+                      <hr>
+              
+        
+
+
+ 
+   <div  id="pdf-card" >
+        <div class="container-fluid" id="tbl_exporttable_to_xls">
+          <div class="table-responsive"  > 
+         
+         <div id="print-button" >
+       
+
+            <div class="printable-content" class="printable-wrapper">
+
+      <h2 >1-Details of outward supplies and inward supplies liable to reverse charge</h2>       
+     
+
+      <table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+                    style="background-color: rgba(0, 0, 0, 0.2);" id="myTable2">
+
+      <table class="table table-bordered table-striped mt-4 "  style="margin: 0px auto;">
+      <thead>
+  <tr >
+    <th>Nature Of Supplies</th>
+    <th>Total Taxable <br>Value</th>
+    <th>Integrated Tax	</th>
+    <th>Central Tax</th>
+    <th>State/UT Tax	</th>
+    <th>Cess	</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>Outward taxable supplies (other than zero rated, nil rated and exempted)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  
+  <tr>
+    <td>Outward taxable supplies (zero rated)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Other outward supplies (nil rated, exempted)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Inward supplies (liable to reverse charge)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Non-GST outward supplies</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+</tbody>
+</table>
+<br>
+<h2>2. Details of inter-State supplies made to unregistered persons, composition dealer and UIN holders</h2>
+
+<table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+style="background-color: rgba(0, 0, 0, 0.2);" id="myTable2">
+
+<table class="table table-bordered table-striped mt-4 "  style="margin: 0px auto;">
+  <tr>
+    <th>
+      </th>
+      <th colspan="2"> &nbsp;Supplies Made To Unregistered Persons
+        </th>
+        
+    <th colspan="2">Supplies Made To Composition Taxable Persons	</th></th>
+    <th colspan="2">Supplies Made To UIN Holders</th>
+  </tr>
+  <tr >
+    <th>
+      Place Of Supply (State/UT)</th>
+      <th> 
+        Total Taxable Value</th>
+        <th>Amount Of Integrated <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax</th>  
+    <th>Total Taxable <BR>Value	</th>
+      <th>Amount Of Integrated <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax</th>  
+     <th>Total Taxable Value	</th>
+     <th>Amount Of Integrated <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax</th>  
+  </tr>
+ 
+  <tr>
+    <td> </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table><br>  
+<h2>3. Details of eligible Input Tax Credit</h2>     
+     
+
+
+<table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+style="background-color: rgba(0, 0, 0, 0.2);" id="myTable2">
+
+<table class="table table-bordered table-striped mt-4 "  style="margin: 0px auto;">
+
+  <tr >
+    <th>Details</th>
+    
+    <th>Integrated Tax	</th>
+    <th>Central Tax</th>
+    <th>State/UT Tax	</th>
+    <th>Cess	</th>
+  </tr>
+  <tr>
+  
+    
+    <th colspan="5" style="font-weight: 500;"><b>(A) ITC Available (whether in full or part)	</b></th>
+    
+  </tr>
+  <tr >
+    <td>(1) Import of goods</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+  
+  <tr>
+    <td>(2) Import of services</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+  </tr>
+  <tr>
+    <td>(3) Inward supplies liable to reverse charge (other than 1 & 2 above)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+  </tr>
+  <tr>
+    <td>(4) Inward supplies from ISD</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+  <tr>
+    <td>(5) All other ITC</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+ 
+  </tr>
+  <tr >
+  
+    
+    <th colspan="5" style="font-weight: 500;"><b>(D) Ineleigible ITC	</b></th>
+    
+  </tr>
+  <tr >
+    <td>(1) As per section 17(5)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+  <tr >
+    <td>(2) Others</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+</table><br>
+<h2>4. Details of exempt, nil-rated and non-GST inward supplies</h2>     
+
+<table class="table2excel  table table-responsive-md mt-4 table-hover table-bordered"
+style="background-color: rgba(0, 0, 0, 0.2);" id="myTable2">
+
+<table class="table table-bordered table-striped mt-4 "  style="margin: 0px auto;">
+  <tr class="table  text-black ">
+    <th>Nature Of Supplies</th>
+    
+    <th>Inter-State Supplies</th>
+    <th>Intra-State Supplies</th>
+  
+  </tr>
+  <tr >
+    <td>From a supplier under composition scheme, Exempt and Nil rated supply</td>
+    <td>0</td>
+    <td>0</td>
+  
+  
+  </tr>
+  <tr >
+    <td>Non GST supply</td>
+    <td>0</td>
+    <td>0</td>
+  
+  
+  </tr></DIV></table></div></div>
+
+
+</div></div></div></div>
+<script>
+  $('.inputdate').datepicker( {
+             changeMonth: true,
+             changeYear: true,
+             showButtonPanel: true,
+             dateFormat: 'dd MM yy',
+             onSelect: function(dateText, inst) {
+       $('#selectedFromDate').text('From'+'  ' + dateText);
+     }
+         });
+         $('.inputdate1').datepicker( {
+              changeMonth: true,
+              changeYear: true,
+              showButtonPanel: true,
+              dateFormat: 'dd MM yy',
+              onSelect: function(dateText, inst) {
+       $('#selectedToDate').text('To'+'  ' + dateText);
+     }
+          });
+ </script>
+ 
+ <script>
+  // Get the table element by its ID
+  var table = document.getElementById("myTable");
+
+  // Get the table body
+  var tbody = table.getElementsByTagName("tbody")[0];
+
+  // Get all rows in the table body
+  var rows = tbody.getElementsByTagName("tr");
+
+  // Iterate through each row and set the serial number
+  for (var i = 0; i < rows.length; i++) {
+      // Get the first existing table cell (td) in the current row
+      var firstCell = rows[i].getElementsByTagName("td")[0];
+
+      // Set the serial number as the row number (plus 1) in the first cell
+      firstCell.textContent = i + 1;
+  }
+</script>          
+<script type="text/javascript">
+  $(document).ready(function ($) {
+      console.log('print');
+
+      $(document).on('click', '.btn_print', function (event) {
+          console.log('print1');
+          event.preventDefault();
+          // var printContent = document.getElementById("pdf-card").innerHTML;
+          // var originalContents = document.body.innerHTML;
+
+          // // Create a <div> container for centering
+          // var containerDiv = document.createElement("div");
+          // containerDiv.style.textAlign = "center"; // Center-align the content
+
+          // // Create the <h1> element
+          // var h1Element = document.createElement("h1");
+          // h1Element.textContent = "GSTR-3B REPORT"; // Replace "Title" with your desired title text
+
+          // // Append the <h1> element to the container
+          // containerDiv.appendChild(h1Element);
+
+          // // Insert the container and the print content
+          // containerDiv.innerHTML += printContent;
+          // document.body.innerHTML = containerDiv.outerHTML;
+
+          // window.print();
+
+          // // Restore the original contents (excluding the container)
+          // document.body.innerHTML = originalContents;
+          const pdfCard = document.getElementById('pdf-card').cloneNode(true);
+
+          // Create a new window for printing
+          const printWindow = window.open('', '');
+
+          const pageTitle = printWindow.document.createElement('h1');
+          pageTitle.textContent = ''; // Replace 'Page Title' with your desired title text
+          pageTitle.style.textAlign = 'center';
+          pageTitle.style.color = 'black';
+
+          // Append the <h1> element to the new window's body
+          printWindow.document.body.appendChild(pageTitle);
+
+
+          // Append the cloned 'pdf-card' div to the new window
+          printWindow.document.body.appendChild(pdfCard);
+
+          // Ensure the styles are preserved by copying CSS from the original document
+          const stylesheets = document.styleSheets;
+          for (let i = 0; i < stylesheets.length; i++) {
+              const stylesheet = stylesheets[i];
+              if (stylesheet.href) {
+                  const link = printWindow.document.createElement('link');
+                  link.rel = 'stylesheet';
+                  link.href = stylesheet.href;
+                  printWindow.document.head.appendChild(link);
+              }
+          }
+
+          // Trigger the print dialog for the new window
+          printWindow.print();
+
+          // Close the new window after printing
+          printWindow.close();
+
+
+      });
+
+  });
+</script>
+
+</div>
+<script>
+$(document).ready(function($) {
+$(".table-row").dblclick(function() {
+    window.document.location = $(this).data("href");
+});
+});
+</script>
+
+
+
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+<script type="text/javascript">function ExportToExcel(type, fn, dl) {
+var elt = document.getElementById('tbl_exporttable_to_xls');
+var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+return dl ?
+ XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+ XLSX.writeFile(wb, fn || ('GSTR_3B2.' + (type || 'xlsx')));
+}
+</script>
+
+</nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+</style></div>
+{% endblock %}
+

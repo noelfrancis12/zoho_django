@@ -1,192 +1,458 @@
-{% extends 'nav.html' %}
+{% extends 'base.html' %}
 {% load static %}
-{% block  content %}
-<section>
-
-  <div class="row  ml-4 " style="top: 7rem;">
-    <div class="col-md-2 " style="border-right: 1px solid white;height: 100vh;position: fixed;">
-      <h6 class="mb-4"><a class="active text-white " href="{% url 'base' %}"><i class="fa fa-fw fa-home mr-2 text-white "></i> Home</a> </h6>
-      <h6 class="mb-4"><a class="active  text-white " href="{% url 'itemview' %}"><i class="fa-solid fa-sitemap mr-3 "></i>Items</a> <a class="ml-5 active text-white" href="{% url 'additem' %}"><i class="fa-solid fa-plus "></i></a></h6>
-      <h6 class="mb-4"><a class="active text-white " href="#"><i class="fa-solid fa-building-columns mr-3"></i>Banking</a></h6>
-      <h6 class="mb-4 "><a class="active  text-white" href="#"><i class="fa-solid fa-cart-shopping mr-3"></i>Sales</a></h6>
-      <h6 class="mb-4"><a class="active text-white " href="#"><i class="fa-solid fa-basket-shopping mr-3"></i>Purchases</a></h6>
-      <h6 class="mb-4"><a class="active text-white " href="#"><i class="fa-solid fa-business-time mr-3 "></i>Time Tracking</a></h6>
-       <h6 class="mb-4"><a class="active text-white " href="#"><i class="fa-solid fa-user mr-3 "></i>Accountant</a></h6>
-       <h6 class="mb-4"><a class="active text-white " href="#"><i class="fa-solid fa-calendar-week mr-3"></i>Reports</a></h6>
-       <h6 class="mb-4"><a class="active text-white " href="#"><i class="fa-solid fa-file mr-3"></i>Documents</a></h6>
-        <h6 class="mb43"><a class="active text-white " href="#"><i class="fa-solid fa-money-bill mr-3 "></i>Payroll</a></h6>
-    </div>
-   <div class="col-md-3" style="border-right: 1px solid white;height: 100vh;margin-left: 16.5rem;position: fixed;">
-     <div class="row">
-       <div class="col-md-4"><a class="text-white" style="font-size: 1.5rem;">All Items</a></div>
-       <div class="col-md-4 " style="margin-top: -3rem;"><a style="color: #ccc;width: 4rem;height: 2rem;margin-top: 3rem;" class="btn btn-success " href="{% url 'additem' %}"><i class="fa-solid fa-plus "></i>New</a>
-         <a style="color: #ccc;"href="#3">      
-           <form action="">
-             <select name="" style="width: 4rem;margin-top: -2rem;margin-left: 5rem;" class="form-control">
- 
-               <option value="">...</option>
-               <option value="active" >Mark as active</option>
-               <option value="inactive" >Mark as Inactive</option>
-           </select>
-           </form> </a>
-       </div>
-     </div> 
-     <table class="table  text-white">
-       <thead>
-         <tr>
-           <th>Name</th>
-          
-         </tr>
-         
-       </thead>
-       <tbody>
-         {% for v in allproduct %}
-
-         <tr>
-
-           <td ><a class="text-white " href="{% url 'detail' v.id %}">{{v.Name}}</a></td>
-        
-         </tr>
-        
-         {% endfor %}
-         <tr>
-          <td><hr></td>
-          </tr>
-       </tbody>
-     </table>
+{% block content %}
+<style>
+  /* Style for the black overlay */
+  .modal {
+    position: fixed;
+    top: 100px;
+    left:400px;
+    width:100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Black semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index:99;
+  }
   
-   </div> 
-   
-   <div class="col-md-6" style="margin-left: 41rem;position: fixed;">
-     <div class="row">
-       <div class="col-md-4"><a class="text-white" style="font-size: 1.5rem;"><h2>{{product.Name}}</h2></a></div>
-       
-       <div class="col-md-4 " style="margin-top: -3rem;margin-left: 14rem;"><a style="color: #ccc;width: 4rem;height: 2rem;margin-top: 3rem;" class="btn btn-light text-dark " onclick="location.href ='{% url 'edititem' product.id %}' "><i class="fa fa-pencil"></i></i></a>
-         <a style="color: #ccc;"href="#3">      
-           <form action="{% url 'Action' product.id %}" method="post">
-            {% csrf_token %}
-             <select name="action" style="width: 5rem;margin-top: -2rem;margin-left: 5rem;height: 2rem;" class="form-control">
- 
-               <option value="">More</option>
-              {% if product.satus == 'active' %}
-              <option value="inactive">in Active</option>
-               <option value="delet">Delete</option>
-               {% else %}
-               <option value="active">Active</option>
-               <option value="delet">Delete</option>
-               {% endif %}
-           </select>
-           <input style="color: #ccc;height: 2rem;margin-top: -3.6rem;margin-left: 11rem;" class="btn btn-secondary  text-white " type="submit">
+  /* Style for the modal content */
+  .modal-content {
+    background-color: black; /* White background for the modal */
+    color:black;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 10px 8px rgba(0, 0, 0, 0.9);
+    max-width: 500px; /* You can adjust the width as needed */
+    position: relative;
+    width:100%;
+    height: 100%;
+  }
+  
+  /* Style for the close button (you can customize this) */
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  .modal-title{
+    color:white;
+    size:20px;
+  }
 
-           </form> </a>
-       </div>
-     </div>
-     <button class="btn btn-dark text-white">{{product.satus}}</button>
+  .dropdown-item:hover{
+    color: white;
+  }
 
-     <!-- ============================ tab view (detail page )==================================== -->
+</style>
 
+<section class="item" id="navbar-example2" >
+  <div class="nav-item" style="height:2vh; width:4vw; margin-left: 96.8%;">
+    <button type="button" onclick="history.go(-1);" style="height:5vh; width:2.5vw;">&times;</button>
+  </div>
+  <div class="container-fluid" style="background: black; width:90vw; margin-left:-5rem;margin-top: 2rem; height: 245vh;">
+    <div class="col-md-12" style="right:0;">
+      <div class="row">
+         
+        <div class="col-md-3" style="border-right: 1px solid white; height: 250vh; position: absolute; z-index:99; margin-top:-3rem;">
+          <div class="row">
+            <div class="col-md-4"><a class="text-white" style="font-size: 1.5rem;">All Items</a></div>
+              <div class="col-md-4 " style="margin-left: 18rem; margin-top: -1.9rem; ">
+                <a style="color: black; margin-top: 5rem; background: #FFCFB0;" class="btn btn-secondary" href="{% url 'additem' %}">New</a>
+                <div class="col-md-4 form-inline" style="margin-left: -5rem; margin-top: -1.8rem;">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" Style="background: #FFCFB0;">
+                      Filter
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="filterButton">
+                      <a class="dropdown-item" href="#" data-sort="name">Name</a>
+                      <a class="dropdown-item" href="#" data-sort="hsn">HSN Number</a>
+                      <a class="dropdown-item" href="#" data-sort="all">All</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-     
-    <div class="tabs">
-    <div class="tab-header">
+            <input type="text" id="searchInput" class="form-control bg-dark" placeholder="Search Items..." style="margin-top: -2.2rem; width: 50%; margin-left: 1rem;">
+            <div id="tableContainer" style="max-height: 500px;overflow-y: auto;margin-top: -0.5rem;">
+              <table class="table text-white" style="margin-top: 1.9rem;" id="dataTable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>HSN</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  {% for v in allproduct %}
+                  <tr>
+            
+                    <td><a class="text-white" href="{% url 'detail' v.id %}">{{v.Name}}</a></td>
+                    <td><a class="text-white" href="{% url 'detail' v.id %}">{{v.hsn}}</a></td>
+            
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div> 
+          </div>
+          
+          <div class="col-md-12" style="margin-left: 24rem;"  data-spy="scroll" data-target="#navbar-example2" data-offset="0">
+            <div class="row" style="position: relative;">
+              <div class="col-md-12" >
+                <a class="text-white" style="font-size: 1.5rem; margin-left:4rem;"><h3>{{product.Name}}</h3></a>
+                {%  if product.satus == 'active' %}
+                <button class="btn btn-dark text-white mt-2" style="border: 2px solid green;"  >{{product.satus}}</button>
+                {% else %}
+                  <button class="btn btn-dark text-white mt-3" style="border: 2px solid red;"  >{{product.satus}}</button>
+                {% endif %}
+              </div>
+              <div class="col-md-4 " style="margin-top: 1rem; z-index:9;">
+                <a href="{% url 'transaction' product.id %}" style= "font-size: 18px; width: 8.6rem; height: 1.9rem; background-color: #FFCFB0;;"  class="btn btn-secondary  text-dark">
+                  Transactions
+                </a>
+              </div>
 
-     <div class="active">
-       <i class="fa fa code"></i>OverView
-     </div>
-     <div >
-       <i class="fa fa code"></i> Description
-     </div>
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6" style="margin-top: 2rem;">
+                    <a style="color: #e0e0e0; width: 3rem; height: 2rem; margin-top: 2.3rem; margin-left: 43rem; background: #FFCFB0;" class="btn btn-secondary text-dark" onclick="location.href ='{% url 'edititem' product.id %}'">
+                      <i class="fa fa-solid fa-pencil "></i>
+                    </a>
+                  </div>
+                </div>      
+                    
+                <div class="col-md-4 " style="margin-top:-2rem;position: relative;z-index:9; ">
+                  <input type="file" id="attachment" style="display: none;">
+                  <button onclick="document.getElementById('attachment').click();" id="comment-box" style= "font-size: 18px;margin-left: 46.4rem; width: 3rem; height: 2rem; background: #FFCFB0;"  class="btn btn-secondary text-dark">
+                    <i class="fa fa-solid fa-file"></i>
+                  </button>
+                  <a href="{% url 'cleer' product.id %}" style="color: #ccc;height: 2rem;margin-top: -3.7rem;margin-left: 49.8rem; font-size: 18px; background: #FFCFB0;"  class="btn btn-secondary  text-dark " >
+                    <i class="fa fa-solid fa-trash"></i>
+                  </a>
+                </div>
+            
+                <div class="toggle2">
+                  <button onclick="toggleModal()" style="margin-top: -6.7rem; font-size: 18px; margin-left: 53rem; background: #FFCFB0;" class="btn btn-secondary text-dark">
+                    <i class="fa fa-solid fa-comment"></i>
+                  </button>
+                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </div>
+            </div>
 
-     <div >
-       <i class="fa fa code"></i> History
-     </div>
+            <hr>
 
+            <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Add Comment</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <form id="commentForm" method="post" action="{% url 'commentdb' product.id %}">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <label for="commentInput">Comment:</label>
+                        <textarea class="form-control bg-white text-dark" id="commentInput" name="comment" rows="3" style="height: 80px;"></textarea>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submitCommentBtn" onclick="submitComment()">Submit</button>
+                      </div>
+                      <div class="container-fluid">
+                        <table class="table table-responsive-md mt-4 table text-white">
+                          <thead>
+                            <tr>
+                              <th>sl no.</th>
+                              <th>Comments</th>
+                              <th>Delete</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {% for com in comments %}
+                            <tr class="table-row">
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ com.content }}</td>  <!-- Use com.comment instead of com.content -->
+                              <td><a href="{% url 'delete_comment' product.id com.id %}">Delete</a></td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-9"> 
+              <div class="card text-black" style=" margin-bottom:30px; width: 60vw; background: #FFE7C7;">
+                <div class="card-body">
+                  <h2 class="text-center" style="margin-top: 7rem;" >{{product.Name}}</h2> <hr>
+
+                  <h6 style="margin-top: -10.3rem;">Date :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 9.5rem; margin-bottom: 2rem;">{{product.date}}</h6> <br>
+
+                  <h6 style="margin-top: -2.9rem;">HSN Code :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 9.5rem; margin-bottom: 2rem; font-size: 15px;">{{product.hsn}}</h6> 
+
+                  <h6 style="margin-top: -1.6rem;">Stock on Inventory :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 9.5rem; margin-bottom: 2rem; font-size: 15px;">{{product.stock}}</h6> 
+
+                  <h6 style="margin-top: -6.5rem; margin-left: 38rem;"><b>Cost price :</b></h6> <br>
+                  <h6 style="margin-top: -3.25rem; margin-left: 45rem; font-size: 18px;" ><li class="fa fa-rupee">&nbsp;<b>{{product.p_price}}</b></li></h6> <br>
+
+                  <h6 style="margin-top: -1.5rem; margin-left: 38rem;"><b>Selling  price :</b></h6> <br>
+                  <h6 style="margin-top: -3.3rem; margin-left: 45rem;  font-size: 18px;" ><li class="fa fa-rupee">&nbsp;<b>{{product.s_price}}</b></li></h6> <br>
+
+                  <h6 style="margin-top: -1.5rem; margin-left: 38rem;"><b>Stock Value :</b></h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 45rem; margin-bottom: 3.5rem; font-size: 20px;"><li class="fa fa-rupee">&nbsp;<b>{{ stock }}</b></li></h6>
+
+                  <h5 style="margin-top: 7rem;">Account Type :</h5>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem; margin-bottom: 2rem;" >{{product.type}}</h6> 
+              
+                  <h5 class="mr-5">Unit :</h5>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem; margin-bottom: 2rem;" >{{product.unit.unit}}</h6> 
+              
+                  <h6 class="mr-4 ">Created Source :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem; margin-bottom: 2rem;"  >{{product.user.username}}</h6> 
+
+                  <h6 sclass="mr-4 ">HSN Code :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem; margin-bottom: 2rem;"  >{{product.hsn}}</h6> 
+
+                  <h6 class="mr-4 ">Tax Prefrence :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem; margin-bottom: 2rem;"  >{{product.tax}}</h6> 
+
+                  <h6 class="mr-4 ">Stock on Inventory :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem; margin-bottom: 2rem;"  >{{product.stock}}</h6> 
+
+                  <h6 class="mr-4 ">Cost price :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem; margin-bottom: 2rem;" >{{product.p_price}}</h6>
+
+                  <h6 class="mr-5">Purchase Account :</h6>
+                  <h6 style="margin-top: -1.5rem; margin-left: 13rem;" >{{product.purchase.Account_name}}</h6> <br>
+
+                  <h6 class="mr-5">Selling  price :</h6>
+                  <h6 style="margin-top: -1.5rem; margin-left: 13rem;" >{{product.s_price}}</h6> <br>
+
+                  <h6 class="mr-5">Sales  Account :</h6>
+                  <h6 style="margin-top: -1.6rem; margin-left: 13rem;" >{{product.sales.Account_name}}</h6> <br>
+                  
+                </div>
+                    
+                <div> 
+                  <div class="card" style="margin-left:500px;width:350px;height: auto; margin-top:-35rem; background-color:#C88141;">
+                    <div class="card-body" style="color:White;">
+                      <h4>PURCHASE DETAILS</h4>
+                      <hr>
+                      <h6 class="mr-5">Purchase Account &nbsp;&nbsp;&nbsp;&nbsp; </h6>
+                      <h6 style="margin-top: -1.6rem; margin-left: 12rem;" >{{product.purchase.Account_name}}</h6> <br>
+                      <h6 class="mr-5">Description &nbsp;&nbsp;&nbsp;&nbsp; </h6>
+                      <h6 style="margin-top: -1.6rem; margin-left: 12rem;" >{{product.p_desc}}</h6> <br>
+
+                      <h4 style="margin-top: 2rem;">SALES DETAILS</h4><hr>
+                      <h6 class="mr-5">Sales  Account</h6>
+                      <h6 style="margin-top: -1.6rem; margin-left: 12rem;" >{{product.sales.Account_name}}</h6> <br>
+                      <h6 class="mr-5">Description</h6>
+                      <h6 style="margin-top: -1.6rem; margin-left: 12rem;" >{{product.s_desc}}</h6><br>
+                      <h6 class="mr-4 ">Stock on Inventory</h6>
+                      <h6 style="margin-top: -1.6rem; margin-left: 12rem;"  >{{product.stock}}</h6> 
+                      {% comment %} <h6 class="mr-5 " style="margin-top: 2rem;">Stock on Inventory</h6>
+                      <h6 style="margin-top: -1.4rem; margin-left: 13rem; "  >{{product.stock}}</h6> {% endcomment %}
+                    </div>
+                  </div>
+                </div>
+              </div><br><br>
+            </div>
+          </div>  
+        </div>
+      </div>
     </div>
-
-    <div class="tab-indicator"></div>
-
-
-    <div class="tab-body">
-     <div class="activ ">
-      <h6 class="mr-5">Account Type</h6>
-      <h6 style="margin-top: -1.7rem; margin-left: 10rem;" >{{product.type}}</h6> 
-
-       <h6 class="mr-5">Unit</h6>
-       <h6 style="margin-top: -1.7rem; margin-left: 10rem;" >{{product.unit.unit}}</h6> 
-
-       <h6 class="mr-4 ">Created Source</h6>
-       <h6 style="margin-top: -2rem; margin-left: 10rem; margin-bottom: 2rem;" >{{product.user.username}}</h6> 
-      <h4 class="mb-3"><b>Purchase Information</b></h4>
-      <h6 class="mr-5">Cost price</h6> <br>
-      <h6 style="margin-top: -3rem; margin-left: 10rem;" >{{product.p_price}}</h6> <br>
-      <h6 class="mr-5">Purchase Account</h6>
-      <h6 style="margin-top: -2rem; margin-left: 10rem;" >{{product.purchase.Account_name}}</h6> <br>
-      <h6 class="mr-5">Description</h6>
-      <h6 style="margin-top: -2rem; margin-left: 10rem;" >{{product.p_desc}}</h6> 
-
-      <h4 class="mb-3 mt-4"><b>Sales Information</b></h4>
-      <h6 class="mr-5">Selling  price</h6> <br>
-      <h6 style="margin-top: -3rem; margin-left: 10rem;" >{{product.s_price}}</h6> <br>
-      <h6 class="mr-5">Sales  Account</h6>
-      <h6 style="margin-top: -2rem; margin-left: 10rem;" >{{product.sales.Account_name}}</h6> <br>
-      <h6 class="mr-5">Description</h6>
-      <h6 style="margin-top: -2rem; margin-left: 10rem;" >{{product.s_desc}}</h6> 
-      
-      
+  </div>
+</section>
+                        
+                  
+              
+            
+              
+              
+            {% comment %} </div> {% endcomment %}
+            {% comment %} <div class="row" style="margin-top:30px;">
+              <div class="col-sm-5">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="mb-3"><b>Purchase Information</b></h4>
+                    <h6 class="mr-5">Cost price</h6> <br>
+                    <h6 style="margin-top: -2.5rem; margin-left: 8rem;" >{{product.p_price}}</h6> <br>
+                    <h6 class="mr-5">Purchase Account</h6>
+                    <h6 style="margin-top: -1.5rem; margin-left: 10rem;" >{{product.purchase.Account_name}}</h6> <br>
+                    <h6 class="mr-5">Description</h6>
+                    <h6 style="margin-top: -1.8rem; margin-left: 10rem;" >{{product.p_desc}}</h6> 
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="card" >
+                  <div class="card-body">
+        
+                    <h4 class="mb-2 mt-3"><b>Sales Information</b></h4>
+                    <h6 class="mr-5">Selling  price</h6> <br>
+                    <h6 style="margin-top: -3rem; margin-left: 10rem;" >{{product.s_price}}</h6> <br>
+                    <h6 class="mr-5">Sales  Account</h6>
+                    <h6 style="margin-top: -1.6rem; margin-left: 10rem;" >{{product.sales.Account_name}}</h6> <br>
+                    <h6 class="mr-5">Description</h6>
+                    <h6 style="margin-top: -1.6rem; margin-left: 10rem;" >{{product.s_desc}}</h6>
+                  </div> 
+                </div>
+              </div>
+            <div> {% endcomment %}
+          {% comment %} <div class="container" >
+            <h2 style="margin-left:150px;">There is no transaction yet</h2>
+            <p style="margin-left:280px;">do something</p>
        
-     </div>
-
-     <div >
-       <h2>There is no transaction yet</h2>
-       <p>do something</p>
-     </div>
-
-
-     <div >
-      <h6>{{product.date}}</h6>
-       <h6 style="margin-left: 15rem ;margin-top: -1.8rem;">{{product.history}}</h6>
-   
-     
-      
-    
       
       
-     </div>
+            <div style="overflow: hidden;" >
+              <h6 style="margin-left: 5rem;">{{product.date}}</h6>
+              <h6 style="margin-left: 30rem;margin-top: -1rem;">{{product.creat}}</h6>
+          
+              <table class="table text-white" >
+                <thead>
+                  {% for i in history %}
+                  <tr>
+                    <th >{{i.date}}</th>
+                    <th>{{i.message}}</th>
+          
+                  </tr>
+                  {% endfor %}
+                </thead>
+              </table> {% endcomment %}
+                
 
 
-    </div>
+
+  <script>
+    function toggleModal() {
+      const modal = document.getElementById("myModal");
+      if (modal.style.display === "none") {
+        modal.style.display = "block";
+        // You can add an AJAX call here to load comments dynamically, if needed
+      } else {
+        modal.style.display = "none";
+      }
+    }
+  
+    // Function to close the modal
+    function closeModal() {
+      const modal = document.getElementById("myModal");
+      modal.style.display = "none";
+    }
+  
+    function submitComment() {
+      document.getElementById('commentForm').submit();
+    }
+  </script>
+  
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Attach keyup and paste event handlers to the search input
+      $("#searchInput").on("keyup paste", function() {
+        var filter = $(this).val().toUpperCase();
+        var table = $("#tableBody");
+        var tr = table.find("tr");
+  
+        // Loop through all table rows, show/hide based on search query
+        tr.each(function() {
+          var td_name = $(this).find("td:eq(0)");
+          var td_hsn = $(this).find("td:eq(1)");
+          var txtValue_name = td_name.text().toUpperCase();
+          var txtValue_hsn = td_hsn.text().toUpperCase();
+  
+          if (txtValue_name.indexOf(filter) > -1 || txtValue_hsn.indexOf(filter) > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      });
+    });
+  </script>
+  
+
+{% comment %} <script>
+  function fieldset2_function() {
+    document.getElementById("over").style.display = "none";
+    document.getElementById("comments").style.display = "block";
+    document.getElementById("addCommentBtn").style.display = "block"; // Show the "Add Comment" button
+  }
+
+</script> {% endcomment %}
+
 
 <script>
+  $(document).ready(function() {
+    var originalTable = $('#dataTable').clone(); // Clone the original table on page load
 
-let tabHeader = document.getElementsByClassName("tab-header")[0];
-let tabIndicator = document.getElementsByClassName("tab-indicator")[0];
-let tabBody = document.getElementsByClassName("tab-body")[0];
+    // Function to sort items by name
+    function sortByName() {
+      var rows = $('#dataTable tbody tr').get();
+      rows.sort(function(a, b) {
+        var keyA = $(a).find('td:eq(0)').text().toUpperCase();
+        var keyB = $(b).find('td:eq(0)').text().toUpperCase();
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+      $.each(rows, function(index, row) {
+        $('#dataTable').children('tbody').append(row);
+      });
+    }
 
-let tabsPane =tabHeader.getElementsByTagName("div")
-for(let i=0;i<tabsPane.length;i++){
-tabsPane[i].addEventListener("click",function(){
- tabHeader.getElementsByClassName("active")[0].classList.remove("active");
- tabsPane[i].classList.add("active");
+    // Function to sort items by HSN number
+    function sortByHSN() {
+      var rows = $('#dataTable tbody tr').get();
+      rows.sort(function(a, b) {
+        var keyA = $(a).find('td:eq(1)').text();
+        var keyB = $(b).find('td:eq(1)').text();
+        return keyA.localeCompare(keyB);
+      });
+      $.each(rows, function(index, row) {
+        $('#dataTable').children('tbody').append(row);
+      });
+    }
 
- tabBody.getElementsByClassName("activ")[0].classList.remove("activ");
-tabBody.getElementsByTagName("div")[i].classList.add("activ");
-
-   tabIndicator.style.left = 'calc(calc(100% / 3) * ${i})';
-
-});
-}
-
-
+    // Event handler for the "Filter" dropdown
+    $('.dropdown-item').on('click', function() {
+      var sortType = $(this).data('sort');
+      if (sortType === 'name') {
+        sortByName();
+      } else if (sortType === 'hsn') {
+        sortByHSN();
+      } else if (sortType === 'all') {
+        // Reset the table to its original order
+        $('#dataTable').replaceWith(originalTable.clone());
+      }
+    });
+  });
 </script>
 
+  
+  
+{% comment %} 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> {% endcomment %}
 
-   </div>
-
-   </div>
-
-  </div>
-
- 
 </section>
-
 {% endblock %}
+
+

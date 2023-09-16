@@ -1,0 +1,761 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<style>
+    
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999; /* Set a high z-index to bring the modal to the front */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    }
+    
+    .modal-content {
+        background-color: #fefefe; /* Opaque background for the content */
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 60%;
+    }
+    
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .close:hover {
+        color: #000;
+    }
+    
+    /* Style for the text area */
+    textarea {
+        width: 100%;
+        resize: vertical;
+        margin-bottom: 10px;
+    } 
+
+</style>
+
+<div class="fixed-top" style="top: 7rem; margin-left: 18rem;">
+    <div>
+        <div class="row">
+            <h2><a class="text-white" style="font-size: 1.5rem;">All Vendor Credits</a></h2>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="row">
+                    <div class="col-md-2">
+                        <!-- <input type="text" id="myInput"  onkeyup="myFunction()" placeholder="search for names" style="border-radius: 15px;">  -->
+                        <input type="text" id="myInput" onkeyup="myFunction()" class="form-control text-black" placeholder="Search vendors..." style="margin-top: 2px; width: 450%;background-color:white;">
+
+                    </div>
+
+                    <div class="col-md-4 form-inline" style="margin-left: 10rem;margin-top: -2rem;">  
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a  class="btn btn-success mr-2" href="{% url 'vendor_credits' %}">+New</a>
+                                
+                            </div>
+                            <div class="col-md-5">
+                                <button onclick="sortTable()" class="btn btn-primary" style="width: 4.5rem;">a-z</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: 500px;overflow-y: scroll;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+
+                            <table class="table  text-white">
+                              <thead style="font-weight: bold;">
+                                <tr>
+                                    <br>
+                                  <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Name</th>
+                                  <th>Date</th>
+                                  <th>Amount</th>
+                                 
+                                </tr>
+                                
+                              </thead>
+                   
+                                
+                                <tbody id="myTable"  >
+                                  {% for v in vdata %}                    
+                                  <tr id="over">                     
+                                    <td><i class="fa-sharp fa-light fa-circle"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a id="aover" href="{% url 'show_credits' v.id %}" style="color: rgb(230, 171, 45);">{{v.company_name}} </a></td>     
+                                    <td>{{v.vendor_date}}</td>  
+                                    <td>{{v.grandtotal}}</td>                      
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+         
+            <div class="col-sm-12 col-md-8 col-lg-8" style="margin-top: -1rem;">
+                <div>
+                    <span class="input-group mb-1 pt-3" style="border-bottom: 1px solid rgb(37, 37, 37);border-top: 1px solid rgb(37, 37, 37);">
+
+                        <div >              
+                            <a class="text-white" style="font-size: 2rem;"><i class="fa-sharp fa-regular fa-circle-dot"></i>&nbsp;&nbsp;{{vcredit.company_name}}</a>
+                        </div>
+                        <div id="over" class="toggle1" style="font-size: 22px;">&nbsp;&nbsp;&nbsp;&nbsp;
+                          <button onclick="fieldset1_function()" class="btn btn-warning">Overview</button>
+                        </div>&nbsp;
+                      
+                        <!-- <div id="over" class="toggle2" style="font-size: 22px;">
+                          <button onclick="fieldset2_function()" class="btn btn-warning">Comments</button>
+                        </div> -->
+                        <div id="over" class="toggle2" style="color: #e6ab2d; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 22px;">
+                            <button  class="btn btn-warning" onclick="toggleModal()">Comments</button>
+                        </div>&nbsp;
+
+                        <!-- <div class="toggle2">
+                            <button onclick="toggleModal()" style="margin-top: -6.5rem; font-size: 18px; margin-left: 45rem;" class="btn btn-secondary text-dark">Comments</button>
+                          </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                      </div> -->
+                      
+                        <div id="over" class="toggle4" style="font-size: 22px;">
+                          <button onclick="fieldset3_function()" class="btn btn-warning">Mail</button>
+                        </div>&nbsp;
+                      
+                        <div id="over" class="toggle6" style="font-size: 22px;">
+                          <button onclick="fieldset5_function()" class="btn btn-warning">Attach</button>
+                        </div>&nbsp;
+                      
+                        <!-- <div id="over" style="font-size: 22px;">
+                          <a href="{% url 'credit_delete_vendor' vcredit.id %}" class="btn btn-warning" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                        </div>&nbsp;&nbsp; -->
+    
+                        <div id="over" style="font-size: 22px;">
+                            <a  class="btn btn-warning mr-2 " href="{% url 'credits_statement' vcredit.id %}"></i>Statement</a>
+                          </div>&nbsp;
+    
+                          <div id="over" style="font-size: 22px;">
+                            <a  class="btn btn-warning mr-2" href="{% url 'edit_vendor_credits' vcredit.id %}"></i>Edit</a>
+                          </div>&nbsp;
+    
+                          <div id="over" style="font-size: 22px;">
+                            <a href="{% url 'credit_delete_vendor' vcredit.id %}" class="btn btn-danger" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                          </div>
+                      </span>
+                    </div>
+                <div class="row">
+                    
+                    <!-- <div class="col-sm-12 col-md-8 col-lg-8 mt-1">              
+                        <a class="text-white" style="font-size: 2rem;"><i class="fa-sharp fa-regular fa-circle-dot"></i>&nbsp;&nbsp;{{vcredit.company_name}}</a>
+                    </div> -->
+
+                    <!-- <div class="col-sm-1 col-md-1 col-lg-2 mt-3"> 
+                        <a style="color: #ccc;" class="btn btn-primary mr-2" href="{% url 'credits_statement' vcredit.id %}"></i>Statement</a>
+                         <a style="color: #ccc;background-color: rgb(46, 46, 46);" class="btn  mr-2" href="{% url 'credits_statement' vcredit.id %}" ></i><i class="fa-solid fa-paperclip"></i>Statement</a> -->
+                        <!-- <a style="color: #ccc;background-color: rgb(46, 46, 46);" class="btn  mr-2" href=""></i><i class="fa-sharp fa-solid fa-xmark"></i></a> -->
+                    <!-- </div> 
+                    <div class="col-sm-1 col-md-1 col-lg-1 mt-3">                      
+                        <a style="color: #ccc;" class="btn btn-primary mr-2" href="{% url 'edit_vendor_credits' vcredit.id %}"></i>Edit</a>
+                        <a style="color: #ccc;background-color: rgb(46, 46, 46);" class="btn  mr-2" href="" ></i><i class="fa-solid fa-paperclip"></i></a>
+                        <a style="color: #ccc;background-color: rgb(46, 46, 46);" class="btn  mr-2" href=""></i><i class="fa-sharp fa-solid fa-xmark"></i></a> -->
+                    <!-- </div>                     -->
+                </div>
+                
+                  
+                  
+
+                  <fieldset1 id="overview" class="Overview" >
+                    <div style="height: 400px;">
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Company Name*</label></div>
+                                 <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                    <label style="font-weight: bold;">{{ vcredit.company_name }}</label>      
+                                 </div>   
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12 col-md-2 col-lg-2"></div>
+
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">GST Treatment*</label></div>
+                                 <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                    <label style="font-weight: bold;">{{ vcredit.gst_treatment }}</label>      
+                                 </div>   
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12 col-md-2 col-lg-2"></div>
+
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Tax Amount*</label></div>
+                                 <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                    {% if vcredit.gst_number == "null" %}
+                                    <label style="font-weight: bold;">{{ vcredit.t_tax }}</label> 
+                                    {% else %}   
+                                    <label style="font-weight: bold;">{{ vcredit.t_tax }}</label> 
+                                    
+    
+                                    {% endif %}                
+                                 </div>   
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12 col-md-2 col-lg-2"></div>
+
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Total Amount*</label></div>
+                                 <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                    <label style="font-weight: bold;">{{ vcredit.grandtotal }}</label>      
+                                 </div>   
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-12 col-md-2 col-lg-2"></div>
+    
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Credit Note</label></div>
+                                 <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                    <label style="font-weight:bold;">{{ vcredit.credit_note }}</label>      
+                                 </div>   
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-12 col-md-2 col-lg-2"></div>
+    
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color: rgb(230, 171, 45);font-size:medium;">Order Number</label></div>
+                                 <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                    <label style="font-weight:lighter;">{{ vcredit.order_no }}</label>      
+                                 </div>   
+                            </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color: rgb(230, 171, 45);font-size:medium;">Email Id</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight:lighter;">{{ vcredit.vendor_email }}</label>      
+                             </div>   
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color: rgb(230, 171, 45);">Source of Supply</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight:lighter;">{{ vcredit.source_supply }} </label>      
+                             </div>   
+                        </div>
+                        
+                        
+                                         
+                        
+                       
+                       
+                        
+                    </div>
+                    <br><br><br> <br><br>          
+                  </fieldset1> 
+
+<!-- Show the comment fieldset only if projc is not None -->
+
+            <fieldset2 id="comments" style="display: none;">
+                <form action="#" method="post">
+                    {% csrf_token %}
+                    <div class="form-group row mt-4">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <textarea name="comment" id="" cols="60" rows="5" required> </textarea>
+                            <div class="valid-feedback">Valid.</div>
+                            <div class="invalid-feedback">Please fill out this field.</div> 
+                            <label>(For Internal Use)</label> 
+                        </div>
+                    </div> 
+                    <div class="row mt-4">
+                        <div class="col-sm-12 col-md-6 col-lg-6">
+                            <input type="submit" class="btn btn-primary form-control" value="Add Comment">   
+                        </div>
+                    </div>
+                </form>
+            </fieldset2>
+            
+
+
+
+                  <fieldset3 id="mail" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <br>
+                            <button style="color: #ccc;" class="btn btn-info mr-2" onclick="fieldset4_function()">Sent</button> 
+
+                        </div>
+                    </div>
+                    <div style="height: 450px;">
+                        <form action="{% url 'credit_sendmail' vcredit.id %}" method="post" enctype="multipart/form-data" class="was-validated">
+                            {% csrf_token %}
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color: rgb(230, 171, 45);">To</label></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                     <!-- <label class="col-form-label" name="email" style="color: white;">{{ vcredit.vendor_email }}</label>   -->
+                                     <input type="email" name="email" class="form-control text-black" value="{{ vcredit.vendor_email }}" readonly>
+                                </div>
+    
+                            </div>
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Subject</label></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                     <input type="text" class="form-control" name="subject" placeholder="subject" required>
+                                     <div class="valid-feedback">Valid.</div>
+    
+                                     <div class="invalid-feedback">Please fill out this field.</div>   
+                                </div>
+                            </div>
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                     <textarea name="content" id="" cols="60" rows="4" placeholder="Type here....."></textarea>  
+                                </div>
+                            </div>
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                       <input type="submit" class="btn btn-primary form-control" value="Send">   
+                                </div>
+                            </div>
+                        </form>
+                        <br><br><br><br>
+                    </div>
+
+                  </fieldset3>
+
+                  <fieldset4 id="sentmail" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="fixed-top" style="top: 16rem; margin-left: 18rem;">
+                                <div style="height: 400px;">
+                                    
+                                
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+        
+                                        <div class="col-sm-12 col-md-8 col-lg-8">
+                                            <table class="table  text-white">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Date</th>
+                                                    <th>Subject</th>
+                                                    
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="over">
+                                                  {% for v in mdata %}
+                                         
+                                                  <tr>
+                                         
+                                                    <td>{{v.mail_date}}</td>
+                                                    <td>{{v.subject}}</td>
+                                    
+                                                   
+                                                  </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                            
+                                    </div>
+                                  
+                            
+                                       
+                                    
+                            
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                  </fieldset4>
+
+                  <fieldset5 id="attach" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <br>
+                            <button style="color: #ccc;" class="btn btn-info mr-2" onclick="fieldset6_function()">View</button> 
+
+                        </div>
+                    </div>
+                    <form action="{% url 'credit_upload_document' vcredit.id %}" method="post" enctype="multipart/form-data" class="was-validated">
+                        {% csrf_token %}
+                        
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Title</label></div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                 <input type="text" class="form-control" name="title" placeholder="Title" required>  
+                                 <div class="valid-feedback">Valid.</div>
+                                 <div class="invalid-feedback">Please fill out this field.</div>   
+                                 
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Upload Document</label></div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                <input type="file" class="form-control" name="file" required>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                   <input type="submit" class="btn btn-primary form-control" value="Upload">   
+                            </div>
+                        </div>
+                    </form>
+                   
+                  </fieldset5>
+
+                 <fieldset6 id="doc_list" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="fixed-top" style="top: 16rem; margin-left: 18rem;">
+                                <div style="height: 400px;">
+                                    
+                                
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+        
+                                        <div class="col-sm-12 col-md-8 col-lg-8">
+                                            <table class="table  text-white">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Title</th>
+                                                    <th>Document</th>
+                                                    <th>Action</th>
+                                                    
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="over">
+                                                  {% for v in ddata %}
+                                         
+                                                  <tr>
+                                         
+                                                    <td>{{v.title}}</td>
+                                                    <td>{{v.document.url}}</td>
+                                                    <td><a href="{% url 'credit_download_doc' v.id %}" class="btn btn-outline-warning">download</a></td>
+                                    
+                                                   
+                                                  </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>                           
+                                    </div>                           
+                                </div>                           
+                            </div>
+                        </div>
+                    </div>
+                  </fieldset6>
+
+                  <fieldset7 id="com_list" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="fixed-top" style="top: 16rem; margin-left: 18rem;">
+                                <div style="height: 400px;">
+                                    
+                                
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+        
+                                        <div class="col-sm-12 col-md-8 col-lg-8">
+                                            <table class="table  text-white">
+                                                <thead>
+                                                  <tr>
+                                                    
+                                                    <th>Comments</th>
+                                                    
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="over">
+                                                  {% for ven in cdata %}
+                                         
+                                                  <tr>
+                                                    <td>{{ven.comment}}</td>
+                                                  </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                            
+                                    </div>
+                                  
+                            
+                                       
+                                    
+                            
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                  </fieldset7>
+
+                  
+
+                  <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Add Comment</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                              <form id="commentForm" method="post" action="{% url 'commentdb' vcredit.id %}">
+                                  {% csrf_token %}
+                                  <div class="form-group">
+                                      <label for="commentInput">Comment:</label>
+                                      <textarea class="form-control bg-dark" id="commentInput" name="comment" rows="3"></textarea>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="submitCommentBtn" onclick="submitComment()">Submit</button>
+                                </div>
+                            
+                                  <div class="container-fluid">
+                                    <table class="table table-responsive-md mt-4 table  text-white">
+                                      <thead>
+                                          <tr>
+                                              <th>sl no.</th>
+                                              <th>Comments</th>
+                                              <th>Delete</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                          {% for com in cdata %}
+                                              <tr class="table-row">
+                                                  <td style="color: #000;">{{ forloop.counter }}</td>
+                                                  <td style="color: #000;">{{ com.comment }}</td>  <!-- Use com.comment instead of com.content -->
+                                                  <td><a href="{% url 'delete_comment_credit' com.id vcredit.id  %}">Delete</a></td>
+                                              </tr>
+                                          {% endfor %}
+                                      </tbody>
+                                    </table>  
+                                  </div>
+                              </form>
+                          </div>
+                    </div>
+                  </div>
+
+
+                  <script>
+                    function toggleModal() {
+                      const modal = document.getElementById("myModal");
+                      if (modal.style.display === "none") {
+                        modal.style.display = "block";
+                        // You can add an AJAX call here to load comments dynamically, if needed
+                      } else {
+                        modal.style.display = "none";
+                      }
+                    }
+                  
+                    // Function to close the modal
+                    function closeModal() {
+                      const modal = document.getElementById("myModal");
+                      modal.style.display = "none";
+                    }
+                  
+                    function submitComment() {
+                      document.getElementById('commentForm').submit();
+                    }
+                  </script>
+
+<script>
+   
+
+    function fieldset1_function(){
+        document.getElementById("overview").style.display="block";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("com_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset2_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="block";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("com_list").style.display="none";
+
+
+
+
+    }
+    function fieldset3_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="block";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("com_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset4_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="block";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("com_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset5_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="block";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("com_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset6_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="block";
+        document.getElementById("com_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset7_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("com_list").style.display="block";
+
+
+
+
+
+    }
+    
+    function myFunction(){
+        var input,filter,table,tr,td,i,txtValue;
+        input=document.getElementById("myInput");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("myTable");
+        tr=table.getElementsByTagName("tr");
+        for(i = 0; i < tr.length; i++)
+        {
+            td=tr[i].getElementsByTagName("td")[0];
+            if(td){
+                txtValue=td.textContent || td.innerText;
+                if(txtValue.toUpperCase().indexOf(filter) > -1){
+                    tr[i].style.display="";
+                }
+                else{
+                    tr[i].style.display="none";
+                }
+            }
+        }
+    }
+
+    function sortTable()
+    {
+        var table,i,x,y;
+        table=document.getElementById("myTable");
+        var switching=true;
+        while(switching)
+        {
+            switching=false;
+            var rows=table.rows
+            for(i = 0 ; i < (rows.length - 1) ; i++)
+            {
+                var Switch=false;
+                x = rows[i].getElementsByTagName("TD") [0];
+                y = rows[i + 1].getElementsByTagName("TD") [0];
+                if(x.innerText.toLowerCase() > y.innerText.toLowerCase())
+                {
+                    Switch=true;
+                    break;
+                }
+
+            }
+            if(Switch)
+            {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching=true
+            }
+        }
+    }
+      
+    
+      
+</script>
+<!-- 
+ <script>
+    function fieldset7_function() {
+      // Show the comments fieldset
+      document.getElementById("com_list").style.display = "block";
+  
+      // Get the value of the comment textarea
+      var comment = document.getElementById("commentInput").value;
+  
+      // Create a new table row to display the comment
+      var newRow = document.createElement("tr");
+      newRow.innerHTML = "<td>" + comment + "</td>";
+  
+      // Append the new row to the table body
+      document.getElementById("over").appendChild(newRow);
+    }
+  </script>
+   -->
+
+
+
+
+{% endblock %}

@@ -1,0 +1,493 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+  /* Style for the black overlay */
+  .modal {
+    position: fixed;
+    top: 100px;
+    left: 400px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99;
+  }
+  .modal-content {
+    background-color: black;
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 10px 8px rgba(0, 0, 0, 0.9);
+    max-width: 500px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Style for the close button (you can customize this) */
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  .modal-title{
+    color:white;
+    size:20px;
+  }
+
+  .filter-dropdown {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1;
+    border-radius: 10%;
+  }
+  .filter-option,
+  .filter-value {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 1px;
+  }
+
+  .filter-buttons {
+      display: flex;
+      justify-content: space-between;
+  }
+
+  .filter-buttons button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+  }
+
+  .apply-filter {
+      background-color: #4caf50;
+      color: white;
+  }
+
+  .clear-filter {
+      background-color: #f44336;
+      color: white;
+  }
+
+</style>
+
+<section class="item" id="navbar-example2">
+  <div class="nav-item" style="height: 4vh; width: 4vw; padding-top: 14px; margin-left: 97%;">
+    <button type="button" onclick="history.go(-1);" style="height: 5vh; width: 2.5vw;">&times;</button>
+  </div>
+  <div class="container" style="background: black; margin-left: -5rem; margin-top: 2rem; width: 90%; height: 72%;">
+    <div class="col-md-12" style="right: 0;">
+      <div class="row">
+        <div class="col-md-3" style="border-right: 1px solid white; height: 100vh; position: absolute; z-index: 99;">
+          <div class="row">
+            <div class="col-md-4" style="margin-left: 15rem; margin-top: -1.9rem;">
+              <a style="color: black; margin-top: 5rem; background: #FFCFB0;" class="btn btn-secondary" href="{% url 'additem' %}">New</a>
+            </div>
+          </div>
+          <input type="text" id="searchInput" class="form-control bg-dark" placeholder="Search Items..." style="margin-top: -2.2rem; width: 50%; margin-left: 1rem;">
+          <div id="tableContainer" style="max-height: 500px; overflow-y: auto; margin-top: 2rem;">
+            <table class="table text-white" style="margin-top: 4rem;" id="dataTable">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Quantity</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody1">
+                {% for v in allproduct %}
+                <tr>
+                  <td><a class="text-white" href="{% url 'transaction' v.id %}">{{ v.Name }}</a></td>
+                  <td><a class="text-white" href="#">{{ v.stock }}</a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-md-9" style="margin-left: 21rem;" data-spy="scroll" data-target="#navbar-example2" data-offset="0">
+          <div class="row" style="position: relative;">
+            <div class="container">
+              <div class="row" style="margin-top: 4.2rem;">
+                <div class="col" style="margin-top: -4.2rem;">
+                  <a class="" style="font-size: 1.5rem; margin-left: 4rem; margin-top: -2rem; color: #FFCFB0;">
+                    <h3>{{ product.Name }}</h3>
+                  </a>
+                  <p style="margin-top: 1.5rem; color: #FFCFB0;">SALE PRICE :</p>
+                  <p style="margin-top: -2.2rem; margin-left: 8rem; color: #01F9C6;">{{ product.s_price }}(incl)</p>
+                  <p style="margin-top: -1rem; color: #FFCFB0;">PURCHASE PRICE :</p>
+                  <p style="margin-top: -2.3rem; margin-left: 8rem; color: #01F9C6;">{{ product.p_price }}(excl)</p>
+                  <p style="margin-top: -3.9rem; margin-left: 45rem; color: #FFCFB0;">STOCK QUANTITY :</p>
+                  <p style="margin-top: -2.2rem; margin-left: 53rem; color: #01F9C6;">{{ product.stock }}</p>
+                  <p style="margin-top: -1rem; margin-left: 45rem; color: #FFCFB0;">STOCK VALUE :</p>
+                  <p style="margin-top: -2.3rem; margin-left: 53rem; color: #01F9C6;">{{ stock }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="tableContainer" style="max-height: 500px; overflow-y: auto; margin-top: 11rem; margin-left: 0.1rem; width: 100%;">
+            <table class="table text-white" id="dataTable2">
+              <thead>
+                <tr>
+                  <th>Type <i class="fas fa-filter filter-button"></i>
+                    <div class="filter-dropdown">
+                      <select class="filter-option" id="type-filter">
+                        <option value="Estimate">Estimate</option>
+                        <option value="Sales Order">Sales Order</option>
+                        <option value="Recurring Invoice">Recurring Invoice</option>
+                        <option value="Purchase Order">Purchase Order</option>
+                        <option value="Recurring Bills">Recurring Bills</option>
+                        <option value="Invoice">Invoice</option>
+                        <option value="DeliveryChellan">DeliveryChellan</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Expense">Expense</option>
+                      </select><br>
+                      
+                      <button class="apply-filter btn-primary" onclick="applyFilter()">Apply</button>
+                      <button class="clear-filter btn-primary">Clear</button>
+                      
+                    </div><br>
+                  </th>
+                  
+                  <th>Name <i class="fas fa-filter filter-button"></i>
+                    <div class="filter-dropdown">
+                      <select class="filter-option">
+                        <option value="contains">Contains</option>
+                        <option value="exact-match">Excat Match</option>
+                      </select><br>
+                      <input type="text" class="filter-value"><br>
+                      <button class="apply-filter btn-primary">Apply</button>
+                      <button class="clear-filter btn-primary">Clear</button>
+                    </div><br>
+                  </th>
+                  
+                  <th>Date <i class="fas fa-filter filter-button"></i>
+                    <div class="filter-dropdown">
+                      <select class="filter-option">
+                        <option value="contains">Contains</option>
+                        <option value="exact-match">Excat Match</option>
+                      </select><br>
+                      <input type="text" class="filter-value"><br>
+                      <button class="apply-filter btn-primary">Apply</button>
+                      <button class="clear-filter btn-primary">Clear</button>
+                    </div><br>
+                  </th>
+                  
+                  <th>Quantity <i class="fas fa-filter filter-button"></i>
+                    <div class="filter-dropdown">
+                      <select class="filter-option">
+                        <option value="contains">Contains</option>
+                        <option value="exact-match">Excat Match</option>
+                      </select><br>
+                      <input type="text" class="filter-value"><br>
+                      <button class="apply-filter btn-primary">Apply</button>
+                      <button class="clear-filter btn-primary">Clear</button>
+                    </div><br>
+                  </th>
+                  
+                  <th>Price/Unit <i class="fas fa-filter filter-button"></i>
+                    <div class="filter-dropdown">
+                      <select class="filter-option">
+                        <option value="contains">Contains</option>
+                        <option value="exact-match">Excat Match</option>
+                      </select><br>
+                      <input type="text" class="filter-value"><br>
+                      <button class="apply-filter btn-primary">Apply</button>
+                      <button class="clear-filter btn-primary">Clear</button>
+                    </div><br>
+                  </th>
+                  
+                  <th>Status <i class="fas fa-filter filter-button"></i>
+                    <div class="filter-dropdown">
+                      <select class="filter-option">
+                        <option value="contains">Contains</option>
+                        <option value="exact-match">Excat Match</option>
+                      </select><br>
+                      <input type="text" class="filter-value"><br>
+                      <button class="apply-filter btn-primary">Apply</button>
+                      <button class="clear-filter btn-primary">Clear</button>
+                    </div><br>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                {% for v in estimate %}
+                <tr>
+                  <td>Estimate</td>
+                  <td>{{ v.estimate.customer_name }}</td>
+                  <td>{{ v.estimate.estimate_date }}</td>
+                  <td>{{ v.quantity }}</td>
+                  <td>{{ v.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+                {% for s in sales_order %}
+                <tr>
+                  <td>Sales Order</td>
+                  <td>{{ s.sale.customer.customerName }}</td>
+                  <td>{{ s.sale.sales_date }}</td>
+                  <td>{{ s.quantity }}</td>
+                  <td>{{ s.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+                
+                {% for r in recurring_invoice %}
+                <tr>
+                  <td>Recurring Invoice</td>
+                  <td>{{ r.ri.cname }}</td>
+                  <td>{{ r.ri.start }}</td>
+                  <td>{{ r.quantity }}</td>
+                  <td>{{ r.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+                {% for p in purchase_order %}
+                <tr>
+                  <td>Purchase Order</td>
+                  <td>{{ p.PO.customer_name }}</td>
+                  <td>{{ p.PO.Ord_date }}</td>
+                  <td>{{ p.quantity }}</td>
+                  <td>{{ p.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+                {% for r in recurring_bills %}
+                <tr>
+                  <td>Recurring Bills</td>
+                  <td>{{ r.recur_bills.customer_name }}</td>
+                  <td>{{ r.recur_bills.start_date }}</td>
+                  <td>{{ r.quantity }}</td>
+                  <td>{{ r.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+                {% for i in invoice %}
+                <tr>
+                  <td>Invoice</td>
+                  <td>{{ i.inv.customer.customerName }}</td>
+                  <td>{{ i.inv.inv_date }}</td>
+                  <td>{{ i.quantity }}</td>
+                  <td>{{ i.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+                {% for d in deliveryChellan %}
+                <tr>
+                  <td>DeliveryChellan</td>
+                  <td>{{ d.chellan.customer_name }}</td>
+                  <td>{{ d.chellan.chellan_date }}</td>
+                  <td>{{ d.quantity }}</td>
+                  <td>{{ d.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+                {% for b in bills %}
+                <tr>
+                  <td>Bills</td>
+                  <td>{{ b.purchase_bill.customer_name }}</td>
+                  <td>{{ b.purchase_bill.bill_date }}</td>
+                  <td>{{ b.quantity }}</td>
+                  <td>{{ b.rate }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+                {% for e in expense %}
+                <tr>
+                  <td>Expense</td>
+                  <td>{{ e.customername }}</td>
+                  <td>{{ e.start_date }}</td>
+                  <td>{{ e.quantity }}</td>
+                  <td>{{ e.amount }}</td>
+                  <td></td>
+                {% endfor %}
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function applyFilter() {
+    var selectedType = document.getElementById('type-filter').value;
+    var tableRows = document.querySelectorAll("#tableBody tr");
+  
+    tableRows.forEach(function(row) {
+      var typeColumn = row.querySelector("td:first-child").textContent;
+      if (typeColumn.trim() === selectedType) {
+        row.style.display = "table-row";
+      } else {
+        row.style.display = "none";
+      }
+    });
+    // Close the dropdown
+    var filterDropdown = document.querySelector('.filter-dropdown');
+    filterDropdown.style.display = 'none';
+  } 
+</script>
+
+
+
+
+  <script>
+    function toggleModal() {
+      const modal = document.getElementById("myModal");
+      if (modal.style.display === "none") {
+        modal.style.display = "block";
+        // You can add an AJAX call here to load comments dynamically, if needed
+      } else {
+        modal.style.display = "none";
+      }
+    }
+  
+    // Function to close the modal
+    function closeModal() {
+      const modal = document.getElementById("myModal");
+      modal.style.display = "none";
+    }
+  
+    function submitComment() {
+      document.getElementById('commentForm').submit();
+    }
+  </script>
+  
+
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // Attach keyup and paste event handlers to the search input
+      $("#searchInput").on("keyup paste", function() {
+        var filter = $(this).val().toUpperCase();
+        var table = $("#tableBody");
+        var tr = table.find("tr");
+  
+        // Loop through all table rows, show/hide based on search query
+        tr.each(function() {
+          var td_name = $(this).find("td:eq(0)");
+          var td_hsn = $(this).find("td:eq(1)");
+          var txtValue_name = td_name.text().toUpperCase();
+          var txtValue_hsn = td_hsn.text().toUpperCase();
+  
+          if (txtValue_name.indexOf(filter) > -1 || txtValue_hsn.indexOf(filter) > -1) {
+            $(this).show();
+          } else {
+            $(this).hide();
+          }
+        });
+      });
+    });
+  </script>
+ 
+
+  <script>
+    $(document).ready(function() {
+      $('.filter-button').on('click', function() {
+        $(this).closest('th').find('.filter-dropdown').toggle();
+      });
+  
+      $('.apply-filter').on('click', function() {
+        const $table = $('#dataTable2');
+        const columnIndex = $(this).closest('th').index();
+        const filterOption = $(this).siblings('.filter-option').val();
+        const filterValue = $(this).siblings('.filter-value').val().trim();
+  
+        $table.find('tbody tr').hide();  // Hide all rows
+  
+        if (filterOption === 'exact-match') {
+          applyExactMatchFilter($table, columnIndex, filterValue);
+        } else if (filterOption === 'contains') {
+          applyContainsFilter($table, columnIndex, filterValue);
+        }
+
+        // Close the filter dropdown
+        $(this).closest('.filter-dropdown').hide();
+      });
+  
+      $('.clear-filter').on('click', function() {
+        $('#dataTable2 tbody tr').show();
+        $(this).siblings('.filter-option').val('contains');
+        $(this).siblings('.filter-value').val('');
+  
+        // Close the filter dropdown
+        $(this).closest('.filter-dropdown').hide();
+      });
+    });
+  
+    function applyExactMatchFilter($table, columnIndex, filterValue) {
+      $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+        if ($(this).text().trim() === filterValue) {
+          $(this).parent().show();
+        }
+      });
+    }
+  
+    function applyContainsFilter($table, columnIndex, filterValue) {
+      $table.find(`tbody tr td:nth-child(${columnIndex + 1})`).each(function() {
+        if ($(this).text().toLowerCase().includes(filterValue.toLowerCase())) {
+          $(this).parent().show();
+        }
+      });
+    }
+  
+  </script>
+
+  <script>
+    // Function to filter items based on status
+    function filterItems(Type) {
+      
+      if (Type === 'estimate') {
+        $('tbody tr').hide();
+        $('tbody tr.active, tbody tr.Active').show();
+      } else if (status === 'inactive' || status === 'Inactive') {
+        $('tbody tr').hide();
+        $('tbody tr.inactive, tbody tr.Inactive').show();
+      } else {
+        $('tbody tr').show(); // Show all items
+      }
+    }
+  
+    // Attach the filter function to the filter buttons
+    $('#filterEstimateButton').on('click', function() {
+      filterItems('estimate');
+    });
+  
+    $('#filterInactiveButton').on('click', function() {
+      filterItems('inactive');
+    });
+  
+    $('#filterAllButton').on('click', function() {
+      filterItems('all');
+    });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+{% endblock %}

@@ -1,0 +1,516 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.8/xlsx.full.min.js"></script>
+
+<style>
+  
+body
+{
+   justify-content: space-between;
+}
+
+
+a {
+  text-decoration: none;
+}
+
+
+
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  color: #333;
+  margin-left:5px ;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+
+}
+
+thead {
+  color: #fff;
+}
+
+#over:hover {
+  background-color: rgba(110, 110, 110, 0.616);
+}
+.daterangepicker{
+    color: black;
+  }
+  @media print {
+ 
+    .no-page-break {
+        page-break-inside: avoid;
+        display: none;
+      
+    }
+  
+}
+
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 10%;
+    width: 90%;
+    height: 90%;
+    background-color: transparent;
+    margin-bottom:100% ;
+}
+
+/* Styling for the modal content */
+.modal-content {
+    background-color: white;
+    width: 60%;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 10%;
+    left:10%;
+    right:10%
+}
+
+/* Styling for the close button */
+.close {
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: red;
+}
+
+/* Styling for the button inside the modal */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.warning-icon {
+    color: #FFD700; 
+    font-size: 24px;
+    margin-right: 5px;
+}
+.container-fulid{
+  width:100%;
+  margin-left:1%;
+  
+}
+#nav{
+  border:1px solid ;
+  border-radius:5px ;
+  top:3px;
+  background-color: white;
+}
+
+/* Position the dropdown icon */
+.custom-caret {
+    position: absolute;
+    right: 10px; /* Adjust the value as needed */
+    top: 50%; /* Adjust the value as needed */
+    transform: translateY(-10%);
+    font-size: 15px; /* Adjust the font size as needed */
+}
+
+
+.custom-caret i {
+    color: white; /* Adjust the color as needed */
+    cursor: pointer; /* Add cursor pointer */
+}  
+.td th, td,tr {
+  padding: 10px;
+  text-align: center;
+ border: 1px solid #333;
+}
+h2,h4,h5{
+  color: white;
+}   
+.cancel-button {
+      background-color: #333; /* Change the background color */
+      color: white; /* Change the text color */
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }   
+</style>
+
+
+
+ <br> 
+ <div class="container-fulid" style="position: fixed;">
+ <nav class="nav nav-pills navbar-expand-lg navbar-light " id="navabars">
+  <!-- Navbar brand or logo -->
+  <a class="navbar-brand" href="#"></a>
+  
+  <!-- Navbar content -->
+  <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+          <li class="nav-item" id="nav">
+              <!-- Date range selection -->
+              <div class="nav-item dropdown" id="reportrange" style=" color: black;  width: 10vw;white-space: nowrap;font-weight: bolder;">
+                <i class="fa fa-calendar" style=" transform: translateY(50%);"></i>&nbsp;
+                
+                <span class="custom-caret"><i class="fa fa-caret-down"></i></span> 
+              </div>
+          </li>
+          <li class="nav-item">
+              <!-- Custom report link -->
+              <a class="nav-link" href="{% url 'custom_valuation_repot' %}" style="color:white ;white-space: nowrap;">
+                  <i class="fa fa-gear" style="color: #0056b3;" ></i>
+                  Custom Report
+              </a>
+          </li>
+
+  <li class="nav-item dropdown" style="padding-left:650px ;">
+    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="background: white; color: black;"><i class="fa fa-print"></i></a>
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li>
+        <a class="printdrop" href="#" onclick="printPageContent()" style="font-size:16px;top: 2%;">Print Preference</a></li>
+    </ul>
+  </li>
+
+
+        
+  <li class="nav-item dropdown" >
+    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="background: transparent; color: white;font-size: medium;">Export As</a>
+    <ul class="dropdown-menu dropdown-menu-end">
+      <li><a class="dropdown-item" style="font-size:15px;" onclick="exportAs('pdf')" >PDF</a></li>
+      <li><a class="dropdown-item" style="font-size:15px;" onclick="exportAs('xls')"  >XLS (Microsoft Excel 1997-2004 Compatible)</a></li>
+<li><a class="dropdown-item" style="font-size:15px;" onclick="exportAs('xlsx')">XLSX (Microsoft Excel )</a></li>
+
+    </ul>
+  </li> 
+
+           <li class="nav-item">
+            <input type="button" value="X" onclick="javascript:history.go(-1);" class="btn btn-tansperent" style="height:35px ;font-size: 20px;"> 
+       
+           </li>
+      </ul>
+  </div>
+</nav>
+</div>
+<br><br><br><br><br>
+<div id="contentToExport">
+  <div  style="top: 7rem; " >
+
+   <center>
+    <div class="row">
+      {% if company.company_name != None %}
+       <div  ><h4 class="text text-danger " 
+        >{{company.company_name }}
+        {% else %}
+         Add Company
+        </h4>
+        </div>
+        {% endif %}
+           <div ><a class="text text-primary" style="font-size: 2rem; white-space: nowrap;">Inventory Valuation Summary </a></div>
+                  <h5 id="selectedEndDate" class="text text-danger"></h5>
+            </div>
+        </div>   
+      </center><br><br>
+    
+        <div class="row" >
+            <div class="col">
+              <div class="table-resposive">
+                <table class="table" id="myTable" style="width: 100%;">
+                    <thead class="td">
+                      
+                      <tr class="td">
+                        <th class="td" >ITEM NAME</th>
+                        <th class="td">SKU</th>
+                        <th class="td">STOCK ON HAND</th>
+                        <th class="td">INVENTORY ASSET VALUE</th>
+                    
+                      </tr>
+                     
+                    </thead>
+                    <tbody>
+                     
+                      {% for i in item %}
+                      <tr id="over" class="table">
+             
+                     
+                        <td class="td">{{i.Name}}</td>
+                        <td class="td"></td>
+                        <td class="td"></td>
+                        <td class="td"colspan=3></td>
+                        
+
+                      </tr>
+                
+                 {% endfor %}
+                 
+                    </tbody>
+                    <th class="td">Total</th> 
+                    <td class="td"></td>
+                    <td class="td"></td>
+                </table>
+           
+            
+              
+             
+              </div>
+            </div>
+          </div>
+        </div> 
+      </div><br>
+                <p>**Amount is displayed in your base currency <span style="background-color: green;">INR</span></p>
+              <p>***Only items having stock or transactions are displayed</p>
+            
+                <br><br><br>
+      
+      
+           
+
+        
+
+           
+        
+
+    <!-- </div> -->
+
+
+<div id="pdfModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="background-color: lightgray;margin-bottom:10% ;">
+     
+      <h2 style="color: black;font-size: larger;font-weight: bold;justify-content: right;">Export Report As PDF</h2>
+      <span class="close">&times;</span>
+    </div>
+    <div class="modal-body" >
+      <p  style="color: black;font-size: medium;">You can protect the export report with a password to keep your data secure</p>
+      <input type="checkbox" style="color: black;"><p style="color: black;font-size: medium;">I want to protect this file with password</p><br>
+      
+    </div>
+    <div class="modal-footer">
+      <button onclick="convertToPDF()" class="button_ex">PDF</button>
+      <button>cancel</button>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="xlsModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="background-color: lightgray;margin-bottom:10% ;">
+     
+      <h2 style="color: black;font-size: larger;font-weight: bold;justify-content: right;">Export Report as XLS (Microsoft Excel 1997-2004 Compatible)</h2>
+      <span class="close">&times;</span>
+    </div>
+    <div class="modal-body" >
+      <p  style="color: black;font-size: medium;">You can protect the export report with a password to keep your data secure</p>
+      <input type="checkbox" style="color: black;"><p style="color: black;font-size: medium;">I want to protect this file with password</p><br>
+      
+    </div>
+    <div class="modal-footer">
+      <button class="xlsExportButton" id="xlsExportButton">Export</button>
+      <button>cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="xlsxModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header" style="background-color: lightgray;margin-bottom:10% ;">
+     
+      <h2 style="color: black;font-size: larger;font-weight: bold;justify-content: right;">Export Report as XLSX (Microsoft Excel)</h2>
+      <span class="close">&times;</span>
+    </div>
+    <div class="modal-body" >
+      <p  style="color: black;font-size: medium;">You can protect the export report with a password to keep your data secure</p>
+      <input type="checkbox" style="color: black;"><p style="color: black;font-size: medium;">I want to protect this file with password</p><br>
+      
+    </div>
+    <div class="modal-footer">
+      <button class="xlsxExportButton" >Export</button>
+      <button>cancel</button>
+    </div>
+  </div>
+</div>
+
+
+
+&nbsp&nbsp&nbsp
+
+</div> 
+</div>
+<script>
+  function printPageContent() {
+    const contentToPrint = document.getElementById('contentToExport');
+    const clonedContent = contentToPrint.cloneNode(true);
+
+    // Find all the elements with the class "text" within the cloned content
+    const textElements = clonedContent.querySelectorAll('.text');
+    const tableElements = clonedContent.querySelectorAll('.table,td');
+
+
+    // Set the text color to black for each element with the class "text"
+    textElements.forEach(element => {
+      element.style.color = '#000000';  // Text color (black)
+    });
+    tableElements.forEach(element => {
+      element.style.color = '#000000';
+      element.style.border ='1px solid';
+      
+    });
+    // Print the cloned content
+    const printWindow = window.open('', '_blank');
+    printWindow.document.body.appendChild(clonedContent);
+    printWindow.print();
+    printWindow.close();
+  }
+</script>
+
+
+<script>
+  $(function() {
+  
+    var start = moment().subtract(29, 'days');
+    var end = moment();
+  
+    function cb(start, end,label) {
+        $('#reportrange span').text(label);
+        $('#selectedEndDate').text('As of'+'  '+end.format('MMMM D, YYYY'));
+      }
+      
+  
+      var daterangepickerOptions ={
+        startDate: start,
+        endDate: end,
+        ranges: {
+          'Today': [moment(), moment()],
+           'This Week': [moment().startOf('week'), moment().endOf('week')],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'This Quarter': [moment().startOf('quarter'), moment().endOf('quarter')],
+           'This Year': [moment().startOf('year'), moment().endOf('year')],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Previous Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
+           'Previous Quarter': [moment().subtract(1, 'quarter').startOf('quarter'), moment().subtract(1, 'quarter').endOf('quarter')],
+           'Previous Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
+           //'Custom':[moment(),moment()]
+        },
+        opens: 'left', // Adjust the direction of the calendar popup if needed
+        showCustomRangeLabel: true,
+        //singleDatePicker:true,
+        showDropdowns:true,
+        linkedCalenders:false,
+        showCancel:true,
+        cancelClass: 'cancel-button',
+        maxSpan:{days:30}
+
+        
+
+    };
+    $('#reportrange').daterangepicker(daterangepickerOptions, cb);
+
+$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
+    if (picker.chosenLabel === 'Custom') {
+        $('#selectedEndDate').text('As of ' + picker.endDate.format('MMMM D, YYYY'));
+    }
+});
+
+    $('.custom-caret i').click(function() {
+        $('#reportrange').data('daterangepicker').toggle();
+    });
+    $('.cancel-button').click(function() {
+        $('#reportrange').data('daterangepicker').setStartDate(start);
+        $('#reportrange').data('daterangepicker').setEndDate(end);
+    });
+   
+    $('.drp-calendar.right').remove();
+      
+
+    cb(start, end, 'Custom');
+  });
+  </script>
+
+<script>
+  function exportAs(option) {
+      $(".modal").hide();
+      
+      if (option === "pdf") {
+          $("#pdfModal").show();
+      } else if (option === "xls") {
+          $("#xlsModal").show();
+      } else if (option === "xlsx") {
+          $("#xlsxModal").show();
+      } else if (option === "zoho") {
+          $("#zohoModal").show();
+      }
+  }
+
+  // Close modal when the close button is clicked
+  $(".close").click(function() {
+      $(this).closest(".modal").hide();
+  });
+</script>
+
+<script>
+  document.querySelector('.button_ex').addEventListener('click', function () {
+    const element = document.getElementById('contentToExport'); 
+  
+   
+    const pdfOptions = {
+      margin: 1,
+      filename: '{{company.company_name}}.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale:1 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'Landscape' },
+    };
+
+    html2pdf().from(element).set(pdfOptions).save();
+  }); 
+</script>
+<script>
+// Function to convert a table to a worksheet object
+function tableToWorksheet(table) {
+  var ws = XLSX.utils.table_to_sheet(table);
+  return ws;
+}
+
+// Function to download an Excel file
+function downloadExcelFile(ws, filename) {
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  XLSX.writeFile(wb, filename);
+}
+
+// Export button click event for XLS format
+document.querySelector('.xlsExportButton').addEventListener('click', function () {
+  var contentToExport = document.getElementById('myTable');
+  var worksheet = tableToWorksheet(contentToExport);
+  downloadExcelFile(worksheet, '{{company.company_name}}.xls');
+});
+
+// Export button click event for XLSX format
+document.querySelector('.xlsxExportButton').addEventListener('click', function () {
+  var contentToExport = document.getElementById('myTable');
+  var worksheet = tableToWorksheet(contentToExport);
+  downloadExcelFile(worksheet, '{{company.company_name}}.xlsx');
+});
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,612 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<style>
+    #over:hover{
+        background-color: rgba(110, 110, 110, 0.616);
+        font-weight:bold ;
+    }
+    .image-upload>input {
+  display: none;
+}
+/* Style for the modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 9999; /* Set a high z-index to bring the modal to the front */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-content {
+    background-color: #fefefe; /* Opaque background for the content */
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+}
+
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* Style for the text area */
+textarea {
+    width: 100%;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+
+
+</style>
+
+<div class="fixed-top" style="top: 7rem; margin-left: 18rem;">
+    <div>
+        <div class="row"><div class="col-md-6"><a class="text-white" style="font-size: 2rem;">All Projects</a>
+                        
+                        
+        </div></div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="row">
+                    
+                    
+                    
+                    <div class="col-md-6 "> 
+                        <input type="text" id="vendorSearchInput" class="form-control bg-light text-dark" placeholder="Search Projects..." >
+                      </div>
+                      <div class="col-md-6 form-inline" style="margin-top: 0rem;"><a style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" class="btn btn-warning mr-2" href="{% url 'proj' %}"><i class="fa-solid fa-plus "></i>New</a>&nbsp;
+                        <button id="sortButton" class="btn btn-warning">Sort</button>
+                      </div>
+                </div>
+                <div style="height: 435px;overflow-y: scroll;overflow-x: hidden; ">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+
+                            <table class="table  text-white" id="myTable">
+                                
+                                <tbody>
+                                  {% for v in proje %}                    
+                                  <tr id="over">                     
+                                    <td><i class="fa-sharp fa-light fa-circle"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<a id="aover" href="{% url 'overview' v.id %}" style="color: rgb(230, 171, 45);">{{v.name}}</a></td>
+                                    <td><i class="fa-sharp fa-light fa-circle"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp<a id="aover" href="#" style="color: rgb(230, 171, 45);">{% if v.billing == "Fixed cost for project" or v.billing == "Based on project hours" %}
+                                        {{v.rateperhour}} 
+                                      {% else %}
+                                        Per hour
+                                      {% endif %}</a></td>                          
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-8 col-lg-8" style="margin-top: -3.5rem;">
+                {% for v in proj %}
+                <div class="row align-items-center">
+                    <div class="col-8 mb-2">
+                        <div class="d-flex align-items-center">
+                            <div style="width: 500px;" >
+                                <a class="text-white" style="font-size: 3rem; white-space: nowrap;"><i class="fa-sharp fa-regular fa-circle-dot"></i>{{ v.name }}</a>
+                        </div>&nbsp;
+                            <div class="toggle1" style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size: 22px;margin-left: 150px;">
+                                <button onclick="fieldset1_function()" class="btn btn-light text-warning">Overview</button>
+                            </div>&nbsp;
+                            <div  class="toggle2" style="color: rgb(230, 171, 45);font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size: 22px;">
+                                <a style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" class="btn btn-warning mr-2" href="{% url 'editproj' v.id %}">Edit</a>
+                            </div>&nbsp;
+                            <div  class="toggle4" style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size: 22px;">
+                                <a style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" class="btn btn-warning mr-2" href="{% url 'delproj' v.id %}">Delete</a>
+                            </div>&nbsp;
+                            
+                            <!--<div id="over" style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size: 22px;">
+                                <a href="{% url 'projcomment' v.id  %}" class="btn btn-warning">Comment</a>
+                            </div>&nbsp;&nbsp;-->
+                            <div style="color: rgb(230, 171, 45); font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 22px;">
+                                <a href="#" class="btn btn-warning" onclick="openModal()">Comment</a>
+                            </div>&nbsp;
+                            <div  class="toggle4" style="color: rgb(230, 171, 45);;font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size: 22px;">
+                                <label for="file-input">
+                                    <img src="https://cdn-icons-png.flaticon.com/128/9329/9329892.png" style="height: 40px;width: 40px;" />
+                                </label>
+                                <input id="file-input" type="file" style="display: none;" />
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                  <fieldset1 id="overview" class="Overview" >
+                    <div style="height: 435px; overflow-y: scroll; overflow-x: hidden; margin-top: 2rem;">
+                        {% for v in proj %}
+                        <div class="form-group row ">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Project Name:</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight: bold;">{{ v.name }}</label>      
+                             </div>   
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Project Description:</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight: bold;">{{ v.desc }}</label>      
+                             </div>   
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Status:</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                
+                                    {% if project.active %}
+                                    <a style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-weight: bold;" class="text-light"  href="#">Active</a>
+                                    {% else %}
+                                    <a style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-weight: bold;" class="text-light" href="#">Inactive</a>
+                                    {% endif %}
+                           
+                             </div>   
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Customer Name:</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight: bold;">{{ v.c_name.customerName }}</label>      
+                             </div>   
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Customer Email:</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight: bold;">{{ v.c_name.customerEmail }}</label>      
+                             </div>   
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Rate per hour(in Rs.):</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight: bold;">{% if v.billing == "Fixed cost for project" or v.billing == "Based on project hours" %}
+                                    {{v.rateperhour}} {{v.taskrph}}
+                                  {% else %}
+                                    Per hour
+                                  {% endif %}</label>      
+                             </div>   
+                        </div>
+                                <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Billing:</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight: bold;">{{ v.billing}}</label>      
+                             </div>   
+                        </div>
+                      <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-2 col-lg-2"></div>
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color:rgb(214, 75, 75) ;font-weight: bold;">Budget Type:</label></div>
+                             <div class="col-sm-12 col-md-6 col-lg-6 col-form-label">
+                                <label style="font-weight: bold;">{{ v.budget }}</label>      
+                             </div>   
+                        </div>
+                     
+                            {% endfor %}
+
+
+
+                            <center><h1>User Details</h1></center>
+                            
+                            <label for="">Users</label><br>
+                            <table class="table text-black" id="user_table">
+                                <thead>
+                                    <tr>
+                                        <th>User</th>
+                                        <th class="text-right">E-mail</th>
+                                        <th class="text-right">Role</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for v in usern %}
+                                    <tr id="user_row1">
+                                        <td>
+                                            <a class="text-white"  >{{v.usernamez}}</a>
+                                        </td>
+                                        <td class="text-right">
+                                            <a class="text-white"  >{{v.emailz}}</a>
+                                        </td>
+                                        <td class="text-right">
+                                            <a class="text-white"  >staff</a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            
+                            <center><h1>Task Details</h1></center>
+                            
+                            <label for="">Tasks</label><br>
+                            <table class="table text-black" id="task_table">
+                                <thead>
+                                    <tr>
+                                        <th>Task name</th>
+                                        <th class="text-right">Description</th>
+                                        <th class="text-right">Type</th>
+                                        
+                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for v in taskz %}
+                                    <tr id="task_row1">
+                                        <td>
+                                            <a class="text-white"  >{{v.taskname}}</a>
+                                        </td>
+                                        <td class="text-right">
+                                            <a class="text-white"  >{{v.taskdes}}</a>
+                                        </td>
+                                        <td class="text-right">
+                                            <a class="text-white"  >{{v.billable}}</a>
+                                        </td>
+                                        
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                           
+                          
+                           
+
+                    </div>
+                    <br><br><br> <br><br>          
+                  </fieldset1> 
+
+               
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div id="commentModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content bg-dark">
+        <span class="close" onclick="closeModal()">&times;</span>
+        
+        <form method="post" action="{% url 'projcommentdb' projc.id %}">
+            {% csrf_token %}
+            <textarea id="commentTextArea" name="comment" rows="8" placeholder="Enter your comment..." class="form-control bg-dark" style="height: 200px;width: 100%;"></textarea>
+            <!-- Hidden textarea to store previous comments -->
+<textarea id="hiddenComments" style="display: none;">{{ projc.comment }}</textarea>
+
+            <button type="submit" class="btn btn-warning">Save</button>
+            <button type="button" class="btn btn-warning mt-1" onclick="viewComment()">View</button>
+            <button type="button" class="btn btn-warning mt-1" onclick="clearTextArea()">Clear</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ... Your existing JavaScript code ...
+
+    function viewComment() {
+        var commentTextArea = document.getElementById("commentTextArea");
+        var hiddenComments = document.getElementById("hiddenComments");
+
+        // Set the textarea value with the value fetched from the database
+        commentTextArea.value = hiddenComments.value;
+
+        var modal = document.getElementById("commentModal");
+        modal.style.display = "block";
+    }
+
+    // ... Your existing JavaScript code ...
+</script>
+    
+
+
+<script>
+    function saveComment() {
+        var comment = document.getElementById("commentTextArea").value;
+        var projId = '{{ proj.id }}'; // Assuming 'proj' variable is passed from Django view
+        var csrfToken = '{{ csrf_token }}'; // Assuming CSRF token is passed from Django template
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/projcommentdb/' + projId + '/');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('X-CSRFToken', csrfToken);
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                console.log('Comment saved:', comment);
+                closeModal();
+            } else {
+                console.error('Failed to save comment:', xhr.statusText);
+            }
+        };
+
+        xhr.send('comment=' + encodeURIComponent(comment));
+    }
+</script>
+
+
+<script>
+ // Create an array to store comments
+var comments = [];
+
+function openModal() {
+    var modal = document.getElementById("commentModal");
+    modal.style.display = "block";
+}
+
+function closeModal() {
+    var modal = document.getElementById("commentModal");
+    modal.style.display = "none";
+}
+
+function saveComment() {
+    var comment = document.getElementById("commentTextArea").value;
+    comments.push(comment); // Save the comment to the array
+    console.log("Comment saved:", comment);
+    closeModal();
+}
+
+
+
+function clearTextArea() {
+    var commentTextArea = document.getElementById("commentTextArea");
+    commentTextArea.value = ""; // Clear the text in the textarea
+}
+
+// Close the modal if the user clicks outside of it
+window.onclick = function (event) {
+    var modal = document.getElementById("commentModal");
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+</script>
+<script>
+    let sorted = false; // Keep track of whether the table is sorted
+  
+    // Store the original order of rows
+    const tables = document.getElementById("myTable");
+    const originalRows = Array.from(tables.getElementsByTagName("tr"));
+  
+    // Add event listener to the "Sort" button
+    const sortButton = document.getElementById("sortButton");
+    sortButton.addEventListener("click", function () {
+      if (!sorted) {
+        sortTableByName();
+        sorted = true;
+      } else {
+        restoreOriginalOrder();
+        sorted = false;
+      }
+    });
+  
+    // Function to sort the table by project name in ascending order
+    function sortTableByName() {
+      const rows = Array.from(tables.getElementsByTagName("tr"));
+  
+      rows.sort((a, b) => {
+        const nameA = a.cells[0].innerText.toLowerCase();
+        const nameB = b.cells[0].innerText.toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
+  
+      rows.forEach((row) => tables.appendChild(row));
+    }
+  
+    // Function to restore the original order of rows
+    function restoreOriginalOrder() {
+      originalRows.forEach((row) => tables.appendChild(row));
+    }
+  </script>
+  
+  
+
+
+<script>
+    const searchInput = document.getElementById("vendorSearchInput");
+    const table = document.getElementById("myTable");
+    const tableRows = table.getElementsByTagName("tr");
+  
+    searchInput.addEventListener("keyup", function () {
+      const searchTerm = searchInput.value.toLowerCase();
+  
+      for (let i = 0; i < tableRows.length; i++) {
+        const rowText = tableRows[i].textContent.toLowerCase();
+        if (rowText.includes(searchTerm)) {
+          tableRows[i].style.display = "";
+        } else {
+          tableRows[i].style.display = "none";
+        }
+      }
+    });
+  </script>
+
+<script>
+    // Add event listener to the "Mark as active" button
+    const markActiveButton = document.querySelector('#toggleButton');
+    markActiveButton.addEventListener('click', function() {
+      const projectId = this.getAttribute('data-project-id');
+      const buttonParent = this.parentNode;
+      const buttonClassList = buttonParent.classList;
+  
+      if (buttonClassList.contains('active')) {
+        buttonClassList.remove('active');
+        this.textContent = 'Mark as active';
+      } else {
+        buttonClassList.add('active');
+        this.textContent = 'Mark as inactive';
+      }
+  
+      // Send a request to update the active status in the backend
+      // Replace the URL with the appropriate endpoint to update the active status
+      fetch(`/update-project-status/${projectId}/`)
+        .then(response => {
+          if (response.ok) {
+            console.log('Project status updated successfully.');
+          } else {
+            console.log('Failed to update project status.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  </script>
+  
+  
+  
+
+<script>
+   
+
+    function fieldset1_function(){
+        document.getElementById("overview").style.display="block";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset2_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="block";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+
+        document.getElementById("doc_list").style.display="none";
+
+
+
+
+    }
+    function fieldset3_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="block";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset4_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="block";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset5_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="block";
+        document.getElementById("doc_list").style.display="none";
+
+
+
+
+
+    }
+    function fieldset6_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="block";
+
+
+
+
+
+    }
+    function myFunction(){
+        var input,filter,table,tr,td,i,txtValue;
+        input=document.getElementById("myInput");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("myTable");
+        tr=table.getElementsByTagName("tr");
+        for(i = 0; i < tr.length; i++)
+        {
+            td=tr[i].getElementsByTagName("td")[0];
+            if(td){
+                txtValue=td.textContent || td.innerText;
+                if(txtValue.toUpperCase().indexOf(filter) > -1){
+                    tr[i].style.display="";
+                }
+                else{
+                    tr[i].style.display="none";
+                }
+            }
+        }
+    }
+
+    function sortTable()
+    {
+        var table,i,x,y;
+        table=document.getElementById("myTable");
+        var switching=true;
+        while(switching)
+        {
+            switching=false;
+            var rows=table.rows
+            for(i = 0 ; i < (rows.length - 1) ; i++)
+            {
+                var Switch=false;
+                x = rows[i].getElementsByTagName("TD") [0];
+                y = rows[i + 1].getElementsByTagName("TD") [0];
+                if(x.innerText.toLowerCase() > y.innerText.toLowerCase())
+                {
+                    Switch=true;
+                    break;
+                }
+
+            }
+            if(Switch)
+            {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching=true
+            }
+        }
+    }
+      
+      
+</script>
+
+
+
+
+{% endblock %}

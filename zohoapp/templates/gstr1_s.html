@@ -1,0 +1,479 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<head>
+<style>
+  
+  h2{
+    font-size: small;
+    font-family: 'Segoe UI', Tahoma,;
+    color:#dfe4e9;
+  }
+table {
+  font-family: arial, sans-serif;
+
+  width: 100%;
+}
+
+td, th {
+
+  text-align:center;
+  padding: 10px;
+  color:#e5d7d7;
+  font-weight: 100;
+  font-size: small;
+  font-family: 'Segoe UI', Tahoma,;
+}
+table,tr {
+  border: hidden;
+ 
+}
+tr:nth-child(odd) {
+  background-color:#201919 ;
+}
+tr:nth-child(even) {
+  background-color: #8f8e8e2a;
+}
+
+
+
+  #aover{
+    color: rgb(214, 141, 5);
+  }
+/* #aover:hover{
+  font-weight: bold;
+} */
+tr:hover{
+  background-color: #bcb68c;
+  font-weight: bold;
+
+}
+
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: rgb(108, 108, 104);
+
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #e0dcdc;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    #selected-area{
+        font-size: 20px;
+    }
+  
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: none;
+  background-color: #131111;
+ 
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+  color: #ddd;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+  color: #1f1c1c;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+  color: #1f1c1c;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+
+  border-top: none;
+ 
+}
+
+    
+</style>
+<script> 
+  $(document).ready(function(){
+    $("#flip").click(function(){
+      $("#panel").slideToggle("slow");
+    });
+  });
+  </script>
+    <script> 
+      $(document).ready(function(){
+        $("#flip1").click(function(){
+          $("#panel1").slideToggle("slow");
+        });
+      });
+      </script>
+
+
+<!-- Include jQuery -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+<!-- Include jQuery.table2excel plugin -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/jquery-table2excel@1.1.0/dist/jquery.table2excel.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<style>
+    #ui-datepicker-div {
+        width: 15rem;
+        left: 600px;
+        font-size: 1rem;
+        background-color: aliceblue;
+    }
+
+    .ui-datepicker-title {
+        font-size: .8rem
+    }
+
+    .ui-datepicker-calendar {
+        display: none;
+    }
+
+    .datepicker {
+        margin-top: 1rem;
+        display: grid;
+        justify-items: center;
+    }
+
+    select>option {
+
+        background-color: rgb(212, 212, 212);
+    }
+
+    .ui-datepicker-prev {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker-next {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker .ui-datepicker-buttonpane button {
+        color: white;
+        background: black;
+        font-size: .8rem;
+    }
+
+    /* .ui-datepicker .ui-datepicker-buttonpane button:hover {
+            color: white;
+            background: rgb(234, 176, 0);
+        } */
+
+    .monthYearPicker {
+        font-size: 1rem;
+        height: 1.5rem;
+        width: 12rem;
+    }
+    .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+    .bar .left{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.bar .left input{
+    height: 5vh;
+}
+</style>
+
+<div class="page-content">
+
+
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="bar">
+             
+                <div class=" left">
+                    <div class="px-2">
+                      <label style="text-align:left ">From</label>
+                      <input type="date"  value="2023-01-01" /> 
+                    </div>
+                    <div  class="px-2">
+                      <label style="text-align:left ">To</label>
+                      <input type="date" value="2023-08-01" />
+                      
+                    </div>
+
+                </div>
+                <div class="right">
+                
+                    
+                    <input  type="checkbox" name="selling" checked style="padding-left:700px ;"> <label >Consider non-tax as exempted</label>
+                  </div>
+                <div class="right">
+                  <button class="btn btn_print btn-outline-info"  style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-print"></i></button>
+                  <button class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')" style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-file-excel"></i></button>  
+                </div>
+            </div>
+            <div class="card radius-15">
+              <div class="card-body">
+                  <div class="card-title">
+                      
+   <h2 class="mb-0" class="text-white" style="font-size: 1rem;">GSTR-1</h2>
+                      
+                      <hr>
+                  </div>
+              </div>
+          </div>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+         
+  
+      
+          
+          <script type="text/javascript">
+              $(document).ready(function ($) {
+                  console.log('print');
+
+                  $(document).on('click', '.btn_print', function (event) {
+                      console.log('print1');
+                      event.preventDefault();
+                      var element = document.getElementById('pdf-card');
+                      var opt =
+                      {
+                          margin: 0.5,
+                          filename: 'gstr1_s' + '.pdf',
+                          image: { type: 'jpeg', quality: 0.98 },
+                          html2canvas: { scale: 2 },
+                          jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait' }
+                      };
+                      html2pdf().set(opt).from(element).save();
+
+                  });
+
+              });
+          </script>
+     </div>
+     <script>
+      $(document).ready(function($) {
+          $(".table-row").dblclick(function() {
+              window.document.location = $(this).data("href");
+          });
+      });
+  </script>
+    
+  <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+  <script type="text/javascript">function ExportToExcel(type, fn, dl) {
+         var elt = document.getElementById('tbl_exporttable_to_xls');
+         var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+         return dl ?
+           XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+           XLSX.writeFile(wb, fn || ('gstr1_s.' + (type || 'xlsx')));
+      }
+      </script>
+      
+    </div>
+  </div>
+
+   
+                  
+ 
+  
+
+   <div class="container-fluid" id="tbl_exporttable_to_xls"> 
+
+  <div class="card radius-15" id="pdf-card">
+   
+    
+         
+  <div class="col-md-12 " style="width: 100%;">
+ 
+    <div class="tab">
+      <button class="tablinks" onclick="openCity(event, 'sale')">Sale</button>
+      <button class="tablinks" onclick="openCity(event, 'Sale Return')" >Sale Return</button>
+      
+    </div>
+     
+   
+     
+      <div id="sale" class="tabcontent"><div class="tm-page-content">
+        <div class="table-responsive">   
+  <table class="table  text-white " style="width: 100%;">
+
+    <tr >
+  
+    
+        <th colspan="5" style="font-weight: 500; text-align: center;"><b>Invoice Details	</b></th>
+        <th  style="font-weight: 500; text-align:right;"><b>Tax Rate		</b></th>
+        <th >Cess Rate</th>
+                            <th >Taxable Value</th>
+                            <th colspan="4" >Amount</th>
+                            <th >Place Of Supply(Name Of State)
+                            </th>
+      </tr>
+  <tr >
+    <th>GSTIN/UIN</th>
+    <th>Party Name</th>
+    
+    <td>Invoice No.</td>
+    <td>Date</td>
+    <td>Value</td>
+    <td></td>
+    <td></td>   
+    <td></td>
+    <th style="text-align: center;">Integrated</th>
+    <th style="text-align: center;">Central Tax</th>
+    <th style="text-align: center;">State/UT Tax</th>
+    <th style="text-align: center;">Cess</th>
+    <td></td>
+  </tr>
+ 
+ 
+  
+  {% for i in reinv %}
+                        <tr class="text-center">
+                            <td>0</td>
+                            <td>{{i.customer_name.customer.customerName}}</td>
+                            <td>{{i.retainer_invoice_number}}</td>
+                            <td>{{i.retainer_invoice_date}}</td>
+                            <td>{{i.total_amount}}</td>
+                            <td>0</td>
+                            <td>0</td>
+  {% endfor %}    
+  {% for i in data %}   
+                            <td>{{i.subtotal}}</td>
+{% endfor %}  
+{% for i in invoices %} 
+                            <td>{{i.igst}}</td>
+                            <td>{{i.cgst}}</td>
+                            <td>{{i.stst}}</td>
+                            <td>{{i.t_tax}}</td>
+                            <td>{{i.p_supply}}</td>
+                            
+ {% endfor %}
+  </tr>
+
+</table></div></div></div></div></div></div>
+<div id="Sale Return" class="tabcontent">
+  <div class="tm-page-content">
+  <div class="table-responsive"> 
+<table class="table  text-white " style="width: 100%;">
+    <tr >
+  
+    
+        <th colspan="7" style="font-weight: 500; text-align: center;"><b>Cr. Note Details	</b></th>
+        <th  style="font-weight: 500; text-align:right;"><b>Tax Rate		</b></th>
+        <th >Cess Rate</th>
+                            <th >Taxable Value</th>
+                            <th colspan="4" >Amount</th>
+                            <th >Place Of Supply(Name Of State)
+                            </th>
+      </tr>
+  <tr >
+    <td>GSTIN/UIN</td>
+    <td>Party Name</td>
+    
+    <td>Invoice No.</td>
+    <td>Invoice Date	</td>
+    <td>Note No.</td>
+    <td>Note Date	</td>
+    <td>Value	</td>   
+    <td></td>
+    <td></td>
+    <td></td>
+    <td style="text-align: center;">Integrated</td>
+    <td style="text-align: center;">Central Tax</td>
+    <td style="text-align: center;">State/UT Tax</td>
+    <td style="text-align: center;">Cess</th>
+    <td></td>
+  </tr>
+ 
+ 
+
+  <tr>
+   
+   
+
+    <tr class="text-center">
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+    
+     <td></td>
+    <td></td>
+    <td></td>
+
+    <td></td>
+    <td></td>
+    <td></td>
+  
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    
+
+  </tr>
+ 
+</table>
+</div></div>
+
+
+</div></div></div></div>
+<script>
+  function openCity(evt, cityName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(cityName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  </script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<!-- REQUIRED FOR MONTH & YEAR PICKER -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet"
+    type="text/css" />
+{% endblock %}
+

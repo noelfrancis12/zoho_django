@@ -1,0 +1,738 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/css/pikaday.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.8.0/pikaday.min.js"></script>
+    
+</head>
+
+<style>
+
+    tbody {
+        -ms-overflow-style: none;  /* Internet Explorer 10+ */
+        scrollbar-width: none;  /* Firefox */
+    }
+
+    tbody::-webkit-scrollbar { 
+        display: none;
+    }
+    
+    th,td {
+      text-align: left;
+      color: white;
+    }
+    
+    table,td {
+        border: none;
+    }
+
+    table a{
+        color:white
+    }
+
+    table a:hover{
+        color:rgb(184, 121, 4)
+    }
+
+    table tr:hover{
+        background-color: rgba(29,31,33,255)
+    }
+
+    .allow-border{
+        border-bottom: 1pt dotted white;
+    }
+
+    .dropdown-item:hover{
+        background-color: white;
+    }
+
+    #custom-dropdown-btn{
+        background-color: white;
+        width: 96%;
+        height: 4vh;
+        text-align: left;
+    }
+
+    #date-options{
+        background-color: white;
+        width: 83%;
+        margin-top: 1vh;
+        margin-left: 4vh;
+        border-radius: 10px;
+    }
+
+    #date-options a{
+        color: #060606;
+    }
+
+    .div-option:hover{
+        background-color: #007bff;
+    }
+
+    #date-options a:hover{
+        background-color: white;
+    }
+    .dropdown-item:hover{
+        background-color: white;
+    }
+
+    tr.detail-row,#furplus, #funplus,#totalfur,#totalfun{
+        display: none;
+    }
+
+    .close-button{
+        font-size: 2vh; 
+        font-weight: 100;
+    }
+
+    @media print{
+        body{
+            visibility: hidden;
+        }
+
+        #printdiv{
+            visibility: visible;
+            width: auto;
+            height: auto;
+            overflow: visible;  
+        }
+    }
+
+    .sticky-header {
+        position: fixed;
+        top: 10;
+        background-color: #f2f2f2;
+        margin-top: -355px;
+        background-color: #212529;
+        padding-top: 60px;
+    }
+    
+    table td{
+        width: 33%;
+    }
+
+  </style>
+
+
+<div class="container-fluid">
+    <div class="spacediv" style="display: none;">
+        <p style="margin-top: -1vh;">&nbsp;</p>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <div class="custom-dropdown">
+                <div class="d-flex">
+                    <i class="fa fa-calendar" aria-hidden="true" style="font-size: 4vh; color: white;"></i>&nbsp;
+                    <a id="custom-dropdown-btn" href="#" class="btn bg-white text-dark" style="font-size: 1vw; height: 30px;"></a>
+                </div>
+                <div id="datepicker-container" style="display: none;">
+                    <div id="date-options" style="display: none;">
+                        <a class="date-option" href="#"><div class="div-option">Today</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Week</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Month</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Quarter</div></a>
+                        <a class="date-option" href="#"><div class="div-option">This Year</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Yesterday</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Previous Week</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Previous Month</div></a>
+                        <a class="date-option" href="#"><div class="div-option">Previous Quarter</div></a>
+                        <a id="datepicker" href="#"><div class="div-option">Custom</div></a>
+                    </div>
+                </div>
+            </div><br><br>
+        </div>
+        <div class="col-md-5" >
+            <button class="btn btn-light"><a class="text-dark" href="{% url 'load_customize_report_bs' %}"><i class="fa fa-cog">&nbsp;</i>Customize Report</a></button>
+        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class=" col-md-1 d-flex" >            
+            <button class="btn btn-light" type="button" style="height: 30px;" onclick="display()">
+                <i class="fa fa-print">&nbsp;Print</i>
+            </button>
+        </div>
+        <div class="col-md-1 d-flex">
+            <button class="btn btn-light" type="button" style="height: 30px;" onclick="exportToPDF()">
+                <i class="fa fa-file-pdf-o" aria-hidden="true">&nbsp;PDF</i>
+            </button>
+        </div>
+        <div class="col-md-2 d-flex">
+            <button class="btn btn-light dropdown-toggle" type="button" id="exportDropdown2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 30px;">
+                <i class='fas fa-file-export'></i> Export
+            </button>
+            <div class="dropdown-menu " aria-labelledby="exportDropdown2">
+                <a class="dropdown-item" href="#" onclick="exportToExcel()">XLS (Excel)</a>
+            </div>&nbsp;&nbsp;&nbsp;
+            <a href="{% url 'report_inventory_view' %}" class="btn btn-light close-button" style="height: 30px;">
+                X 
+             </a>
+        </div>
+    </div>
+
+    <div class="row" id="pdfdiv">
+        <div class="row bg-dark" style="border-radius: 3vh; width: 77vw;" id="printdiv">
+            <h3 style="text-align: center; margin-top: 2vh;">{{company.company_name}}</h3> 
+            <h1 style="text-align: center;">Balance Sheet</h1> 
+            <h6 style="text-align: center;">Basis: Cash</h6> 
+            <h6 style="text-align: center;">As of <span id="todaydate"></span></h6> <br>
+            <div class="table-responsive">
+                <div class="container-fluid "> 
+                    <table class="table" >
+                        <thead id="stick">
+                            <tr>  
+                                <th class="bg-dark" style="border-bottom: 2px solid white; font-size: 2vw; font-weight: 500; width: 26vw;">ACCOUNT </th>  
+                                <th class="bg-dark" style="border-bottom: 2px solid white; font-size: 2vw; font-weight: 500; width: 20vw; text-align: center;">
+                                    ACCOUNT CODE  
+                                </th> 
+                                <th class="bg-dark" id="tbhd" style=" border-bottom: 2px solid white; text-align: right; font-size: 2vw; font-weight: 500; width: 26vw;">
+                                    TOTAL  
+                                </th> 
+                            </tr>
+                        </thead> 
+                        <tbody> 
+                            <tr> 
+                                <td><span style="font-size: large;">ASSETS</span></td>
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr>  
+                                <td style="font-size: medium;">Current Assets</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr>  
+                                <td style="font-size: medium;">Bank</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Bank Acc 1 </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> Bank Of America </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> Eur Bank Account </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> New Acc 1 </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr> 
+    
+                            <tr> 
+                                <td></td>
+                                <td></td>
+                                <td class="allow-border" style="text-align: right;"> 0 </td> 
+                            </tr> 
+    
+                            <tr>  
+                                <td style="font-size: medium;">Cash</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Petty Cash </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Undeposited Funds </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td</td>
+                                <td</td>
+                                <td class="allow-border" style="text-align: right;"> 0</td> 
+                            </tr> 
+                            <tr>  
+                                <td style="font-size: medium;">Other Current Assets</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Advance Tax </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Employee Advance </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Input VAT </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#">0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Sales to Customers (Cash) </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#">0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td></td>
+                                <td></td>
+                                <td class="allow-border" style="text-align: right;">  0 </td> 
+                            </tr> 
+                            <tr>  
+                                <td style="font-size: medium;">Other Assets</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Error </a> </td>
+                                <td style="text-align: center;">Error</td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> GoCardless Clearing </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#">0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> GoCardless Clearing - EUR </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> GoCardless Clearing - GBP </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td> <a href="#"> Inventory Asset </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#">0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td></td>
+                                <td></td>
+                                <td style="text-align: right;" class="allow-border"> 0 </td> 
+                            </tr>  
+                            <tr> 
+                                <td class="allow-border" style="font-size: medium;"><b>Total Current Assets</b></td>
+                                <td class="allow-border"></td>
+                                <td style="text-align: right;" class="allow-border">0 </td> 
+                            </tr>  
+                            <tr>  
+                                <td style="font-size: medium;">Fixed Assets</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td>
+                                    <a class="btn" style="border: 2px solid white; font-size: x-small;" id="furplus" onclick="openfur()">+</a>
+                                    <a class="btn" style="border: 2px solid white; font-size: x-small;" id="furminus" onclick="closefur()">-</a>
+                                    <a href="#"> Furniture and Equipment </a> 
+                                </td>
+                                <td></td>
+                                <td style="text-align: right;" id="furvalue" style="display: none;"> <a href="#" >0</a></td> 
+                                <td style="text-align: right;" id="totalfur"> <a href="#">0</a> </td> 
+                            </tr> 
+                            <tr id="furdiv1" > 
+                                <td>  
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a class="btn" style="border: 2px solid white; font-size: x-small;" id="funplus" onclick="openfun()">+</a>
+                                    <a class="btn" style="border: 2px solid white; font-size: x-small;" id="funminus" onclick="closefun()">-</a>
+                                    <a href="#"> Fun </a> 
+                                </td>
+                                <td style="text-align: center;">0</td>
+                                <td style="text-align: right;" id="funvalue"><a href="#"> 0</a> </td> 
+                                <td style="text-align: right;" id="totalfun"><a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr id="fundiv1" > 
+                                <td>  
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="#"> bugfix account </a> 
+                                </td>
+                                <td style="text-align: center;">0</td>
+                                <td style="text-align: right;"><a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr id="fundiv2" > 
+                                <td class="allow-border" style="font-size: medium;" >
+                                    <strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Total for Fun </strong> 
+                                </td>
+                                <td class="allow-border" style="text-align: center;">0</td>
+                                <td style="text-align: right;" class="allow-border"><a href="#">0</a> </td> 
+                            </tr> 
+                            <tr id="furdiv2" > 
+                                <td class="allow-border" style="font-size: medium;">
+                                    <strong> &nbsp;&nbsp;&nbsp;&nbsp; Total for Furniture and Equipment </strong> 
+                                </td>
+                                <td class="allow-border"></td>
+                                <td style="text-align: right;" class="allow-border" ><a href="#">0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td class="allow-border" style="font-size: medium;"><b>Total Fixed Assets</b></td>
+                                <td class="allow-border"></td>
+                                <td style="text-align: right;" class="allow-border">  0 </td> 
+                            </tr>      
+                            <tr> 
+                                <td></td>
+                                <td style="font-size: medium; text-align: center;">TOTAL ASSETS</td>
+                                <td  style="text-align: right;" class="allow-border"> 0</td> 
+                            </tr>
+                            <tr> 
+                                <td><span style="font-size: large;">LIABILITIES &amp; EQUITIES</span></td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr>  
+                                <td style="font-size: medium;">Current Liabilities</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Employee Reimbursements </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> HMRC-PAYE </a> </td>
+                                <td style="text-align: center;">0</td>
+                                <td style="text-align: right;"><a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> Opening Balance Adjustments </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> Output VAT </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#">0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> Unearned Revenue </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#"> 0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> VAT MOSS Payable </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#">0</a> </td> 
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> VAT Payable </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#"> 0</a> </td> 
+                            </tr>  
+                            <tr> 
+                                <td class="allow-border" style="font-size: medium;"><b>Total Current Liabilities</b></td>
+                                <td class="allow-border"></td>
+                                <td style="text-align: right;" class="allow-border">  0</td> 
+                            </tr>  
+                            <tr>  
+                                <td style="font-size: medium;"> Other Liabilities</td> 
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Tag Adjustments </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"><a href="#">0</a> </td>
+                            </tr>  
+                            <tr> 
+                                <td class="allow-border" style="font-size: medium;"><b>Total Other Liabilities</b></td>
+                                <td class="allow-border"></td>
+                                <td style="text-align: right;" class="allow-border">  0 </td>
+                            </tr>  
+                            <tr>  
+                                <td style="font-size: medium;">Equities</td>
+                                <td></td>
+                                <td></td>
+                            </tr>  
+                            <tr> 
+                                <td><a href="#"> Current Year Earnings </a></td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#">0</a> </td>
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> Opening Balance Offset </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td>
+                            </tr> 
+                            <tr> 
+                                <td><a href="#"> Owner's Equity </a> </td>
+                                <td></td>
+                                <td style="text-align: right;"> <a href="#"> 0</a> </td>
+                            </tr> 
+                            <tr> 
+                                <td style="font-size: medium;">  Retained Earnings  </td>
+                                <td></td>
+                                <td style="text-align: right;"> 0 </td>
+                            </tr>  
+                            <tr> 
+                                <td class="allow-border" style="font-size: medium;"><b>Total Equities</b></td>
+                                <td class="allow-border"></td>
+                                <td class="allow-border" style="text-align: right;">  0 </td>
+                            </tr>   
+                            <tr> 
+                                <td></td>
+                                <td style="text-align: center; font-size: medium;">TOTAL LIABILITIES &amp; EQUITIES</td>
+                                <td style="text-align: right; border-bottom: 1pt double white;"> 0</td>
+                            </tr>
+                        </tbody><br>
+                    </table>
+                    <div><br>
+                        <p>
+                            <small>**Amount is displayed in your base currency</small>&nbsp;
+                            <span class="badge text-semibold badge-success d-inline">INR</span>
+                        </p>
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const tableHeader = document.getElementById("stick");
+
+    // Function to handle scroll events
+    function handleScroll() {
+        if (window.pageYOffset > tableHeader.offsetTop) {
+            if("{{valid}}"==1){
+                $(".spacediv").show()
+            } 
+            tableHeader.classList.add("sticky-header");
+        } else {
+            tableHeader.classList.remove("sticky-header");
+        }
+    }
+
+    // Listen for scroll events
+    window.addEventListener("scroll", handleScroll);
+
+    function openfur(){
+        $("#furdiv1").show()
+        $("#furdiv2").show()
+        $("#fundiv1").show()
+        $("#fundiv2").show()
+        $("#furplus").hide()
+        $("#furminus").show()
+        $("#funplus").hide()
+        $("#funminus").show()
+        $("#totalfur").hide()
+        $("#furvalue").show()
+        $("#totalfun").hide()
+        $("#funvalue").show()
+    }
+
+    function closefur(){
+        $("#furdiv1").hide()
+        $("#furdiv2").hide()
+        $("#fundiv1").hide()
+        $("#fundiv2").hide()
+        $("#furplus").show()
+        $("#furminus").hide()
+        $("#totalfur").show()
+        $("#furvalue").hide()
+    }
+
+    function openfun(){
+        $("#fundiv1").show()
+        $("#fundiv2").show()
+        $("#funplus").hide()
+        $("#funminus").show()
+        $("#totalfun").hide()
+        $("#funvalue").show()
+    }
+
+    function closefun(){
+        $("#fundiv1").hide()
+        $("#fundiv2").hide()
+        $("#funplus").show()
+        $("#funminus").hide()
+        $("#totalfun").show()
+        $("#funvalue").hide()
+    }
+
+    function display() {
+        var printContents = document.getElementById("printdiv").innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+    }
+
+    function exportToPDF(){
+        var content = document.getElementById('pdfdiv');
+        html2pdf()
+        .from(content)
+        .save('report.pdf')
+    }
+
+    // Function to save Excel using XLSX
+    function exportToExcel() {
+        var table = document.querySelector('table');
+        var ws = XLSX.utils.table_to_sheet(table);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, 'report.xlsx');
+    }
+
+    // Initialize Pikaday date picker
+    const weekday = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var nowDate = new Date(); 
+    const picker = new Pikaday({
+        field: document.getElementById('datepicker'),
+        format: 'MM/DD/YYYY', // You can change the date format
+        onSelect: function(date) {
+            
+            // document.getElementById('custom-dropdown-btn').textContent =  "Custom";
+            document.getElementById('custom-dropdown-btn').textContent =  picker.toString();
+            document.getElementById('tbhd').innerHTML = picker.toString().slice(4)  
+            document.getElementById('todaydate').innerHTML = picker.toString().slice(4) 
+            document.getElementById('datepicker-container').style.display = 'none';
+            document.getElementById('date-options').style.display = 'none';
+        }
+    });
+
+    // Handle custom dropdown button click
+    const customDropdownBtn = document.getElementById('custom-dropdown-btn');
+    const datepickerContainer = document.getElementById('datepicker-container');
+    const dateOptions = document.getElementById('date-options');
+
+    customDropdownBtn.addEventListener('click', function() {
+        if (datepickerContainer.style.display === 'none') {
+            datepickerContainer.style.display = 'block';
+            dateOptions.style.display = 'block';
+        } else {
+            datepickerContainer.style.display = 'none';
+            dateOptions.style.display = 'none';
+        }
+    });
+
+    // Close date picker if clicking outside
+    document.addEventListener('click', function(event) {
+        if (!datepickerContainer.contains(event.target) && event.target !== customDropdownBtn) {
+            datepickerContainer.style.display = 'none';
+            dateOptions.style.display = 'none';
+        }
+    });
+
+    // Add date option handlers
+    const dateOptionButtons = document.querySelectorAll('.date-option');
+    
+    dateOptionButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const optionText = button.textContent;
+            switch (optionText) {
+                case 'Today':
+                    picker.setDate(new Date());
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Today";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Week':
+                    // Set date to the start of the week (Sunday)
+                    const today = new Date();
+                    today.setDate(today.getDate() - today.getDay());
+                    picker.setDate(today);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Week";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Month':
+                    // Set date to the 1st day of the current month
+                    const firstDayOfMonth = new Date();
+                    firstDayOfMonth.setDate(1);
+                    picker.setDate(firstDayOfMonth);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Month";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'This Quarter':
+                    // Calculate the start date of the current quarter
+                    const quarterStartMonth = Math.floor(new Date().getMonth() / 3) * 3;
+                    const firstDayOfQuarter = new Date(new Date().getFullYear(), quarterStartMonth, 1);
+                    picker.setDate(firstDayOfQuarter);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Quarter";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';                        
+                    break;
+
+                case 'This Year':
+                    // Set date to January 1st of the current year
+                    const firstDayOfYear = new Date(new Date().getFullYear(), 0, 1);
+                    picker.setDate(firstDayOfYear);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "This Year";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Yesterday':
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    picker.setDate(yesterday);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Yesterday";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Week':
+                    // Set date to the start of the previous week (Sunday)
+                    const prevWeekStart = new Date();
+                    prevWeekStart.setDate(prevWeekStart.getDate() - prevWeekStart.getDay() - 7);
+                    picker.setDate(prevWeekStart);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Week";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Month':
+                    // Set date to the 1st day of the previous month
+                    const prevMonth = new Date();
+                    prevMonth.setDate(1);
+                    prevMonth.setMonth(prevMonth.getMonth() - 1);
+                    picker.setDate(prevMonth);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Month";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+
+                case 'Previous Quarter':
+                    // Calculate the start date of the previous quarter
+                    const prevQuarterStartMonth = Math.floor(new Date().getMonth() / 3) * 3 - 3;
+                    const prevQuarterStart = new Date(new Date().getFullYear(), prevQuarterStartMonth, 1);
+                    picker.setDate(prevQuarterStart);
+                    // document.getElementById('custom-dropdown-btn').textContent =  "Previous Quarter";
+                    // document.getElementById('datepicker-container').style.display = 'none';
+                    // document.getElementById('date-options').style.display = 'none';
+                    break;
+                    
+                default:
+                    break;
+            }
+            document.getElementById('datepicker-container').style.display = 'none';
+            document.getElementById('date-options').style.display = 'none';
+        });
+    });
+
+    var formdate = "{{newdate}}";
+    if(formdate){
+        document.getElementById('custom-dropdown-btn').innerHTML= formdate
+        document.getElementById('tbhd').innerHTML= formdate
+        document.getElementById('todaydate').innerHTML= formdate
+    }else{
+        document.getElementById('custom-dropdown-btn').innerHTML= weekday[nowDate.getDay()]+" "+month[nowDate.getMonth()]+" "+nowDate.getDate()+" "+ nowDate.getFullYear(); 
+        document.getElementById('todaydate').innerHTML= nowDate.getDate() +" "+ month[nowDate.getMonth()]+" "+ nowDate.getFullYear(); 
+    };
+
+</script>
+
+{% endblock %}

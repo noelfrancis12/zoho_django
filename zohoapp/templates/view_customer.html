@@ -1,0 +1,284 @@
+
+
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href='https://unpkg.com/css.gg@2.0.0/icons/css/trash.css' rel='stylesheet'>
+<script src="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+
+
+
+
+<style>
+    .card{
+        background: none;
+    }
+    tbody tr td{
+        border: none;
+        border-top: none;
+        border-style: none;
+        color:azure;
+        justify-content: center;
+    }
+    tr:hover{
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+   
+    ul.image-bullets {
+        list-style-type: none;
+        padding-left: 30px;
+    }
+
+    ul.image-bullets li:before {
+        content: "";
+        background-image: url('static/images/bullet.png');
+        background-size: 15px 15px;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 5px; 
+        margin-left: 26%;
+    }
+    .recurpoints ul li{
+        margin-bottom: 10px;
+    }
+
+    .flowchart {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px;
+}
+
+    .flowchart-item {
+        text-align: center;
+        padding: 10px;
+        background-color: lightblue;
+        border: 3px solid rgb(25, 91, 145);
+        border-radius: 5px;
+        width: 150px;
+        color: black;
+        font-size: 12px;
+    }
+    .flowchart-item i{
+        font-size: 15px;
+    }
+
+    .flowchart-connector {
+        flex-grow: 1;
+        height: 2px;
+        background-color: #ccc;
+        margin-top: 0%;
+
+    }
+    
+    @media (max-width: 768px) {
+        .flowchart {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flowchart-item {
+            width: 120px;
+        }
+        .flowchart-connector {
+            height: 50px;
+            width: 2px; 
+            margin-left: 0%; 
+            transform: translateX(-50%);
+        }
+    }
+    .btn{
+        color: rgb(218, 164, 48);
+        outline-color: azure;
+        border: 2px solid rgb(25, 91, 145);
+    }
+    .btn:hover{
+        color: darkslategray;
+        background-color: lightblue;
+        outline: none;
+        
+    }
+    a{
+        list-style: none;
+        color: azure;
+    }
+     a:hover{
+        color: rgb(218, 164, 48);
+     }
+     ::-webkit-scrollbar {
+        width: 5px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+    
+</style>
+<div class="container-fluid " style="width: 1200px; height: 570px;overflow-y: scroll;">
+    
+    
+        <div class="card radius-15" >
+            <div class="card-body">
+                <div class="card-title">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h2 class="mb-0 text text-right">All Customers</h2>
+                        </div>
+                        <div class="col-md-2">
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card radius-15 mb-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class=" col-md-3">
+                    
+                    <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off">
+                         
+
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-3">
+                        
+                        <a class="btn text-center px-3 py-2 " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        role="button"><i class="fa fa-filter mx-3"></i>
+                        </a>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item"  href="{% url 'view_customr_sname' %}" >Name</a>
+                            <a class="dropdown-item"  href="{% url 'view_customr_scpname' %}" >Company Name</a>
+                            <a  class="dropdown-item" href="">Receivables</a>
+                            <a  class="dropdown-item" href="">Import Customer</a>
+                            <a  class="dropdown-item" href="">Export Customer</a>
+                  
+                        </div>
+                        <a href="{% url 'add_customers' %}" class="btn fa fa-plus text-right px-3 py-2" role="button">
+                            <span class="mt-2">&nbsp;&nbsp;NEW</span>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="container-fluid">
+                    <table class="table table-responsive-md mt-4" id="table" >
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                <th>CompanyName</th>
+                <th>Email</th>
+                <th>Work Phone</th>
+                <th>Opening Balance</th>
+                <th>Receivables</th>
+                <th></th>
+                            </tr>
+                        </thead>
+                        {% for v in vc %}
+                        <tr>
+               
+                         
+                          <td><a href="{% url 'view_one_customer' v.id %}" style="color: white;">{{v.customerName}}</a></td>
+                          <td><a href="{% url 'view_one_customer' v.id %}" style="color: white;">{{v.companyName}}</a></td>
+                          <td><a href="{% url 'view_one_customer' v.id %}" style="color: white;">{{v.customerEmail}}</a></td>
+                          <td><a href="{% url 'view_one_customer' v.id  %}" style="color: white;" >{{v.customerWorkPhone}}</a></td>
+                          <td><a href="{% url 'view_one_customer' v.id  %}" style="color: white;" >{{v.OpeningBalance}}</a></td>
+                          <td>None</td>
+                          
+                          
+                          <!--<td class="menu-items dropdown"><a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" style="color: aliceblue;">
+                            
+                             <span class="menu-title" style="color:white"></span>
+                             
+                           </a>
+                           <ul class="dropdown-menu" style="background-color:rgb(74, 69, 69);color:white;">
+                             <div class="dropdown-item"><a href="{% url 'editcustomer' v.id %}">Edit</a></div>
+                             <div class="dropdown-item"><a href="">Email customer</a></div>
+                           </ul>
+                         </td>-->
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>       
+       <!-- <hr>
+        <div class="card radius-15 mt-5">
+            <div class="card-body">
+                <div class="card-title">
+                    <h3 class="mb-0 text-center"></h3>
+                    <br>
+                    <div class="flowchart">
+                        <div class="flowchart-item text-uppercase" style="width: 200px;">
+                            <i class="fa-sharp fa-solid fa-bag-shopping" style="color: #daa430;"></i> Rountine Purchase
+                        </div>
+                        <div class="flowchart-connector"></div>
+                        <div class="flowchart-item text-uppercase" style="width: 210px;">
+                            <i class="fa-sharp fa-solid fa-file" style="color: #daa430;"></i> Create Recurring Profile
+                        </div>
+                        <div class="flowchart-connector"></div>
+                        <div class="flowchart-item text-uppercase" >
+                            <i class="fa-sharp fa-solid fa-receipt" style="color: #daa430;"></i> generated bill
+                        </div>
+                        <div class="flowchart-connector">  </div>
+                        <div class="flowchart-item text-uppercase">
+                            <i class="fa-sharp fa-solid fa-money-check-dollar" style="color: #3ec61c;"></i> record payment
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title recurpoints">
+                    <h3 class="mb-0 text-center">In th Recurring Bills Section,you can:</h3>
+                    <br>
+                    <div >
+                    <ul class='image-bullets'>
+                        <li>Create a recurring profile to automatically generate bills.</li>
+                        <li>View when each bill was generated under the recurring profile.</li>
+                        <li>Create an individual bill within the recurring profile.</li>
+                    </ul>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var $rows = $('#table tbody tr');
+    $('#search').keyup(function() {
+      var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+      $rows.show().filter(function() {
+        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+        return !~text.indexOf(val);
+      }).hide();
+    });
+  });
+
+
+$('.dropdown-toggle').dropdown();
+
+ 
+</script>
+{% endblock %}

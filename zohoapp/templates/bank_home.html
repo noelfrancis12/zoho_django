@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<link href='https://unpkg.com/css.gg@2.0.0/icons/css/trash.css' rel='stylesheet'>
+<script src="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+
+
+<style>
+    .card{
+        background: none;
+    }
+    tbody tr td{
+        border: none;
+        border-top: none;
+        border-style: none;
+        color:azure;
+        justify-content: center;
+    }
+    tr:hover{
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+   
+    ul.image-bullets {
+        list-style-type: none;
+        padding-left: 30px;
+    }
+
+    ul.image-bullets li:before {
+        content: "";
+        background-image: url('static/images/bullet.png');
+        background-size: 15px 15px;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 5px; 
+        margin-left: 26%;
+    }
+    .recurpoints ul li{
+        margin-bottom: 10px;
+    }
+
+
+    .btn{
+        color: rgb(218, 164, 48);
+        outline-color: azure;
+        border: 2px solid rgb(25, 91, 145);
+    }
+    .btn:hover{
+        color: darkslategray;
+        background-color: lightblue;
+        outline: none;
+        
+    }
+    a{
+        list-style: none;
+        color: azure;
+    }
+     a:hover{
+        color: rgb(218, 164, 48);
+     }
+     ::-webkit-scrollbar {
+        width: 5px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+    
+</style>
+<div class="container-fluid containerprof" >
+    
+    
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h2 class="mb-0 text-uppercase text-right">ALL BANKINGS</h2>
+                        </div>
+                        <!-- <div class="col-md-2">
+                            <a href="{%url 'create_bank'%}" class="btn fa fa-plus text-right px-3 py-2" role="button">
+                                <span class="mt-2">&nbsp;&nbsp;NEW</span>
+                            </a> 
+
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card radius-15 mb-5">
+            <div class="card-body">
+                <div class="row">
+                    <div class=" col-md-3">
+                    
+                       
+                            <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off">
+                       
+                        
+
+                    </div>
+                    
+                    <div class="col-md-5"></div>
+                    <div class="col-md-4 d-flex justify-content-end align-items-start gap-1">
+                        <!-- <a href="{%url 'create_bank'%}" class="btn fa fa-plus text-right px-3 py-2" role="button">
+                            <span class="mt-2">&nbsp;&nbsp;NEW</span>
+                        </a>  -->
+
+                    <!-- </div>
+                    <div class="col-md-2"> -->
+                        <a class="btn text-center " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        role="button"><i class="fa fa-filter mt-1 mx-4"></i>
+                        </a>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item" href="{% url 'bank_home'  %}">All</a>
+                            <a class="dropdown-item" href="{% url 'nameasc'  %}">Name A-Z</a>
+                            <a class="dropdown-item" href="{% url 'namedes'  %}">Name Z-A</a>
+                           
+
+                        </div>
+                        <a href="{%url 'create_bank'%}" class="btn fa fa-plus text-right px-3 py-2" role="button">
+                            <span class="mt-2">&nbsp;&nbsp;NEW</span>
+                        </a> 
+                    </div>
+
+                </div>
+                <hr>
+                <div class="container-fluid">
+                    <table class="table table-responsive-md mt-4" id="table">
+                        <thead>
+                            <tr>
+                                <th>NAME</th>
+                                <th>IFSC CODE</th>
+                                <th>ACCOUNT NUMBER</th>
+                                <th>BRANCH</th>
+                               
+                                <th>OPENING BALANCE</th>
+                                <th>BALANCE</th>
+                            
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            {% for bank, balance in bank_balances %}
+                        
+                            <tr>
+                            <td><a href="{% url 'bank_listout' bank.id %}">{{bank.name}}</a></td>
+                          
+
+                            <td><a href="{% url 'bank_listout' bank.id %}"> {{ bank.ifsc}}</a></td>
+                          
+                            <td><a href="{% url 'bank_listout' bank.id %}">{{ bank.ac_no}}</a></td>
+                            <td><a href="{% url 'bank_listout' bank.id %}">{{ bank.branch}}</a></td>
+                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ bank.opn_bal }}</a></td>
+                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ balance }}</a></td>
+                          
+                            </tr>
+
+                            {%endfor%}  
+                           
+                            
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>       
+        
+        
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var $rows = $('#table tbody tr');
+    $('#search').keyup(function() {
+      var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+      $rows.show().filter(function() {
+        var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+        return !~text.indexOf(val);
+      }).hide();
+    });
+  });
+  $('.dropdown-toggle').dropdown();
+</script>
+
+{%endblock%}

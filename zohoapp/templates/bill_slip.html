@@ -1,0 +1,650 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E="
+    crossorigin="anonymous"></script>
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/JavaScript-autoComplete/1.0.4/auto-complete.min.js"
+    integrity="sha512-LwZthDLbb+dritfG9jbFyY1ClYqlkF4I9foqo+783wcl6EPR+kE3uqb0OPsieHt4pFH4HVduwX6rTTDmCaC20g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    integrity="sha384-**YOUR-INTEGRITY-VALUE**" crossorigin="anonymous">
+
+<style>
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: rgb(252, 236, 217)";
+
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .slip {
+        /* position: absolute; */
+        overflow: hidden;
+    }
+
+    .ribbon {
+        position: relative;
+        top: -20px;
+        left: -80px;
+
+        width: 140px;
+
+        background-color: rgb(95, 91, 100);
+        transform: rotate(-45deg);
+        text-align: center;
+        color: #fff;
+
+        font-size: 15px;
+        overflow: hidden;
+
+    }
+</style>
+<style>
+    /* .jobs-area {
+            background: linear-gradient(0deg, #4c4c4d 0%, #9c9d9d 20%, #fbfbfb 100%);
+            opacity: 1;
+            transition: 0.2s;
+        } */
+
+      
+
+        .jobs-tab {
+
+            float: left;
+        }
+
+        .jobs-tab li {
+            display: inline-block;
+            padding: 1px 0;
+            margin-left: 20px;
+            position: relative;
+
+        }
+
+
+        .single-job {
+            padding: 40px 50px;
+            border-radius: 25px;
+            border-top-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+
+        }
+
+        .single-job:hover {
+            background-color: #d6d5d5;
+            box-shadow: 4px 4px 6px 6px rgb(170, 172, 172);
+
+        }
+
+
+        .job-text i {
+
+            font-size: 15px;
+            width: 10px;
+            height: 10px;
+            margin-right: 10px;
+            color: var(--heading);
+        }
+
+        .single-job ul {
+            list-style-type: none;
+        }
+
+        .nav-tabs .nav-item.show .nav-link,
+        .nav-tabs .nav-link.active {
+            color: rgb(212, 118, 10);
+            background-color: transparent;
+        }
+
+
+        .nav-tabs .nav-link {
+            border: none;
+            background: transparent;
+            font-size: 15px;
+            color: black;
+        }
+
+        .nav-link {
+            /* color: rgb(53, 52, 52); */
+            display: block;
+            padding: 0;
+        }
+
+        .nav-tabs {
+            border-bottom: none;
+        }
+        .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 999;
+        /* Adjust the alpha value to control the opacity */
+    }
+
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function ($) {
+        console.log('print');
+
+        $(document).on('click', '.btn_print', function (event) {
+            console.log('print1');
+            event.preventDefault();
+            var element = document.getElementById('whatToPrint');
+            var opt =
+            {
+                margin: 1,
+                filename: 'purchase_bill_' + '.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+
+        });
+
+    });
+</script>
+
+
+
+
+
+
+
+<div class="row">
+    <div class="col-md-4">
+          <div class="py-2"><a class="text-white" style="font-size: 2rem;"> All Bills</a></div>
+        <div class="row  ">
+            <!-- <div class="col-md-4 py-2"><a class="text-white" style="font-size: 1.5rem;"> All Bills</a></div> -->
+            <!-- <div class="col-md-10 py-2 d-flex justify-content-end">
+                <select id="selectOption" class="btn  dropdown-toggle " style="background-color: rgb(217, 156, 26);"
+                        aria-label=".form-select-lg example"  name="type">
+                        <option value="1" selected>All Bills</option>
+                        <option value="2">Customer A-Z</option>
+                        <option value="3">Vendor A-Z</option>
+                </select>
+            </div> -->
+            <div class="col-md-12 form-inline justify-content-end py-2">
+                <a style=" width: 100px;background-color: rgb(217, 156, 26);" class="btn"
+                    href="{% url 'new_bill' %}"><i class="fa-solid fa-plus "></i>New</a>
+                
+            </div>
+        </div>
+        <div class="pt-3" >
+            <table class="text-white" style="width: 100%;">
+                {% for bill in bills %}
+                <tr class="clickable-row" data-href="{% url 'bill_view' bill.id %}">
+                    <td>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>{{bill.customer_name}}</h5>
+                            </div>
+                            <div class="col-md-6 " style="text-align: right;">&#x20B9;{{bill.total}}.00</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="clickable-row" data-href="{% url 'bill_view' bill.id %}">
+                    <td>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p>{{bill.bill_no}}</p>
+                            </div>
+                            <div class="col-md-4 " style="text-align: right;">
+                                <p>{{bill.bill_date|date:'d/m/Y'}}</p>
+                            </div>
+                            <div class="col-md-4 " style="text-align: right;">
+                                <p>{{bill.status}}</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr style="border-top: 1px solid white;">
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="text-light" style="font-size: 2rem;">
+            {{bill.bill_no }}</div>
+        <div class="row py-3 mt-2" >
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="jobs-tab tab-item ">
+                            <ul class="nav nav-tabs " id="myTab" role="tablist">
+                                
+                                <li class="nav-item">
+                                    <a class=" btn  " id="profile-tab" data-toggle="tab" href="#template" role="tab"
+                                    style="background-color: rgb(217, 156, 26);"
+                                        aria-controls="profile" aria-selected="true"><i class="fas fa-file-alt"></i>  Template</a>
+                                </li>
+                                <li class="nav-item active">
+                                    <a class=" btn  " id="home-tab" data-toggle="tab" href="#overview" role="tab"
+                                    style="background-color: rgb(71, 70, 69);"
+                                        aria-controls="home" aria-selected="false"><i class="fas fa-eye"></i> Overview</a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 text-white my-auto " style="text-align: right;">
+                <!-- <div class="btn-group" role="group" aria-label="Basic example"> -->
+                    <a href="#" class="btn btn-sm text-white" style="background-color:  rgb(217, 156, 26);"
+                        data-toggle="modal" data-target="#addComment" data-inv-id="{{ bill.id }}">
+                        <i class="fas fa-comment" data-toggle="tooltip" 
+                        title="Add/Edit Comment"></i></a>
+                    <a href="{% url 'edit_bill' bill.id %}" class="btn btn-sm text-white" style="background-color:  rgb(217, 156, 26);"
+                        data-toggle="tooltip" data-placement="top" title="Edit">
+                        <i class="fas fa-pencil-alt" ></i></a>
+                    <a href="" class="btn btn-sm text-white btn_print" style="background-color:  rgb(217, 156, 26);"
+                        data-toggle="tooltip" title="PDF" id="pdf">
+                        <i class="fa fa-file-pdf-o"></i></a>
+                    <a href="" class="btn btn-sm text-white " style="background-color:  rgb(217, 156, 26);"
+                        data-toggle="tooltip" title="Print" onclick="printDiv()">
+                        <i class="fa fa-print"></i></a>
+                    <a href="{% url 'emailattachment' %}" class="btn btn-sm text-white"
+                        style="background-color:  rgb(217, 156, 26);" data-toggle="tooltip" title="Email">
+                        <i class="fa fa-envelope"></i></a>
+                <!-- </div> -->
+
+                {% if bill.attachment %}
+                <a download href="{{bill.attachment.url}}" class="btn btn-sm text-white"
+                    style="background-color:  rgb(217, 156, 26);" data-toggle="tooltip" 
+                    title="Download">
+                    <i class="fas fa-download"></i></a>
+                <!-- <div style="padding: 10px; cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Download">
+                        <a download  href="{{bill.attachment.url}}"><i class="fas fa-download"></i></a>
+                    </div> -->
+                {% else %}
+                <a href="#" class="btn btn-sm text-white" style="background-color:  rgb(217, 156, 26);"
+                    data-toggle="modal" data-target="#attachModal" data-inv-id="{{ bill.id }}">
+                    <i class="fas fa-paperclip" data-toggle="tooltip" 
+                    title="Attach File"></i></a>
+                <!-- <div style="padding: 10px; cursor: pointer;" data-toggle="tooltip" data-placement="top" title="Attach File">
+                        <a href="#"  class="comment-icon" data-toggle="modal" data-target="#attachModal" 
+                         data-inv-id="{{ bill.id }}"><i class="fas fa-paperclip"></i></a>
+                    </div> -->
+                {% endif %}
+                <a href="{% url 'delete_bill' bill.id %}" class="btn btn-sm text-white" style="background-color:  rgb(217, 156, 26);"
+                    onclick="return confirm('Do you want to Delete this Bill?');"><i
+                        class="fas fa-trash-alt" data-toggle="tooltip" 
+                        title="Delete"></i></a>
+            </div>
+        </div>
+
+        <div class="my-4  " style="background-color: rgba(252, 236, 217, 0.8); ">
+            
+            <div class="row my-3">
+                <div class="col-lg-12">
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade" id="overview" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="overview text-dark">
+                                        <h2 class="text-dark p-2" style="text-transform: uppercase;">{{ company.company_name }}</h2>
+                                        
+                                        <h6 class="p-2" for="">Vendor Name  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.vendor_name }}</h6> 
+                                        <h6 class="p-2" for="">Vendor Email  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.vendor_email }}</h6> 
+                                        <h6 class="p-2" for="">Customer Name :&nbsp; &nbsp;{{ bill.customer_name }}</h6>
+                                        <h6 class="p-2" for="">Customer Email  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.customer_email }}</h6>
+                                        <h6 class="p-2" for="">Order Date  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.bill_date }}</h6>
+                                        <h6 class="p-2" for="">Expiry Date  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.due_date }}</h6>
+                                        <h6 class="p-2" for="">Total Amount &nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; &nbsp;{{ bill.total }}</h6>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h2 class="p-2 text-dark mt-4" for=""></h2>
+                                    <div class=" rounded p-2" style="background-color: #555;">
+                                        <h6 class="p-2" for="">Bill No  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp; &nbsp;{{ bill.bill_no }}</h6>
+                                        <h6 class="p-2" for="">Order No &nbsp;&nbsp;&nbsp;&nbsp; :&nbsp; &nbsp;{{ bill.order_number }}</h6>
+                                        <h6 class="p-2" for="">Sub-Total:  &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;:&nbsp; &nbsp;{{ bill.sub_total|floatformat:3}}</h6> 
+                                        {% if bill.cgst != 0 %}
+                                        <h6 class="p-2" for="">CGST&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ bill.cgst|floatformat:3}}</h6>
+                                        {% endif %}
+                                        {% if bill.sgst != 0 %}
+                                        <h6 class="p-2" for="">SGST  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ bill.sgst|floatformat:3}}</h6>
+                                        {% endif %}
+                                        {% if bill.igst != 0 %}
+                                        <h6 class="p-2" for="">IGST  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{ bill.igst|floatformat:3}}</h6>
+                                        {% endif %}
+                                        {% if bill.shipping_charge != 0 %}
+                                        <h6 class="p-2" for="">Shipping Charge &nbsp;&nbsp; : {{ bill.shipping_charge|floatformat:3}}</h6>
+                                        {% endif %}
+                                        {% if bill.discount != 0 %}
+                                        <h6 class="p-2" for="">Discount &nbsp;&nbsp;&nbsp;&nbsp; : {{ bill.discount|floatformat:3}}</h6>
+                                        {% endif %}
+                                        <h6 class="p-2" for="">Total &nbsp;&nbsp;&nbsp;&nbsp; : {{ bill.total|floatformat:3}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="tab-pane fade  show active" id="template" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="slip m-3 p-5  bg-light" id="whatToPrint"
+                                style="box-shadow: 5px 5px 10px rgb(45, 45, 45);">
+                                <div class="ribbon">{{ bill.status }}</div>
+                                <div class="row ">
+                                    <div class="col-md-6 ">
+                                        <h2 class="text-dark" style="text-transform: uppercase;">{{ company.company_name }}</h2>
+                                        <h6 class="text-dark">{{ company.address }}</h6>
+                                        <h6 class="text-dark">{{ company.city }},{{ company.state }}</h6>
+                                    </div>
+                                    <div class="col-md-6 " style="text-align: right;">
+                                        <h1 class="text-dark" style="font-size: 2.5rem; ">BILL</h1>
+                                        <h6 class="text-dark">BILL Number : {{bill.bill_no }}</h6>
+                                        <h6 class="text-dark ">Order Date : {{ bill.bill_date|date:'d/m/Y' }}</h6>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row ">
+                                    <div class="col-md-9 mt-auto">
+                                        <h6 class="text-dark">Bill To:</h6>
+                                        <h6 class="text-dark">{{ bill.vendor_name }}</h6>
+                                        <h6 class="text-dark">{{ bill.vendor_email }}</h6>
+                                    </div>
+                                    <div class="col-md-3  mt-auto" style="text-align: right;">
+                                        <h6 class="text-dark">Deliver To:</h6>
+                                        <!-- <div class="text-right"> -->
+                                            <h6 class="text-dark ">{{ bill.customer_name }}</h6>
+                                            <h6 class="text-dark ">{{ bill.customer_email }}</h6>
+                                        <!-- </div> -->
+                                        
+                                    </div>
+                                </div>
+                                <table class="table mt-2" style="border-color: black;">
+                                    <thead class="bg-secondary text-white">
+                                        <tr>
+                                            <th style="color: white;">#</th>
+                                            <th style="width: 30rem;color: white;">Item</th>
+                                            <th style="text-align: right;color: white;">Quantity</th>
+                                            <th style="text-align: right;color: white;">Rate</th>
+                                            <th style="text-align: right;color: white;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td>{{ forloop.counter }}</td>
+                                            <td>{{ item.item_name }}</td>
+                                            <td style="text-align: right;">{{ item.quantity }}</td>
+                                            <td style="text-align: right;">{{ item.rate|floatformat:3 }}</td>
+                                            <td style="text-align: right;">{{ item.amount|floatformat:3 }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table class="table border-0">
+                                    <tr class="border-0" style="text-align: right;">
+
+                                        <td class="text-right">Sub-Total:</td>
+                                        <td class="text-right">{{ bill.sub_total|floatformat:3}}</td>
+                                    </tr>
+                                    {% if bill.cgst != 0 %}
+                                    <tr style="text-align: right; border: 0px;">
+                                        <td class="text-right">CGST:</td>
+                                        <td class="text-right">{{ bill.cgst|floatformat:3}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if bill.sgst != 0 %}
+                                    <tr style="text-align: right;">
+                                        <td class="text-right">SGST:</td>
+                                        <td class="text-right">{{ bill.sgst|floatformat:3}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if bill.igst != 0 %}
+                                    <tr style="text-align: right;">
+
+                                        <td class="text-right">IGST:</td>
+                                        <td class="text-right">{{ bill.igst|floatformat:3}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if bill.shipping_charge != 0 %}
+                                    <tr style="text-align: right;">
+
+                                        <td class="text-right">Shipping Charge:</td>
+                                        <td class="text-right">{{ bill.shipping_charge|floatformat:3}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if bill.discount != 0 %}
+                                    <tr style="text-align: right;">
+
+                                        <td class="text-right">Discount:</td>
+                                        <td class="text-right">{{ bill.discount|floatformat:3}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    <tr style="text-align: right;">
+
+                                        <td class="text-right text-dark">Total:</td>
+                                        <td class="text-right text-dark">{{ bill.total|floatformat:3}}</td>
+                                    </tr>
+
+                                </table>
+
+
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+
+
+
+            
+            <!-- <button id="generate-pdf">Generate PDF</button> -->
+             <div class="text-dark p-3">
+                <h4 >More Information</h4>
+                <h6 >Sales Person: Xyz</h6>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+</section>
+
+
+
+</div>
+
+<!-- Attach File Modal -->
+<div class="modal fade" id="attachModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentModalLabel">Upload File</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body ">
+          <form  id="comment-form" action="{% url 'upload_file_bills' bill.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="file"  style="margin-top: 10px; width: 70%;">
+            <div class="text-center pt-4 pb-2">
+                <button class="btn  " type="submit" style="background-color:rgb(255, 145, 0) ;">Submit</button>
+            </div>
+            
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add comment Modal -->
+<div class="modal fade" id="addComment" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h5 class="modal-title" id="commentModalLabel">Add/Edit Comment</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body ">
+            <form  id="comment-form" action="{% url 'add_comment_bills' bill.id %}" method="POST">
+                {% csrf_token %}
+                {% if bill.comments %}
+                <label class="text-dark pb-2" for="">Edit Comment</label>
+                <textarea style="width: 100%;" name="comment">{{ bill.comments}}</textarea>
+                {% else %}
+                <textarea style="width: 100%;" name="comment" placeholder="Add a comment"></textarea>
+                {% endif %}
+                <div class="text-center pt-4 pb-2">
+                    <button class="btn  " type="submit" style="background-color: rgb(44, 44, 43);" onclick="cancelDialog()">Cancel</button>
+                    <button class="btn  " type="submit" style="background-color: rgb(210, 114, 30);" onclick="saveDialog()" >Save</button>
+                </div>
+                
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script>
+    // Add click event listener to all rows with class "clickable-row"
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+        row.addEventListener('click', () => {
+            // Get the URL from the "data-href" attribute
+            const url = row.getAttribute('data-href');
+            // Navigate to the URL
+            window.location.href = url;
+        });
+    });
+</script>
+<script>
+     function saveDialog() {
+        var frm = document.getElementById("comment-form");
+        frm.submit(); // Submit the form
+    }
+
+    function cancelDialog() {
+        console.log("hi");
+        var frm = document.getElementById("comment-form");
+        let customMsg = "Do you want to cancel?";
+
+        if (confirm(customMsg)) {
+            alert("Comment cancelled!")
+        }
+    }
+</script>
+<!-- <script>
+
+    function print() {
+        var content = document.getElementById("whatToPrint");
+        var printWindow = window.open('', 'PrintWindow');
+        printWindow.document.write('<html><head><title>Print Selected Area</title></head><body>' + content + '</body></html>');
+        printWindow.print();
+        printWindow.close();
+
+
+    }
+
+</script> -->
+
+<!-- <script>
+    function printPageContent() {
+      const contentToPrint = document.getElementById('whatToPrint');
+      const clonedContent = contentToPrint.cloneNode(true);
+  
+     
+      const textElements = clonedContent.querySelectorAll('.text');
+  
+     
+      textElements.forEach(element => {
+        element.style.color = '#000000';  
+      });
+  
+     
+      const printWindow = window.open('', '_blank');
+      printWindow.document.body.appendChild(clonedContent);
+      printWindow.print();
+      printWindow.close();
+    }
+  </script> -->
+  <script>
+    function printDiv() { 
+        //   var divContents = document.getElementById("panel").innerHTML; 
+        //   var a = window.open('', '', 'height=1000, width=1000'); 
+        //   a.document.write('<html>'); 
+        //   a.document.write('<body > <h1> <br>'); 
+        //   a.document.write(divContents); 
+        //   a.document.write('</body></html>'); 
+        //   a.document.close(); 
+        //   a.print(); 
+
+        var printContents = document.getElementById("whatToPrint").innerHTML;
+        var originalContents = document.body.innerHTML;
+        document.body.innerHTML = printContents;
+        window.print();
+        document.body.innerHTML = originalContents;
+      } 
+    
+     
+  </script>
+
+<script>
+    $(document).ready(function () {
+      $("#search").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#myTable tr").filter(function () {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
+    });
+  </script>
+ <script>
+    $(document).ready(function() {
+        $('#selectOption').change(function() {
+            var selectedValue = $(this).val();
+            
+            if (selectedValue === "1") {
+                window.location.href = "{% url 'view_bills' %}";
+            } else if (selectedValue === "2") {
+                window.location.href = "{% url 'customerAtoZ_bills' %}";
+            } else if (selectedValue === "3") {
+                window.location.href = "{% url 'vendorAtoZ_bills' %}";
+            }
+        });
+    });
+  </script> 
+
+{% endblock %}

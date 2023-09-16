@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+  
+  #over:hover{
+        background-color: rgba(110, 110, 110, 0.616);
+        
+    }
+    .description-icon {
+    cursor: pointer;
+  }
+  
+  .description-icon::before {
+    content: attr(title);
+    display: none;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    z-index: 1;
+    white-space: nowrap;
+  }
+  
+  .description-icon:hover::before {
+    display: block;
+  }
+  @media (max-width: 768px) {
+        .flowchart {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flowchart-item {
+            width: 120px;
+        }
+        .flowchart-connector {
+            height: 50px;
+            width: 2px; 
+            margin-left: 0%; 
+            transform: translateX(-50%);
+        }
+    }
+    .btn{
+        color: rgb(218, 164, 48);
+        outline-color: azure;
+        border: 2px solid rgb(25, 91, 145);
+    }
+    .btn:hover{
+        color: darkslategray;
+        background-color: lightblue;
+        outline: none;
+        
+    }
+    a{
+        list-style: none;
+        color: azure;
+    }
+     a:hover{
+        color: rgb(218, 164, 48);
+     }
+  
+    
+</style>
+
+<div class="fixed-top" style="top: 7rem; margin-left: 18rem;">
+    <div style="height: 600px;overflow-y: scroll;">
+      <div class="row">
+        <div class="col-md-3"><a class="text-white" style="font-size: 2rem;">E-way Bills</a>
+              
+             
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-3">
+          <input type="text" id="vendorSearchInput" class="form-control bg-light text-dark" placeholder="Search e-way bills...">
+        </div>
+        
+        <div class="col-md-6 form-inline" style="margin-left: 56rem; margin-top: -2rem;">
+          <a class="btn text-center px-3 " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        role="button"><i class="fa fa-filter mx-3"></i>
+                        </a>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item" href="" style="color:rgb(218, 164, 48) ;">All</a>
+                            <a class="dropdown-item" href="#" style="color:rgb(218, 164, 48) ;" id="sortCustomer" data-sort="customer">Customer</a>
+                            <a class="dropdown-item" href="#" style="color:rgb(218, 164, 48) ;" id="sortTrans" data-sort="transaction">Transaction</a>
+
+                        </div>&nbsp;&nbsp;&nbsp;
+                        <a style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;" class="btn btn-warning mr-2" href="{% url 'ewaycreate' %}">
+                           New
+                        </a>
+        </div>
+      </div>
+      
+    
+        <div class="row mt-3">
+            <div class="col-sm-12 col-md-11 col-lg-11">
+              <table class="table text-white" id="vendorTable">
+                <thead>
+                  <tr>
+                    <th>DATE</th>
+                    <th>TRANSACTION#</th>
+                    <th>CUSTOMER NAME</th>
+                    <th>CUSTOMER E-MAIL</th>
+                    <th>CUSTOMER GSTIN</th>
+                    <th>TOTAL</th>
+                   
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for v in proj %}
+                  <tr id="over">
+                    <!--<td onclick="location.href ='{% url 'detail' v.id %}' " > {{v.name}}</td> -->
+                    <td><a href="{% url 'ewayoverview' v.id %}"> {{v.date}} </a></td>  
+                    <td><a href="{% url 'ewayoverview' v.id %}">{{v.invoiceno}}</a></td>
+                   
+                    <td><a href="{% url 'ewayoverview' v.id %}"> {{v.cust.customerName}}</a> </td>
+                    <td><a href="{% url 'ewayoverview' v.id %}">{{v.cust.customerEmail}}</a></td>
+                    <td><a href="{% url 'ewayoverview' v.id %}">{{v.cgstin_inp}}</a></td>
+                   
+                    <td><a href="{% url 'ewayoverview' v.id %}">{{v.grand_total}}</a></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+            </div>
+            <div class="col-sm-12 col-md-1 col-lg-1"></div>
+
+        </div>
+      
+
+           
+        
+
+    </div>
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Function to filter items based on the search query
+    function filterItems(query) {
+      query = query.toLowerCase();
+      $("#vendorTable tbody tr").each(function() {
+        const rowText = $(this).text().toLowerCase();
+        if (rowText.includes(query)) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    }
+  
+    // Handle keyup event on the search input
+    $("#vendorSearchInput").keyup(function() {
+      const searchQuery = $(this).val();
+      filterItems(searchQuery);
+    });
+  });
+  </script>
+<script>
+  $(document).ready(function() {
+    // Function to filter items based on the search query
+    function filterItems(query) {
+      query = query.toLowerCase();
+      $("#vendorTable tbody tr").each(function() {
+        const rowText = $(this).text().toLowerCase();
+        if (rowText.includes(query)) {
+          $(this).show();
+        } else {
+          $(this).hide();
+        }
+      });
+    }
+  
+    // Function to sort the table based on the selected criteria
+    function sortTable(criteria) {
+      const rows = $("#vendorTable tbody tr").get();
+      rows.sort(function(rowA, rowB) {
+        const cellA = $(rowA).find("td").eq(criteria === "customer" ? 2 : 1).text().toLowerCase();
+        const cellB = $(rowB).find("td").eq(criteria === "customer" ? 2 : 1).text().toLowerCase();
+        return cellA.localeCompare(cellB);
+      });
+      $("#vendorTable tbody").empty().append(rows);
+    }
+  
+    // Handle keyup event on the search input
+    $("#vendorSearchInput").keyup(function() {
+      const searchQuery = $(this).val();
+      filterItems(searchQuery);
+    });
+  
+    // Handle click event on dropdown items
+    $(".form-inline a").click(function() {
+      const sortingCriteria = $(this).data("sort");
+      if (sortingCriteria) {
+        sortTable(sortingCriteria);
+      }
+    });
+  });
+  </script>
+
+{% endblock %}

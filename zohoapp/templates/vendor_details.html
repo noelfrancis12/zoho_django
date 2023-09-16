@@ -1,0 +1,1058 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+
+<style>
+    #over:hover{
+        background-color: rgba(110, 110, 110, 0.616);
+        font-weight:bold ;
+    }
+.exp-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* To create a circle */
+    background-color: rgb(50, 109, 34); /* Color for expense transactions */
+    display: inline-block;
+    margin-right: 5px; /* Adjust the spacing between the dot and text */
+}
+.re-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* To create a circle */
+    background-color: rgb(70, 199, 246); /* Color for expense transactions */
+    display: inline-block;
+    margin-right: 5px; /* Adjust the spacing between the dot and text */
+}
+.po-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* To create a circle */
+    background-color: rgb(248, 61, 10); /* Color for expense transactions */
+    display: inline-block;
+    margin-right: 5px; /* Adjust the spacing between the dot and text */
+}
+.pm-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* To create a circle */
+    background-color: rgb(213, 63, 239); /* Color for expense transactions */
+    display: inline-block;
+    margin-right: 5px; /* Adjust the spacing between the dot and text */
+}
+.pb-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* To create a circle */
+    background-color: rgb(250, 235, 74); /* Color for expense transactions */
+    display: inline-block;
+    margin-right: 5px; /* Adjust the spacing between the dot and text */
+}
+.rb-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%; /* To create a circle */
+    background-color: rgb(66, 43, 242); /* Color for expense transactions */
+    display: inline-block;
+    margin-right: 5px; /* Adjust the spacing between the dot and text */
+}
+.transaction_table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+.transaction_table, .transaction_table th, .transaction_table td {
+        border: 1px solid #000; /* Set the border style and color */
+    }  
+</style>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="py-2"><a class="text-white" style="font-size: 2rem;"> All Vendors</a></div>
+        <div class="row border-bottom pb-2">
+            <div class="col-md-6">
+                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="search for names"
+                    class="form-control bg-dark text-white">
+            </div>
+            <div class="col-md-6 form-inline justify-content-end ">
+                <a class="btn btn-outline-warning " style="margin-right: 5px;" href=""><i class="fa fa-sort "></i></a>
+                <a class="btn btn-outline-warning" href="{% url 'vendor' %}"><i class="fa fa-plus "></i></a>
+
+            </div>
+        </div>
+        <div class="pt-3">
+            <table class="text-white " style="width: 100%;">
+                {% for v in vdata %}
+                <tr class="clickable-row" data-href="{% url 'view_vendor_details' v.id %}">
+                    <td>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>{{v.first_name}} {{v.last_name}}</h5>
+                            </div>
+                            <div class="col-md-6 " style="text-align: right;">&#x20B9; {{ v.opening_bal }}.00</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="clickable-row border-bottom" data-href="{% url 'view_vendor_details' v.id %}">
+                    <td>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p>{{v.vendor_email}}</p>
+                            </div>
+
+                        </div>
+                    </td>
+                </tr>
+
+
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+
+            <div class="col-sm-12 col-md-8 col-lg-8 mt-2">
+                
+                <a class="text-white" style="font-size: 2rem;"><i class="fas fa-user"
+                    style="font-size: 1.5rem;"></i> {{vdata2.first_name}} {{vdata2.last_name}}</a>
+                <div class="row mt-2">
+                    <div class="col-sm-12 col-md-4 col-lg-4 ">
+                        <button onclick="fieldset1_function()"   class="btn btn-warning" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;"><i class="fas fa-eye"></i> Overview</button> 
+                        <button onclick="fieldset8_function()"   class="btn" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                        background-color: rgb(78, 77, 77);"><i class="fas fa-file-alt"></i> Transactions</button>
+                    </div> 
+                    <div class="col-sm-12 col-md-8 col-lg-8 d-flex justify-content-end" >
+                    <button onclick="fieldset2_function()" class="btn btn-warning " style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                        margin-right: 4px;"><i class="fas fa-comment"></i></button>
+                    <button onclick="fieldset3_function()" class="btn btn-warning " style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                        margin-right: 4px;"><i class="far fa-envelope"></i></button>
+                    <button onclick="fieldset5_function()" class="btn btn-warning" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                        margin-right: 4px;"><i class="fas fa-paperclip"></i></button>
+                    <a href="{% url 'delete_vendor' vdata2.id %}" class="btn btn-warning" style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+                        margin-right: 4px;" onclick="return confirm('Are you sure to delete?')"><i class="fas fa-trash-alt"></i></a>
+                    <a style="font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;margin-right: 4px;" class="btn btn-warning "  
+                        href="{% url 'edit_vendor' vdata2.id %}" data-toggle="tooltip" data-placement="top" title="Edit Vendor"><i class="fas fa-edit"></i></a>
+                    <a class="btn btn-warning " data-toggle="tooltip" data-placement="top" title="Change Status" 
+                        href="{% url 'change_vendor_status' vdata2.id %}" ></i><i class="fas fa-info-circle"></i></a>
+                    </div> 
+                                     
+                </div>
+                <hr>
+                    
+                  </span> 
+
+                  <fieldset1 id="overview" class="Overview" >
+                    <div class="ps-3 pe-3" >
+                        <div class="div-to-pdf " id="div-to-pdf" style="height: 100%;background-color: burlywood">
+                            <div class="row py-4 px-2">
+                                <div class="col-md-6  text-uppercase text-dark" style="font-size: 1rem;font-weight: 600;">
+                                    {{vdata2.company_name }}
+                                </div>
+                                <div class="col-md-6 text-dark" style="font-size: 1rem;font-weight: 600;text-align: right;">Status:
+                                    {{vdata2.status }} </div>
+                            </div>
+            
+                            <div class="row text-center">
+                                <h3 style="color: #000000;">VENDOR DETAILS
+                                    <hr>
+                                </h3>
+                            </div>
+                            <div class="row">
+                                <div class="gen-info col-6 text-dark" style="padding-left: 3rem;">
+            
+                                    <div class="row text-center">
+                                        <h5 class="h4 text-dark">{{vdata2.salutation}} {{vdata2.first_name}} {{vdata2.last_name}}
+                                        </h5>
+                                    </div>
+            
+            
+                                    <div class="row mt-3">
+                                        <div class="col-4"><label for="">Email :</label></div>
+                                        <div class="col-8">
+                                            <p class="bold">{{vdata2.vendor_email}}</p>
+                                        </div>
+                                    </div>
+            
+                                    <div class="row mt-3">
+                                        <div class="col-4"><label for="">Work Phone :</label></div>
+                                        <div class="col-8">
+                                            <p class="bold">{{vdata2.vendor_wphone}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-4"><label for="">Mobile Phone:</label></div>
+                                        <div class="col-8">
+                                            <p class="bold">{{vdata2.vendor_mphone}}</p>
+                                        </div>
+                                    </div>
+            
+            
+                                    <div class="h4 mt-3">More info
+                                        <hr>
+                                    </div>
+                                    {% if vdata2.designation %}
+                                    <div class="row mt-3">
+                                        <div class="col-7"><label for="">Designation :</label></div>
+                                        <div class="col-5">
+                                            <p class="bold">{{vdata2.designation}}</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if vdata2.department %}
+                                    <div class="row mt-3 ">
+                                        <div class="col-7"><label for="">Department :</label></div>
+                                        <div class="col-5">
+                                            <p class="bold">{{vdata2.department}}</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if vdata2.skype_number %}
+                                    <div class="row mt-3">
+                                        <div class="col-7"><label for="">Skype Number :</label></div>
+                                        <div class="col-5">
+                                            <p class="bold">{{vdata2.skype_number}}</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% if vdata2.website %}
+                                    <div class="row mt-3">
+                                        <div class="col-7"><label for="">Website :</label></div>
+                                        <div class="col-5">
+                                            <p class="bold" style="max-width: 10rem;word-wrap: break-word;">{{vdata2.website}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+            
+                                </div>
+            
+                                <div class="p-info col-6 my-2" style="height: 100%;">
+                                    <div class="card" style="background-color: rgb(110, 61, 46); padding:1rem;">
+            
+            
+                                        <div class="card-title h4 my-2">General information
+                                            <hr>
+                                        </div>
+            
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">GST Treatment :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.gst_treatment}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">GST Number :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.gst_number}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">PAN Number :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.pan_number}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">Source Of Supply :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.source_supply}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">Currency :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.currency}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">Opening Balance Type :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.opening_bal_type}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">Opening Balance Amount :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.opening_bal}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-5"><label for="">Payment Terms :</label></div>
+                                            <div class="col-7">
+                                                <p class="bold">{{vdata2.payment_terms}}</p>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row m-1">
+                                <div class="col-md-6">
+                                    <div class="card bg-transparent border text-dark pb-2"
+                                        style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);">
+                                        <h4 class="text-center mt-4">Billing Address
+                                            <hr>
+                                        </h4>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Address :</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.baddress}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">City:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.bcity}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">State:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.bstate}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Country:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.bcountry}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Zip:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.bzip}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Phone:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.bphone}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-transparent border text-dark pb-2"
+                                        style="box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);">
+                                        <h4 class="text-center mt-4">Shipping Address
+                                            <hr>
+                                        </h4>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Address :</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.saddress}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">City:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.scity}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">State:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.sstate}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Country:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.scountry}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Zip:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.szip}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-2 px-5">
+                                            <div class="col-6"><label for="">Phone:</label></div>
+                                            <div class="col-6">
+                                                <p class="bold">{{vdata2.sphone}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if  contact_persons %}
+                            <div class="p-2">
+                                <h4 class="text-center mt-4 text-dark">Contact Persons
+                                    <hr>
+                                </h4>
+                                    <table class="table text-white" style="background-color: rgb(110, 61, 46);">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Phone No</th>
+                                            <th>Mobile No</th>
+                                            <th>Skype </th>
+                                            <th>Designation</th>
+                                            <th>Department</th>
+                                        </tr>
+                                        {% for p in contact_persons %}
+                                        <tr>
+                                            <td>{{p.salutation}}{{p.first_name}}{{p.last_name}}</td>
+                                            <td>{{p.email}}</td>
+                                            <td>{{p.work_phone}}</td>
+                                            <td>{{p.mobile}}</td>
+                                            <td>{{p.skype_number}}</td>
+                                            <td>{{p.designation}}</td>
+                                            <td>{{p.department}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+            
+                                
+                            </div>
+                            {% endif %}
+                        </div>
+                </div>
+                      
+                  </fieldset1>
+
+
+                  <fieldset2 id="comments" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <button class="btn btn-warning" onclick="fieldset7_function()">View</button>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <form action="{% url 'add_comment' vdata2.id %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group row mt-4">
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
+                                         <textarea name="comment" id="" cols="60" rows="5" required> </textarea>
+                                         <div class="valid-feedback">Valid.</div>
+                                         <div class="invalid-feedback">Please fill out this field.</div> 
+                                         <label>(For Internal Use)</label> 
+                                         
+                                    </div>
+                                </div> 
+                                <div class="row mt-4">
+                                    <div class="col-sm-12 col-md-6 col-lg-6">
+                                           <input type="submit" class="bg-warning text-dark form-control" style="font-weight: bold;" value="Add Comment">   
+                                    </div>
+                                </div>
+                            </form>  
+                        </div>
+                    </div>                
+                  </fieldset2>
+
+
+                  <fieldset 7 id="view_cmt" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            
+                        </div>
+                       
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+
+                           
+                        
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+
+                            <div class="fixed-top" style="top: 17.5rem; margin-left: 18rem;">
+                                    
+                                
+                                <div class="row">
+                                    <!-- <div class="col-sm-12 col-md-4 col-lg-4"></div> -->
+                                    <div class="col-sm-12 col-md-4 col-lg-4">
+                                       
+
+                                    </div>
+    
+                                    <div class="col-sm-12 col-md-8 col-lg-8">
+
+                                        <div style="height: 300px;overflow-y: scroll;width: 100%;">
+                                            <table id="tbl" class="table  text-white" style="table-layout: fixed;">
+                                                <thead>
+                                                  <tr>
+                                                    <th style="color: rgb(187, 129, 4);text-align: center;">Comments</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody >
+                                                  {% for v in cmt_data %}
+                                         
+                                                  <tr id="over">
+                                         
+                                                    <td style="word-break: break-all;color: rgb(172, 172, 171);"><textarea name="" id="" cols="70" rows="3" style="background: transparent;border: none;color: white;">{{v.comment}}</textarea></td>
+                                                    
+                                    
+                                                   
+                                                  </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                            </table>
+                                         </div>
+                                     
+                                    </div>
+                                    <!-- <div class="col-sm-12 col-md-3 col-lg-3"></div> -->
+
+                                    
+                        
+                                </div>
+                             </div> 
+
+                        </div>
+                        
+                        
+                    </div>
+                </fieldset 7>
+
+                <fieldset8 id="transactions" style="display: none;background-color: burlywood" class="px-2 pb-4">
+                    <div class="row text-dark " >
+                      <div class="col-md-8">
+                        <h6 class="text-uppercase py-2">{{vdata2.first_name}} {{vdata2.last_name}}
+                        </h6>
+                        <p >Phone : {{vdata2.vendor_mphone}}</p>
+                        <p >Email : {{vdata2.vendor_email}}</p>
+                        <p>No Credit Limit Set</p>
+                      </div>
+                      <div class="col-md-4">
+                        <br><br>
+                        <p style="text-align: right;">Address : {{vdata2.baddress}}</p>
+                        <p style="text-align: right;">GSTIN : {{vdata2.gst_number}}</p>
+                      </div>
+                      <hr>
+                    </div> 
+                    
+                    <div>
+                        <h6 class="text-dark text-uppercase py-2">TRANSACTIONS</h6>
+                        <table class="transaction_table table text-dark border mb-4">
+                            <tr>
+                                <th></th>
+                                <!-- <th>
+                                    <div class="row">
+                                        <div class="col-md-6">TYPE</div>
+                                        <div class="col-md-6 " style="text-align: right;"><i class="fas fa-filter"></i></div>
+                                    </div> 
+                                </th> -->
+
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="typeFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            TYPE
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="typeFilterDropdown">
+                                            <form class="px-4 py-3">
+                                                <!-- Checkboxes for static types -->
+                                                <div class="form-group">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input type-checkbox" type="checkbox" value="Expenses" id="checkboxExpenses">
+                                                        <label class="form-check-label" for="checkboxExpenses">
+                                                            Expenses
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input type-checkbox" type="checkbox" value="Recurring Expenses" id="checkboxRecurringExpenses">
+                                                        <label class="form-check-label" for="checkboxRecurringExpenses">
+                                                            Recurring Expenses
+                                                        </label>
+                                                    </div>
+                                                    <!-- Repeat similar blocks for the other static types -->
+                                                </div>
+                                                <!-- Search input -->
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" id="filterType" placeholder="Search">
+                                                </div>
+                                                <!-- Buttons for filtering -->
+                                                <div class="text-right">
+                                                    <button type="button" class="btn btn-primary" id="filterButton">Search</button>
+                                                    <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </th>
+
+                                <th>
+                                    <div class="row">
+                                        <div class="col-md-6">NUMBER</div>
+                                        <div class="col-md-6 " style="text-align: right;"><i class="fas fa-filter"></i></div>
+                                    </div> 
+                                </th>
+                                <th>
+                                    <div class="row">
+                                        <div class="col-md-6">DATE</div>
+                                        <div class="col-md-6 " style="text-align: right;"><i class="fas fa-filter"></i></div>
+                                    </div> 
+                                </th>
+                                <th>
+                                    <div class="row">
+                                        <div class="col-md-6">TOTAL</div>
+                                        <div class="col-md-6 " style="text-align: right;"><i class="fas fa-filter"></i></div>
+                                    </div> 
+                                </th>
+                                <th>
+                                    <div class="row">
+                                        <div class="col-md-6">BALANCE</div>
+                                        <div class="col-md-6 " style="text-align: right;"><i class="fas fa-filter"></i></div>
+                                    </div> 
+                                </th>
+                            </tr>
+                            {% for exp in expence %}
+                            <tr>
+                                <td><span class="dot exp-dot"></span></td>
+                                <td>Expense</td>
+                                <td>{{ exp.invoice }}</td>
+                                <td>{{ exp.date }}</td>
+                                <td><i class="fa fa-inr"></i> {{ exp.amount }}</td>
+                                <td>-</td>
+                            </tr>
+                            {% endfor %}
+                            {% for r_exp in recurring_expense %}
+                            <tr>
+                                <td><span class="dot re-dot"></span></td>
+                                <td>Recurring Expense</td>
+                                <td>{{ r_exp.profile_name }}</td>
+                                <td>{{ r_exp.start_date }}</td>
+                                <td><i class="fa fa-inr"></i> {{ r_exp.amount }}</td>
+                                <td>-</td>
+                            </tr>
+                            {% endfor %}
+                            {% for po in purchase_ordr %}
+                            <tr>
+                                <td><span class="dot po-dot"></span></td>
+                                <td>Purchase Order</td>
+                                <td>{{ po.Pur_no }}</td>
+                                <td>{{ po.Ord_date }}</td>
+                                <td><i class="fa fa-inr"></i> {{ po.grand_total }}</td>
+                                <td>-</td>
+                            </tr>
+                            {% endfor %}
+                            {% for pm in paymnt_made %}
+                            <tr>
+                                <td><span class="dot pm-dot"></span></td>
+                                <td>Payment Made</td>
+                                <td>{{ pm.Pur_no }}</td>
+                                <td>{{ pm.date }}</td>
+                                <td><i class="fa fa-inr"></i> {{ pm.amount }}</td>
+                                <td>-</td>
+                            </tr>
+                            {% endfor %}
+                            {% for pb in purchase_bill %}
+                            <tr>
+                                <td><span class="dot pb-dot"></span></td>
+                                <td>Purchase Bills</td>
+                                <td>{{ pb.bill_no }}</td>
+                                <td>{{ pb.bill_date }}</td>
+                                <td><i class="fa fa-inr"></i> {{ pb.total }}</td>
+                                <td>-</td>
+                            </tr>
+                            {% endfor %}
+                            {% for rb in recurring_bill %}
+                            <tr>
+                                <td><span class="dot rb-dot"></span></td>
+                                <td>Recurring Bills</td>
+                                <td>{{ rb.bill_no }}</td>
+                                <td>{{ rb.start_date }}</td>
+                                <td><i class="fa fa-inr"></i> {{ rb.grand_total }}</td>
+                                <td>-</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                                   
+                  </fieldset8>
+
+
+
+                  <fieldset3 id="mail" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <button style="color: rgb(253, 246, 246)8f8;" class="btn btn-warning mr-2" onclick="fieldset4_function()">Sent</button> 
+
+                        </div>
+                    </div>
+                    <div style="height: 450px;overflow-y: scroll;">
+                        <form action="{% url 'sendmail' vdata2.id %}" method="post" enctype="multipart/form-data" class="was-validated">
+                            {% csrf_token %}
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label style="color: rgb(230, 171, 45);">To</label></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                     <!-- <label class="col-form-label" name="email" style="color: white;">{{ vdata2.vendor_email }}</label>   -->
+                                     <input type="email" name="email" class="form-control bg-light text-dark" value="{{ vdata2.vendor_email }}" readonly>
+                                </div>
+    
+                            </div>
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Subject</label></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                     <input type="text" class="form-control bg-light text-dark" name="subject" placeholder="subject" required>
+                                     <div class="valid-feedback">Valid.</div>
+    
+                                     <div class="invalid-feedback">Please fill out this field.</div>   
+                                </div>
+                            </div>
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                     <textarea name="content" id="" cols="60" rows="4" placeholder="Type here....."></textarea>  
+                                </div>
+                            </div>
+                            <div class="form-group row mt-4">
+                                <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                                <div class="col-sm-12 col-md-6 col-lg-6">
+                                       <input type="submit" class="bg-warning text-dark form-control" value="Send">   
+                                </div>
+                            </div>
+                        </form>
+                        <br><br><br><br>
+                    </div>
+
+                  </fieldset3>
+
+                  <fieldset4 id="sentmail" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="fixed-top" style="top: 17.5rem; margin-left: 18rem;">
+                                <div style="height: 400px;overflow-y: scroll;">
+                                    
+                                
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+        
+                                        <div class="col-sm-12 col-md-8 col-lg-8">
+                                            <table class="table  text-white">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Date</th>
+                                                    <th>Subject</th>
+                                                    
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="over">
+                                                  {% for v in mdata %}
+                                         
+                                                  <tr>
+                                         
+                                                    <td>{{v.mail_date}}</td>
+                                                    <td>{{v.subject}}</td>
+                                    
+                                                   
+                                                  </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                            
+                                    </div>
+                                  
+                            
+                                       
+                                    
+                            
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                  </fieldset4>
+
+                  <fieldset5 id="attach" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+
+                        </div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <button style="color: #fcf8f8;" class="btn btn-warning mr-2" onclick="fieldset6_function()">View</button> 
+
+                        </div>
+                    </div>
+                    <form action="{% url 'upload_document' vdata2.id %}" method="post" enctype="multipart/form-data" class="was-validated">
+                        {% csrf_token %}
+                        
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Title</label></div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                 <input type="text" class="form-control bg-light text-dark" name="title" placeholder="Title" required>  
+                                 <div class="valid-feedback">Valid.</div>
+                                 <div class="invalid-feedback">Please fill out this field.</div>   
+                                 
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Upload Document</label></div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                <input type="file" class="form-control bg-light text-dark" name="file" required>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-4">
+                            <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                   <input type="submit" class="bg-warning text-dark form-control" value="Upload">   
+                            </div>
+                        </div>
+                    </form>
+                   
+                  </fieldset5>
+
+                 <fieldset6 id="doc_list" style="display: none;">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+                        <div class="col-sm-12 col-md-4 col-lg-4">
+                            <div class="fixed-top" style="top: 17.5rem; margin-left: 18rem;">
+                                <div style="height: 400px;overflow-y: scroll;">
+                                    
+                                
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-4 col-lg-4"></div>
+        
+                                        <div class="col-sm-12 col-md-8 col-lg-8">
+                                            <table class="table  text-white">
+                                                <thead>
+                                                  <tr>
+                                                    <th>Title</th>
+                                                    <th>Document</th>
+                                                    <th>Action</th>
+                                                    
+                                                  </tr>
+                                                </thead>
+                                                <tbody id="over">
+                                                  {% for v in ddata %}
+                                         
+                                                  <tr>
+                                         
+                                                    <td>{{v.title}}</td>
+                                                    <td>{{v.document.url}}</td>
+                                                    <td><a href="{% url 'download_doc' v.id %}" class="btn btn-outline-warning">download</a></td>
+                                    
+                                                   
+                                                  </tr>
+                                                  {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>                           
+                                    </div>                           
+                                </div>                           
+                            </div>
+                        </div>
+                    </div>
+                  </fieldset6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   
+
+    function fieldset1_function(){
+        document.getElementById("overview").style.display="block";
+        document.getElementById("transactions").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("view_cmt").style.display="none";
+
+
+
+
+
+
+    }
+    function fieldset2_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("transactions").style.display="none";
+        document.getElementById("comments").style.display="block";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("view_cmt").style.display="none";
+
+
+
+
+
+    }
+    function fieldset3_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("transactions").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="block";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("view_cmt").style.display="none";
+
+
+
+
+
+
+    }
+    function fieldset4_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("transactions").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="block";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("view_cmt").style.display="none";
+
+
+
+
+
+
+    }
+    function fieldset5_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("transactions").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="block";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("view_cmt").style.display="none";
+
+
+
+
+
+
+    }
+    function fieldset6_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("transactions").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="block";
+        document.getElementById("view_cmt").style.display="none";
+
+
+
+
+
+
+    }
+
+
+    function fieldset7_function(){
+        document.getElementById("view_cmt").style.display="block";
+        document.getElementById("transactions").style.display="none";
+        document.getElementById("overview").style.display="none";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+
+
+
+
+
+    }
+
+    function fieldset8_function(){
+        document.getElementById("overview").style.display="none";
+        document.getElementById("transactions").style.display="block";
+        document.getElementById("comments").style.display="none";
+        document.getElementById("mail").style.display="none";
+        document.getElementById("sentmail").style.display="none";
+        document.getElementById("attach").style.display="none";
+        document.getElementById("doc_list").style.display="none";
+        document.getElementById("view_cmt").style.display="none";
+
+
+
+
+
+
+    }
+
+
+    function myFunction(){
+        var input,filter,table,tr,td,i,txtValue;
+        input=document.getElementById("myInput");
+        filter=input.value.toUpperCase();
+        table=document.getElementById("myTable");
+        tr=table.getElementsByTagName("tr");
+        for(i = 0; i < tr.length; i++)
+        {
+            td=tr[i].getElementsByTagName("td")[0];
+            if(td){
+                txtValue=td.textContent || td.innerText;
+                if(txtValue.toUpperCase().indexOf(filter) > -1){
+                    tr[i].style.display="";
+                }
+                else{
+                    tr[i].style.display="none";
+                }
+            }
+        }
+    }
+
+    function sortTable()
+    {
+        var table,i,x,y;
+        table=document.getElementById("myTable");
+        var switching=true;
+        while(switching)
+        {
+            switching=false;
+            var rows=table.rows
+            for(i = 0 ; i < (rows.length - 1) ; i++)
+            {
+                var Switch=false;
+                x = rows[i].getElementsByTagName("TD") [0];
+                y = rows[i + 1].getElementsByTagName("TD") [0];
+                if(x.innerText.toLowerCase() > y.innerText.toLowerCase())
+                {
+                    Switch=true;
+                    break;
+                }
+
+            }
+            if(Switch)
+            {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching=true
+            }
+        }
+    }
+      
+      
+</script>
+
+<script>
+    // Add click event listener to all rows with class "clickable-row"
+    const rows = document.querySelectorAll('.clickable-row');
+    rows.forEach(row => {
+        row.addEventListener('click', () => {
+            // Get the URL from the "data-href" attribute
+            const url = row.getAttribute('data-href');
+            // Navigate to the URL
+            window.location.href = url;
+        });
+    });
+</script>
+
+
+
+
+{% endblock %}

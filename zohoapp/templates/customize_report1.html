@@ -1,0 +1,529 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .form-group label {
+        color: beige;
+        margin-bottom: 5px;
+
+    }
+
+    #close-button {
+        position: fixed;
+        top: 100px;
+        right: 70px;
+    }
+
+    .form-control {
+      
+        color: rgb(4, 4, 4);
+        background-color: #ffffff;
+
+    }
+   
+
+    #dateRangePicker.form-control {
+    color: #d8cccc;}
+
+
+
+
+
+    /* Custom styles for filter section */
+    .filter-section {
+        margin-top: 20px;
+    }
+
+    .filter-row {
+        display: flex;
+        margin-bottom: 10px;
+    }
+
+    .filter-field {
+        flex: 1;
+        margin-right: 10px;
+        color: #080808;
+    }
+
+    .filter-action {
+        margin-top: auto;
+    }
+
+    .column-transfer {
+        display: flex;
+        gap: 10px;
+        margin-top: 35px;
+        margin-left: 250px;
+        margin-right: 50px;
+        border: 1px solid #ccc;
+        padding: 40px;
+        background-color: #060606;
+        border-radius: 10px;
+        flex-direction: row;
+        
+    }
+    .col-md-6 {
+        flex: 1; /* Make both columns take equal space */
+    }
+
+   
+    /* .daterangepicker  {
+        background-color: #f0f0f0; 
+        color: #000; 
+       
+    } */
+    #dateRangePicker {
+        background-color: rgb(5, 5, 5);
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 100%;
+        font-size: 14px;
+        color: rgb(242, 236, 236);
+        /* Set the text color to black */
+    }
+
+    #reportrange .fa-caret-down {
+        color: rgb(11, 11, 11);
+    }
+
+    .daterangepicker .ranges li {
+        color: rgb(255, 255, 255);
+        background-color: #060606;
+    }
+
+    #groupBySelect,
+    #accountSelect
+   
+     
+    {
+        /* background-color: darkslategray; */
+        color: #faf6f6;
+        border: 1px solid #7d7a7a;
+        padding: 8px;
+        width: 100%;
+        font-size: 15px;
+    }
+
+    #groupBySelect option,
+    #accountSelect option
+    
+    {
+        color: #000000;
+    }
+
+    .filter-field select:focus {
+    color: #eae5e5; /* Light gray or beige color */
+}
+
+
+.search-input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 100%;
+  margin-right: 10px;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.item-list {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.items {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.items:last-child {
+  border-bottom: none;
+}
+
+.add,
+.remove {
+  color: rgba(238, 231, 231, 0.768);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: none;
+}
+
+.items:hover .add,
+.items:hover .remove {
+  display: inline-block;
+}
+
+</style>
+<div class="container main-content">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Place the close button here -->
+            <a href="{% url 'salesby_item' %}" class="btn btn-light" id="close-button" style="color:  rgb(3, 3, 3);">
+                <i class="fa fa-times-circle"></i>
+            </a>
+        </div>
+    </div>
+    <div class="row row-container">
+        <div class="col-md-3 left-column">
+            <div class="custom-list-group">
+                <a class="custom-list-item" data-target="general">
+                    General
+                </a>
+                <br>
+                <br>
+                <br>
+                <a class="custom-list-item" data-target="columns">
+                    Show/Hide Columns
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9 right-column">
+            <div id="general" class="custom-content">
+                <h2 style="color: aliceblue;">General </h2>
+                <div>
+                    <label for="dateRangePicker" style="color: beige;">Select Date Range:</label>
+                    <input type="text" id="dateRangePicker" class="form-control">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="groupBySelect" style="color: beige;">Group By</label>
+                    <select id="groupBySelect" class="form-control" style="background-color: #000000;" >
+                        {% for i in customers %}
+                        <option value="" style="color: #fff2f2;">{{ i.customerName }}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+                <!-- Account Dropdown -->
+                <div class="form-group">
+                    <label for="accountSelect" style="color: beige;">Select Account:</label>
+                    <select id="accountSelect" class="form-control" style="background-color: #000000;" >
+                        <option value="all">All Accounts</option>
+                        
+                        <!-- Add more account options as needed -->
+                    </select>
+                </div>
+                <div class="filter-section">
+                    <h6 style="color: aliceblue;">Advanced Filters</h6>
+                    <p style="color: #eeebeb;">Use advanced filters to filter the report based on the fields of Reports,
+                        Item.</p>
+                    <div id="filterContainer"> <!-- Added a container div -->
+                        <!-- The first filter row -->
+                        <div class="filter-row">
+                            <div class="filter-field">
+                                <label for="filterSelectField"></label>
+                                <select class="form-control" style=" background-color: #070707;">
+                                    {% for items in items %}
+                                    <option value="{{ items.Name }}" style="color: #ffffff;">{{ items.Name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="filter-field">
+                                <label for="filterSelectColumn"></label>
+                                <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;">
+                                    <option style="color: #080808;">Select a column</option>
+                                </select>
+                            </div>
+                            <div class="filter-action">
+                                <button class="btn btn-light">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-action">
+                        <button id="addFilter" style="color: blue;" class="btn">+ Add more</button>
+                    </div>
+                </div>
+            </div>
+           
+
+
+
+        </div>
+
+
+
+
+        <div id="columns" class="custom-content" style="display: none;">
+            <div class="row column-transfer">
+                <!-- Show/Hide Columns section -->
+                <div class="row">
+                    <div class="col-md-6" id="originalColumn"
+                        style="height: 70vh; width:25vw; overflow-y:auto; border: 1px solid #ccc; position: relative; padding-right: 15px;">
+                        <h2 style="color: white; position: sticky; top: 0; background-color: #000000;">Available Column</h2>
+                        <div class="search-bar" style="position: sticky; top: 40px;">
+                            <input type="text" id="searchInput" class="search-input" placeholder="Search items">
+                            <span class="search-icon">&#128269;</span>
+                        </div>
+                        <ul class="item-list" style="color: #eeebeb;">
+                           
+                            
+                            <li class="items"><span class="item-text">Length</span> <span class="add add-remove-buttons">+</span></li>
+                            <li class="items"><span class="item-text">Breadth</span> <span class="add add-remove-buttons">+</span></li>
+                            <li class="items"><span class="item-text">4</span><span class="add add-remove-buttons">+</span></li>
+                            <li class="items"><span class="item-text">Showin PDF</span><span class="add add-remove-buttons">+</span>
+                            </li>
+                            <li class="items"><span class="item-text">Date Cf</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Dropdown</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Mandatory customfield</span><span
+                                    class="add">+</span></li>
+                            <li class="items"><span class="item-text">Item type</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">usage unit</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">sales description</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">sales price</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Purchase Description</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">Purchase Price</span><span class="add">+</span></li>
+                            <li class="items"><span class="item-text">SKU</span><span class="add">+</span></li>
+                        </ul>
+                    </div>
+                   
+                    <div class="col-md-6" id="addedColumn" style="height: 70vh; width:25vw; overflow-y:auto; border: 1px solid #ccc; position: relative; padding-right: 15px;">
+                        
+                        <h2 style="color: white;">Selected Column</h2>
+                        <ul class="item-list" style="color: #eeebeb;">
+                            <li class="items"><span class="item-text ">Item Name</span><span class="remove">-</span>
+                                <li class="items"><span class="item-text">Amount</span><span class="remove">-</span>
+                                    <li class="items"><span class="item-text">Quantity sold</span><span class="remove">-</span>
+                            <li class="items"><span class="item-text">Average Price</span><span class="remove">-</span>
+                            
+                        </ul>
+                   
+                </div>
+               
+                </div>
+                <!-- End Show/Hide Columns section -->
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <button type="button" class="btn btn-primary">Run Report</button>
+        <a href="{% url 'salesby_item' %}" class="btn btn-secondary">Cancel</a>
+        
+    </div>
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const links = document.querySelectorAll(".custom-list-item");
+        const contents = document.querySelectorAll(".custom-content");
+
+
+        links.forEach((link, index) => {
+            link.addEventListener("click", () => {
+                links.forEach(link => {
+                    link.classList.remove("active-link");
+                });
+                link.classList.add("active-link");
+                contents.forEach(content => {
+                    content.style.display = "none";
+                });
+                const targetId = link.getAttribute("data-target");
+                const targetContent = document.getElementById(targetId);
+                targetContent.style.display = "block";
+            });
+        });
+
+        
+
+
+        const addFilterButton = document.getElementById("addFilter");
+        const filterRowContainer = document.querySelector(".filter-row");
+        const filterContainer = document.querySelector("#filterContainer");
+       
+
+
+
+
+
+        
+        addFilterButton.addEventListener("click", () => {
+            console.log("Add more button clicked");
+
+            const filterRow = document.createElement("div");
+            filterRow.className = "filter-row";
+            filterRow.innerHTML = `
+    <div class="filter-field">
+            <label for="filterSelectField"></label>
+            <select class="form-control" style=" background-color: #070707;">
+            {% for items in items %}
+                <option value="{{ items.Name }}" style="color: white;">{{ items.Name }}</option>
+            {% endfor %}
+            </select>
+        </div>
+        <div class="filter-field">
+            <label for="filterSelectColumn"></label>
+            <select class="form-control" style="background-color: rgb(7, 7, 7); color: #ffffff;">
+                <option>Select a column</option>
+            </select>
+        </div>
+        <div class="filter-action">
+            <button class="btn btn-light">-</button>
+        </div>
+    `;
+
+
+            const removeFilterButton = filterRow.querySelector(".btn-light");
+            removeFilterButton.addEventListener("click", () => {
+                filterContainer.removeChild(filterRow); // Remove the filter row from the container
+            });
+
+            // Find the index of the current filter row
+            const currentIndex = Array.from(filterContainer.children).indexOf(filterRowContainer);
+
+            // Insert the new filter row after the current filter row
+            filterContainer.insertBefore(filterRow, filterContainer.children[currentIndex + 1]);
+        });
+
+        // Initialize date range picker
+        $('#dateRangePicker').daterangepicker({
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Previous Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')],
+        'Previous Quarter': [
+            moment().subtract(3, 'months').startOf('quarter'),
+            moment().subtract(3, 'months').endOf('quarter')
+        ]
+            }
+        }, function (start, end, label) {
+            // Callback function when a date range is selected
+            console.log('A date range was chosen: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+    // Drag start event handler
+    function dragStart(event) {
+        event.dataTransfer.setData("text/plain", event.target.innerText);
+    }
+
+    // Drop event handler
+    function drop(event) {
+        event.preventDefault();
+        const itemName = event.dataTransfer.getData("text/plain");
+
+        // Create a new selected item element
+        const selectedItem = document.createElement("li");
+        selectedItem.classList.add("items");
+        selectedItem.textContent = itemName;
+
+        // Append the new selected item
+        selectedItems.appendChild(selectedItem);
+    }
+
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const originalAvailableItems = document.querySelectorAll("#originalColumn .items");
+      const originalAddButtons = document.querySelectorAll("#originalColumn .add");
+      const selectedItems = document.querySelector("#addedColumn .item-list");
+      const addedRemoveButtons = document.querySelectorAll("#addedColumn .remove");
+      const searchInput = document.getElementById("searchInput");
+      const searchIcon = document.querySelector(".search-icon");
+    
+      const itemIds = {}; // Map of item text to unique identifier
+    
+      originalAddButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+          const itemText = originalAvailableItems[index].querySelector(".item-text").textContent;
+          const itemId = `selected-${itemText}`; // Unique identifier
+          itemIds[itemText] = itemId;
+          const listItem = document.createElement("li");
+          listItem.className = "items";
+          listItem.innerHTML = `<span class="item-text">${itemText}</span> <span class="remove">-</span>`;
+          listItem.setAttribute("data-item-id", itemId); // Set the unique identifier
+          selectedItems.appendChild(listItem);
+          originalAvailableItems[index].style.display = "none";
+    
+          const removeButton = listItem.querySelector(".remove");
+          removeButton.addEventListener("click", () => {
+            selectedItems.removeChild(listItem);
+            originalAvailableItems[index].style.display = "flex";
+          });
+        });
+      });
+    
+      addedRemoveButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const selectedItem = button.parentNode;
+          const itemText = selectedItem.querySelector(".item-text").textContent;
+          const itemId = itemIds[itemText]; // Get the unique identifier
+      
+          // Create a new list item for the available column
+          const listItem = document.createElement("li");
+          listItem.className = "items";
+          listItem.innerHTML = `<span class="item-text">${itemText}</span> <span class="add">+</span>`;
+          listItem.setAttribute("data-item-id", itemId); // Set the unique identifier
+          
+          // Insert the new item at the beginning of the available items
+          originalAvailableItems[0].parentNode.insertBefore(listItem, originalAvailableItems[0]);
+          
+          // Remove the selected item from the selected column
+          selectedItems.removeChild(selectedItem);
+      
+          const addButton = listItem.querySelector(".add");
+          addButton.addEventListener("click", () => {
+            // Logic when adding an item back to the selected column
+            // ...
+            
+            // Remove the item from the available column and show it in the selected column
+            listItem.parentNode.removeChild(listItem);
+            selectedItems.appendChild(selectedItem);
+          });
+        });
+      });
+    
+      searchIcon.addEventListener("click", () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        originalAvailableItems.forEach(item => {
+          const itemText = item.querySelector(".item-text").textContent.toLowerCase();
+          if (itemText.includes(searchTerm)) {
+            item.style.display = "flex";
+            if (searchTerm !== "") {
+              item.classList.add("highlight");
+            } else {
+              item.classList.remove("highlight");
+            }
+          } else {
+            item.style.display = "none";
+            item.classList.remove("highlight");
+          }
+        });
+    
+        selectedItems.querySelectorAll(".items").forEach(item => {
+          const itemText = item.querySelector(".item-text").textContent.toLowerCase();
+          if (itemText.includes(searchTerm)) {
+            item.style.display = "flex";
+            if (searchTerm !== "") {
+              item.classList.add("highlight");
+            } else {
+              item.classList.remove("highlight");
+            }
+          } else {
+            item.style.display = "none";
+            item.classList.remove("highlight");
+          }
+        });
+      });
+    });    
+  </script>
+
+
+
+{% endblock %}

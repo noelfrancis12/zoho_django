@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .table-container {
+        height: 600px;
+        padding-bottom: 100%;
+          }
+    .button-container {
+       width: 100px;
+        margin-left: 540px;
+        background-color: rgb(230, 171, 45);
+    }
+    .form-control{
+      background-color: black transparent;
+    }
+    .button-container a{
+        color: #FFFEEE;
+    }
+    td a{
+        color: rgb(230, 171, 45);
+    }
+    #over:hover{
+        background-color: rgba(110, 110, 110, 0.616);
+        
+    }
+    td {
+    white-space: nowrap; /* Prevent content from wrapping */
+    /* Add any additional styles or width as needed */
+    color: #FFFEEE;
+  }
+  tr{
+    color: #fff;
+  }
+  
+</style>
+
+<h1>Payment Made</h1>
+
+
+
+
+<div class="table-container">
+<div class="row">
+    <div class="col-md-3">
+    <div class="search-bar">
+        <div class="row">
+            <div class="col-md-3">
+                <input type="search" id="searchInput"  placeholder="Search Payment Made.." style="width: 500px;" class="form-control  bg-dark">
+
+            </div>
+            <div class="col-md-9">
+                
+            </div>
+        </div>
+        
+            
+        
+    </div>
+</div>
+<div class="col-md-9">
+    <div class="button-container">
+        <a type="button" class="btn  ml-auto" style="width: 100px;" href="{% url 'paymentadd_method' %}">+new</a>
+    </div>
+</div>
+</div>
+    <div class="table-responsive">
+    <table id="vendorTable" class="table" style="width:100%;  margin-top: 20px;">
+        <thead>
+            <tr>
+                <th class="text-white">#</th>
+                <th class="text-white">Vendor</th>
+                <th class="text-white">Reference</th>
+                <th class="text-white">Payment Date</th>
+                <th class="text-white">Payment-Method</th>
+                <th class="text-white">Paid Through</th>
+                <th class="text-white">Ammount Received</th>
+
+
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in paymnt %}
+                                <tr id="over">
+                                    <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">{{ p.id}}</td>
+                                    <td><a href="{% url 'payment_details_view' p.id %}">{{ p.vendor.first_name}} {{ p.vendor.last_name }}</a></td>
+                                    <td>{{ p.reference }}</td>
+                                    <td>{{ p.date }}</td>
+                                    <td>{{ p.payment.option }}</td>  
+                                    <td>{{ p.cash }}</td>  
+                                    <td>₹{{ p.amount }}</td> 
+                                    </tr>
+                                    {% endfor %}
+
+            </tbody>
+            </table>
+        </div>
+        </div>
+
+<script>
+
+  const searchInput = document.getElementById("searchInput");
+  const vendorTable = document.getElementById("vendorTable").getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+  searchInput.addEventListener("input", function () {
+    const searchTerm = this.value.toLowerCase();
+
+    for (let i = 0; i < vendorTable.length; i++) {
+      const rowData = vendorTable[i].getElementsByTagName("td");
+      let rowVisible = false;
+
+      for (let j = 0; j < rowData.length; j++) {
+        if (rowData[j].textContent.toLowerCase().includes(searchTerm)) {
+          rowVisible = true;
+          break;
+        }
+      }
+
+      vendorTable[i].style.display = rowVisible ? "" : "none";
+    }
+  });
+
+    </script>
+
+{% endblock %}

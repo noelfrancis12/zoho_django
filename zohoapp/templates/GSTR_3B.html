@@ -1,0 +1,550 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<head>
+<style>
+  
+  h2{
+    font-size: small;
+    font-family: 'Segoe UI', Tahoma,;
+    color:#dfe4e9;
+  }
+table {
+  font-family: arial, sans-serif;
+
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #1f1c1c;
+  text-align: left;
+  padding: 4px;
+  color:#e5d7d7;
+  font-weight: 100;
+  font-size: small;
+  font-family: 'Segoe UI', Tahoma,;
+}
+table,tr {
+  border: hidden;
+ 
+}
+tr:nth-child(odd) {
+  background-color:#201919 ;
+}
+tr:nth-child(even) {
+  background-color: #8f8e8e2a;
+}
+
+
+
+  #aover{
+    color: rgb(214, 141, 5);
+  }
+/* #aover:hover{
+  font-weight: bold;
+} */
+tr:hover{
+  background-color: #bcb68c;
+  font-weight: bold;
+
+}
+
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: rgb(108, 108, 104);
+
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #e0dcdc;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    #selected-area{
+        font-size: 20px;
+    }
+  
+
+
+    
+</style>
+
+
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+<style>
+    #ui-datepicker-div {
+        width: 15rem;
+        left: 600px;
+        font-size: 1rem;
+        background-color: aliceblue;
+    }
+
+    .ui-datepicker-title {
+        font-size: .8rem
+    }
+
+    .ui-datepicker-calendar {
+        display: none;
+    }
+
+    .datepicker {
+        margin-top: 1rem;
+        display: grid;
+        justify-items: center;
+    }
+
+    select>option {
+
+        background-color: rgb(212, 212, 212);
+    }
+
+    .ui-datepicker-prev {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker-next {
+        background: white;
+        cursor: pointer;
+    }
+
+    .ui-datepicker .ui-datepicker-buttonpane button {
+        color: white;
+        background: black;
+        font-size: .8rem;
+    }
+
+    /* .ui-datepicker .ui-datepicker-buttonpane button:hover {
+            color: white;
+            background: rgb(234, 176, 0);
+        } */
+
+    .monthYearPicker {
+        font-size: 1rem;
+        height: 1.5rem;
+        width: 12rem;
+    }
+    .bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+    .bar .left{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.bar .left input{
+    height: 5vh;
+}
+</style>
+
+<div class="page-content">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <style>
+      #ui-datepicker-div{
+          width: 20rem;
+          left: 632px;
+      }
+      .ui-datepicker-calendar {
+          display: none;
+      }
+      .datepicker{
+          margin-top: 1rem;
+          display: grid;
+          justify-items: center;
+      }
+      select > option{
+          background-color: rgb(212, 212, 212);
+      }
+      .ui-datepicker-prev{
+          background: white;
+          cursor: pointer;
+      }
+      .ui-datepicker-next{
+          background: white;
+          cursor: pointer;
+      }
+      .ui-datepicker .ui-datepicker-buttonpane button{
+          color: white;
+          background: black;
+      }
+      .ui-datepicker .ui-datepicker-buttonpane button:hover{
+          color: white;
+          background: rgb(234, 176, 0);
+      }
+      .monthYearPicker{
+          font-size: 1.5rem;
+          height: 2rem;
+          width: 20rem;
+      }
+      .monthYearPara{
+          color: rgb(255, 255, 255);
+      }
+  </style>
+</head>
+<body>
+ 
+
+  <div class="card radius-15">
+    <div class="card-body">
+        <div class="bar">
+         
+            <div class=" left">
+                <div class="px-2">
+                  <label style="text-align:left ">From</label>
+                  <input type="date"  value="2023-01-01" /> 
+                </div>
+                <div  class="px-2">
+                  <label style="text-align:left ">To</label>
+                  <input type="date" value="2023-08-01" />
+                  
+                </div>
+
+            </div>
+                <div class="right">
+                
+                    
+                    <input  type="checkbox" name="selling" checked style="padding-left:700px ;"> <label >Consider non-tax as exempted</label>
+                  </div>
+                <div class="right">
+                  <button class="btn btn_print btn-outline-info"  style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-print"></i></button>
+                  <button class="btn btn-outline-info text-grey" onclick="ExportToExcel('xlsx')" style="background: white; color: rgb(16, 135, 46);"><i class="fa fa-file-excel"></i></button>                       
+                </div>
+            </div>
+            <div class="card radius-15">
+              <div class="card-body">
+                  <div class="card-title">
+                   
+                          <h2 class="mb-0" class="text-white" style="font-size: 1rem;">GSTR3 REPORT</h2>
+                         
+                      <hr>
+                  </div>
+              </div>
+          </div>
+             
+                <div class="row">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+         
+
+
+          <script type="text/javascript">
+              $(document).ready(function ($) {
+                  console.log('print');
+
+                  $(document).on('click', '.btn_print', function (event) {
+                      console.log('print1');
+                      event.preventDefault();
+                      var element = document.getElementById('pdf-card');
+                      var opt =
+                      {
+                          margin: 0.5,
+                          filename: 'GSTR_3B' + '.pdf',
+                          image: { type: 'jpeg', quality: 0.98 },
+                          html2canvas: { scale: 2 },
+                          jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait' }
+                      };
+                      html2pdf().set(opt).from(element).save();
+
+                  });
+
+              });
+          </script>
+     </div>
+     <script>
+      $(document).ready(function($) {
+          $(".table-row").dblclick(function() {
+              window.document.location = $(this).data("href");
+          });
+      });
+  </script>
+    
+  <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+  <script type="text/javascript">function ExportToExcel(type, fn, dl) {
+         var elt = document.getElementById('tbl_exporttable_to_xls');
+         var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+         return dl ?
+           XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+           XLSX.writeFile(wb, fn || ('GSTR_3B.' + (type || 'xlsx')));
+      }
+      </script>
+      
+   </nav>
+
+
+  <div class="card radius-15 " id="pdf-card">
+    <div class="card-body">
+        <div class="container-fluid" id="tbl_exporttable_to_xls">
+         
+
+
+      <h2>1-Details of outward supplies and inward supplies liable to reverse charge</h2>       
+     
+
+
+  <table class="table  text-white " style="width: 100%;">
+<table>
+  <tr >
+    <th>Nature Of Supplies</th>
+    <th>Total Taxable <br>Value</th>
+    <th>Integrated Tax	</th>
+    <th>Central Tax</th>
+    <th>State/UT Tax	</th>
+    <th>Cess	</th>
+  </tr>
+ 
+  <tr>
+    <td>Outward taxable supplies (other than zero rated, nil rated and exempted)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  
+  <tr>
+    <td>Outward taxable supplies (zero rated)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Other outward supplies (nil rated, exempted)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Inward supplies (liable to reverse charge)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+  <tr>
+    <td>Non-GST outward supplies</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  </tr>
+
+</table>
+<br>
+<h2>2. Details of inter-State supplies made to unregistered persons, composition dealer and UIN holders</h2>
+
+<table>
+  <tr>
+    <th>
+      </th>
+      <th colspan="2"> &nbsp;Supplies Made To Unregistered Persons
+        </th>
+        
+    <th colspan="2">Supplies Made To Composition Taxable Persons	</th></th>
+    <th colspan="2">Supplies Made To UIN Holders</th>
+  </tr>
+  <tr >
+    <th>
+      Place Of Supply (State/UT)</th>
+      <th> 
+        Total Taxable Value</th>
+        <th>Amount Of Integrated <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax</th>  
+    <th>Total Taxable <BR>Value	</th>
+      <th>Amount Of Integrated <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax</th>  
+     <th>Total Taxable Value	</th>
+     <th>Amount Of Integrated <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax</th>  
+  </tr>
+ 
+  <tr>
+    <td> </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table><br>  
+<h2>3. Details of eligible Input Tax Credit</h2>     
+     
+
+
+  <table class="table  text-white " style="width: 100%;">
+<table>
+  <tr >
+    <th>Details</th>
+    
+    <th>Integrated Tax	</th>
+    <th>Central Tax</th>
+    <th>State/UT Tax	</th>
+    <th>Cess	</th>
+  </tr>
+  <tr>
+  
+    
+    <th colspan="5" style="font-weight: 500;"><b>(A) ITC Available (whether in full or part)	</b></th>
+    
+  </tr>
+  <tr >
+    <td>(1) Import of goods</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+  
+  <tr>
+    <td>(2) Import of services</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+  </tr>
+  <tr>
+    <td>(3) Inward supplies liable to reverse charge (other than 1 & 2 above)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+
+  </tr>
+  <tr>
+    <td>(4) Inward supplies from ISD</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+  <tr>
+    <td>(5) All other ITC</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+ 
+  </tr>
+  <tr >
+  
+    
+    <th colspan="5" style="font-weight: 500;"><b>(D) Ineleigible ITC	</b></th>
+    
+  </tr>
+  <tr >
+    <td>(1) As per section 17(5)</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+  <tr >
+    <td>(2) Others</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+    <td>0</td>
+  
+  </tr>
+</table><br>
+<h2>4. Details of exempt, nil-rated and non-GST inward supplies</h2>     
+
+<table>
+  <tr >
+    <th>Nature Of Supplies</th>
+    
+    <th>Inter-State Supplies</th>
+    <th>Intra-State Supplies</th>
+  
+  </tr>
+  <tr >
+    <td>From a supplier under composition scheme, Exempt and Nil rated supply</td>
+    <td>0</td>
+    <td>0</td>
+  
+  
+  </tr>
+  <tr >
+    <td>Non GST supply</td>
+    <td>0</td>
+    <td>0</td>
+  
+  
+  </tr></DIV></table></div></div>
+
+
+</div></div></div></div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<!-- REQUIRED FOR MONTH & YEAR PICKER -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+
+    $('.inputdate').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        showButtonPanel: true,
+        dateFormat: 'MM yy',
+        minDate: new Date(2020, 0),  // Year, Index of Month (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec)
+        maxDate: new Date(2023, 11),  // Year, Index of Month (Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec)
+
+        // onClose: function(dateText, inst) { 
+        //     var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+        //     var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+        //     $(this).datepicker('setDate', new Date(year, month, 1));
+        // }
+    }).focus(function () {
+        var thisCalendar = $(this);
+        // $('.ui-datepicker-calendar').detach();
+        $(document).on("click", ".ui-datepicker-close", function () {
+            var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            thisCalendar.datepicker("option", "dateFormat", "MM yy");
+
+            thisCalendar.datepicker('setDate', new Date(year, month, 1));
+        });
+    });
+        //
+</script>
+</style>
+{% endblock %}
+

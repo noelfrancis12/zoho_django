@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+     @media print {
+        body * {
+            visibility: hidden;
+        }
+        
+    
+    .printable-content table {
+        margin: 0 auto;
+    }
+        .printable-content, .printable-content * {
+            visibility: visible;
+        }
+        .printable-content {
+            width: 200%;
+            max-width: 100%;
+            padding: 60px;
+           
+        }
+        .printable-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+    }
+}
+  
+    
+
+
+</style>
+<head>
+   
+</head>
+<div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex">
+        <div class="mr-3">
+             
+    <input type="checkbox" id="myCheckbox" name="myCheckbox" value="checkboxValue">
+    <label for="myCheckbox">Date Filter:</label>
+        </div>
+        <div class="mx-3 d-flex">
+         
+            <input type="date" id="startDate" name="startDate" style="display: none;" class="mx-1">
+            <input type="date" id="endDate" name="endtDate" style="display: none;" class="mx-1">
+
+            <select>
+                <option value="">All Parties</option>
+                <option value="">Recievable</option>
+                <option value="">Payables</option>
+               </select>
+
+        </div>
+    </div>
+   
+    <div class="d-flex">
+        <!-- Print button -->
+        <button class="btn btn-light mr-2" id="pdf" onclick="display()">Print</button>
+        <div style="width: 3px;"></div>
+        <div class="dropdown">
+            <button class="btn btn-light mr-3 dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Export
+            </button>
+            <div class="dropdown-menu" aria-labelledby="exportDropdown">
+                <a class="dropdown-item"  href="#" onclick="exportAsPDF()">PDF</a>
+                <a class="dropdown-item" href="#" onclick="exportToExcel()">XLS (Excel)</a>
+            </div>
+           
+            <a href="javascript:history.back()" class="btn btn-light" style=" color: rgb(1, 1, 1);">
+                <i class="fa fa-times-circle"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="mt-1">
+    
+    <datalist id="customers" >
+        {% for i in cust %}
+            <option value="{{ i.customerName }}" >
+        {% endfor %}
+        {% for i in vendor %}
+        <option value="{{ i.vendor_display_name }}" >
+    {% endfor %}
+
+</div>
+<div class="printable-wrapper" id="container-to-print" >
+
+    <div class="printable-content" >
+        <center>
+        <h2 class="text" style="color: white;">{{ company.company_name }}</h2>
+        <h4 class="text" style="color: white;" id="party_name">All Party </h4>
+        
+    
+       
+        <!-- <p class="text" style="color: white;">From 21 Jan 2023 To 21 Jan 2024</p> -->
+    </center>
+    <input type="text" id="search"  placeholder="Search.." autocomplete="off"  list="customers">
+        <table class="table table-bordered  mt-4" id="transactionTable">
+            <thead>
+                <tr>
+                    <th>Sl No</th>
+                    <th>PARTY NAME</th>
+                    <th>EMAIL</th>
+                    <th>PHONE NUMBER</th>
+                    <th>RECEIVABLE</th>
+                    <th>PAYABLE</th>
+                    <th>CREDIT</th>
+                </tr>
+            </thead>
+            <tbody class="text-light">
+            
+           
+            {% for i in cust %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.customerName }}</td>
+                <td>{{ i.customerEmail }}</td>
+                <td>{{ i.customerWorkPhone }}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            
+            {% endfor %}
+          
+            {% for i in vendor %}
+            <tr>
+                <td>{{ forloop.counter|add:"2" }}</td>
+                <td>{{ i.vendor_display_name }}</td>
+                <td>{{ i.vendor_email }}</td>
+                <td>{{ i.vendor_wphone }}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+          
+            {% endfor %}
+          
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="printable-content mt-3">
+    <p style="color: rgb(2, 144, 4);">**Amount is displayed in your base currency: INR</p>
+</div>
+<div class="d-flex printable-content" >
+    <label>Total Payables:</label>&nbsp;&nbsp;
+    <label id="">0</label>
+    
+    <label style="margin-left: 500px;">Total Receivables:</label>&nbsp;&nbsp;
+    <label id="">0</label>
+</div>
+<script>
+
+
+// function exportToPDF() {
+//      console.log("Exporting to PDF...");
+//      var pdf = new jsPDF();
+//      var content = document.querySelector('.printable-wrapper');
+//      console.log("Content:", content);
+//      pdf.fromHTML(content, 10, 10, {
+//          width: 180
+//      }, function (dispose) {
+//          pdf.save('report.pdf');
+//      });
+// }
+function exportAsPDF() {
+      const container = document.getElementById('container-to-print');
+    
+      // Save the original background color
+      const originalBackgroundColor = container.style.backgroundColor;
+    
+      // Set the container's background color to white
+      container.style.backgroundColor = 'white';
+    
+      // Apply styling changes to the container's content
+      const textWhiteElements = container.querySelectorAll('.text');
+      textWhiteElements.forEach(element => {
+        element.style.color = 'black'; // Set text color to black
+      });
+    
+      const tableElements = container.querySelectorAll('table');
+      const tableCells = container.querySelectorAll('td, th');
+      const tableRows = container.querySelectorAll('tr');
+    
+      tableElements.forEach(table => {
+        table.style.backgroundColor = '#ffffff'; // Set background color to white
+        table.style.color = '#000000'; // Set text color to black
+      });
+    
+      tableCells.forEach(cell => {
+        cell.style.backgroundColor = '#ffffff'; // Set background color to white
+        cell.style.color = '#000000'; // Set text color to black
+        cell.style.border = '1px solid black'; // Add a black border
+      });
+    
+      tableRows.forEach(row => {
+        row.style.backgroundColor = '#000000'; // Set background color to black
+      });
+    
+      const pdfOptions = {
+        margin: 0,
+        filename: '{{company_data.company_name}}partystatement.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+      };
+    
+      // Generate PDF from the container
+      html2pdf().from(container).set(pdfOptions).save().then(() => {
+
+        // Restore the original background color
+        container.style.backgroundColor = originalBackgroundColor;
+
+        textWhiteElements.forEach(element => {
+          element.style.color = 'white'; // Restore original text color
+
+        // Remove the pdf-background class after generating the PDF
+        container.classList.remove('pdf-background');
+        });
+      });
+    }
+
+    // Function to save Excel using XLSX
+    function exportToExcel() {
+        var table = document.querySelector('table');
+        var ws = XLSX.utils.table_to_sheet(table);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+        XLSX.writeFile(wb, 'report.xlsx');
+    }
+
+    // Function to handle export based on dropdown selection
+    document.getElementById('exportDropdown').addEventListener('change', function () {
+        var selectedValue = this.value;
+        if (selectedValue === 'pdf') {
+            exportToPDF();
+        } else if (selectedValue === 'xls') {
+            exportToExcel();
+        }
+    });
+    const pdfExportLink = document.getElementById('pdf'); // This should be the link for PDF export
+pdfExportLink.addEventListener('click', function (event) {
+    event.preventDefault(); // Prevent the link from navigating
+    exportToPDF();
+});
+
+
+
+
+
+    // function display() {
+    //     // Print the page
+    //     window.print();
+    // }
+
+    function adjustTableForPrint() {
+        
+        const table = document.querySelector('.printable-content table');
+        const container = document.querySelector('.printable-content');
+
+       
+       
+        const scaleFactor = (container.offsetWidth / table.offsetWidth) * 0.65;
+
+        
+        table.style.transform = `scale(${scaleFactor})`;
+        table.style.transformOrigin = 'top left';
+
+        
+        const marginTop = (container.offsetHeight - table.offsetHeight * scaleFactor) / 1.5;
+        table.style.marginTop = `${marginTop}px`;
+    }
+
+    //  "Print" button
+    const printButton = document.getElementById('pdf');
+    printButton.addEventListener('click', function() {
+        adjustTableForPrint();
+        window.print();
+    });
+</script>
+
+
+ 
+<script>
+    const checkbox = document.getElementById('myCheckbox');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+    // Add an event listener to the checkbox to toggle the date input
+    checkbox.addEventListener('change', function() {
+        if (checkbox.checked) {
+            startDateInput.style.display = 'flex';
+            endDateInput.style.display = 'flex'; // Show the date input
+        } else {
+            startDateInput.style.display = 'none';
+            endDateInput.style.display = 'none' // Hide the date input
+        }
+    });
+</script>
+<script>
+    var $rows = $('table tbody tr');
+    $('#search').keyup(function() {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        
+        $rows.hide().filter(function() {
+            var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+            return ~text.indexOf(val);
+        }).show();
+    });
+  
+    </script>
+    
+    <script>
+        const searchInput = document.getElementById("search");
+        const partyNameDisplay = document.getElementById("party_name");
+    
+        // Add event listener to the input field for the "input" event
+        searchInput.addEventListener("input", handleInput);
+    
+        // Function to handle input changes
+        function handleInput() {
+            const inputValue = searchInput.value;
+            const datalistOptions = document.getElementById("customers").options;
+    
+            // Check if the input matches any of the datalist options
+            for (let i = 0; i < datalistOptions.length; i++) {
+                if (inputValue === datalistOptions[i].value) {
+                    partyNameDisplay.innerText = datalistOptions[i].value;
+                   
+                    return; // Exit the loop
+                }
+            }
+    
+            // If the input doesn't match any datalist option, clear the display
+            partyNameDisplay.innerText = "All Party"; // Default text
+        }
+    </script>
+   
+    
+    
+    
+    
+    
+
+{% endblock %}

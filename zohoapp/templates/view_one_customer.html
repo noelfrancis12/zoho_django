@@ -1,0 +1,1695 @@
+
+<!DOCTYPE html> 
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Zoho</title>
+    <link rel="stylesheet" href="/static/assets/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.base.css">
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="/static/assets/vendors/js/vendor.bundle.base.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.5.0/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.default.min.css" rel="stylesheet" />
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js"></script>
+ 
+
+
+</head>
+<style>
+    .sidebar {
+        min-height: calc(150vh - 70px);
+        background: transparent;
+        font-weight: normal;
+        padding: 0;
+        width: 244px;
+        z-index: 11;
+        transition: width 0.25s ease, background 0.25s ease;
+        -webkit-transition: width 0.25s ease, background 0.25s ease;
+        -moz-transition: width 0.25s ease, background 0.25s ease;
+        -ms-transition: width 0.25s ease, background 0.25s ease;
+    }
+    
+    .content-wrapper {
+        background: transparent;
+        padding: 1.875rem 1.75rem;
+        width: 100%;
+        -webkit-flex-grow: 1;
+        flex-grow: 1;
+    }
+    
+    @media (max-width:992px) {
+        #log {
+            max-width: 100px;
+            margin-top: 12px;
+            margin-left: 25px;
+            margin-right: 15px;
+        }
+    }
+    
+    .sectionhtml {
+        background-color: #13151b;
+        /* min-height: 380px; */
+        /* Center and scale the image nicely */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        /* Needed to position the navbar */
+        position: relative;
+    }
+    /* Position the navbar container inside the image */
+    
+    .container {
+        position: absolute;
+        margin: 20px;
+        width: auto;
+        /* background: url("/static/images/wallpaper1.jpg") 50% 0 no-repeat fixed; */
+    }
+    
+    .navbar {
+        font-weight: normal;
+        background-color: transparent;
+        left: 244px;
+        transition: left 0.25s ease;
+        -webkit-transition: left 0.25s ease;
+        -moz-transition: left 0.25s ease;
+        -ms-transition: left 0.25s ease;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    .modal-content {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        width: 100%;
+        pointer-events: auto;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        border-radius: 0.3rem;
+        outline: 0;
+    }
+    
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1050;
+        display: none;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        outline: 0;
+    }
+    
+    .form-control {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + 0.75rem + 2px);
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        -webkit-transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+        transition: border-color 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+        -o-transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out, -webkit-box-shadow 0.15s ease-in-out;
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+        .form-control {
+            -webkit-transition: none;
+            -o-transition: none;
+            transition: none;
+        }
+    }
+    
+    .form-control::-ms-expand {
+        background-color: transparent;
+        border: 0;
+    }
+    
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #80bdff;
+        outline: 0;
+        -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    .form-control::-webkit-input-placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    
+    .form-control:-ms-input-placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    
+    .form-control::-ms-input-placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    
+    .form-control::placeholder {
+        color: #6c757d;
+        opacity: 1;
+    }
+    
+    .form-control:disabled,
+    .form-control[readonly] {
+        background-color: #e9ecef;
+        opacity: 1;
+    }
+    
+    select.form-control:focus::-ms-value {
+        color: #495057;
+        background-color: #fff;
+    }
+    
+    .form-row {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        margin-right: -5px;
+        margin-left: -5px;
+    }
+    
+    .form-row>.col,
+    .form-row>[class*="col-"] {
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+    
+    .containerprof {
+        width: 100%;
+        margin-left: 0px;
+        background-color: rgb(32, 35, 37);
+        border-radius: 20px;
+    }
+    
+    .save_btn {
+        background-color: rgb(218, 164, 48);
+        color: azure;
+        padding: 3;
+        width: 200px;
+        border-radius: 20px;
+    }
+    
+     ::-webkit-scrollbar {
+        width: 2px;
+    }
+    
+     ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    
+     ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+    
+     ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    
+    .form-inline {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+    
+    .form-inline .form-check {
+        width: 100%;
+    }
+    
+    @media (min-width: 576px) {
+        .form-inline label {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            margin-bottom: 0;
+        }
+        .form-inline .form-group {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 auto;
+            flex: 0 0 auto;
+            -webkit-box-orient: horizontal;
+            -webkit-box-direction: normal;
+            -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            margin-bottom: 0;
+        }
+        .form-inline .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+        }
+        .form-inline .form-control-plaintext {
+            display: inline-block;
+        }
+        .form-inline .input-group,
+        .form-inline .custom-select {
+            width: auto;
+        }
+        .form-inline .form-check {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            width: auto;
+            padding-left: 0;
+        }
+        .form-inline .form-check-input {
+            position: relative;
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+            margin-top: 0;
+            margin-right: 0.25rem;
+            margin-left: 0;
+        }
+        .form-inline .custom-control {
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
+        .form-inline .custom-control-label {
+            margin-bottom: 0;
+        }
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .form-row {
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-row label {
+        width: 100px;
+        padding-right: 10px;
+    }
+    
+    .form-row input[type="text"],
+    .form-row input[type="email"] {
+        flex: 1;
+    }
+    /* .item{
+  height:1200px;
+} 
+*/
+    
+    .menu-items {
+        margin-top: 1%;
+        margin-bottom: 1%;
+    }
+    
+    nav .icons i {
+        font-size: 1.5rem;
+        color: #fff;
+        cursor: pointer;
+        margin: 1.3rem;
+    }
+    
+    nav .icons i:hover {
+        color: var(--orange);
+    }
+    
+    nav .search-bar-container {
+        width: 60%;
+        position: absolute;
+        padding-top: 1.5rem;
+        border-top: .1rem solid rgba(255, 255, 255, .2);
+        display: flex;
+        align-items: center;
+        z-index: 1001;
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
+    
+    nav .search-bar-container.active {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    }
+    
+    nav .search-bar-container #search-bar {
+        width: 100%;
+        padding: .5rem;
+        text-transform: none;
+        color: #333;
+        font-size: 1.7rem;
+        border-radius: .5rem;
+    }
+    
+    nav .search-bar-container label {
+        color: #fff;
+        cursor: pointer;
+        font-size: 3rem;
+        margin-left: 1.5rem;
+    }
+    
+    nav .search-bar-container label:hover {
+        color: var(--orange);
+    }
+    
+    .icons {
+        position: relative;
+    }
+    /* Show dropdown on hover */
+    
+    .icons:hover .dropdown-content {
+        display: block;
+    }
+    
+    nav.navbar {
+        box-shadow: 0 2px 4px rgba(216, 213, 213, 0.3);
+        /* Add your desired shadow properties here */
+    }
+    .arrow {
+   border: solid white;
+   border-width: 0 3px 3px 0;
+   display: inline-block;
+   padding: 3px;
+   position: static;
+ }
+ 
+ .down {
+   transform: rotate(45deg);
+   -webkit-transform: rotate(45deg);
+ } 
+ .card{
+        background: none;
+    }
+    tbody tr td{
+        border: none;
+        border-top: none;
+        border-style: none;
+        color:azure;
+        justify-content: center;
+    }
+    tr:hover{
+        cursor: pointer;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+   
+    ul.image-bullets {
+        list-style-type: none;
+        padding-left: 30px;
+    }
+
+    ul.image-bullets li:before {
+        content: "";
+        background-image: url('static/images/bullet.png');
+        background-size: 15px 15px;
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-right: 5px; 
+        margin-left: 26%;
+    }
+    .recurpoints ul li{
+        margin-bottom: 10px;
+    }
+
+    .flowchart {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 20px;
+}
+
+    .flowchart-item {
+        text-align: center;
+        padding: 10px;
+        background-color: lightblue;
+        border: 3px solid rgb(25, 91, 145);
+        border-radius: 5px;
+        width: 150px;
+        color: black;
+        font-size: 12px;
+    }
+    .flowchart-item i{
+        font-size: 15px;
+    }
+
+    .flowchart-connector {
+        flex-grow: 1;
+        height: 2px;
+        background-color: #ccc;
+        margin-top: 0%;
+
+    }
+    
+    @media (max-width: 768px) {
+        .flowchart {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flowchart-item {
+            width: 120px;
+        }
+        .flowchart-connector {
+            height: 50px;
+            width: 2px; 
+            margin-left: 0%; 
+            transform: translateX(-50%);
+        }
+    }
+    .btn{width: 30px;
+        color: rgb(218, 164, 48);
+        outline-color: azure;
+        border: 2px solid rgb(25, 91, 145);
+    }
+    .btn:hover{
+        color: darkslategray;
+        background-color: lightblue;
+        outline: none;
+        
+    }
+    a{
+        list-style: none;
+        color: azure;
+    }
+     a:hover{
+        color: rgb(218, 164, 48);
+      }
+     ::-webkit-scrollbar {
+        width: 0px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    } 
+    #upload{
+    display:none
+}
+</style>
+
+<section class="sectionhtml">
+
+    <body>
+        <div class="container-scroller">
+
+            <!-- partial:partials/_sidebar.html -->
+            <nav class="sidebar sidebar-offcanvas" id="sidebar">
+                <div class="sidebar-brand-wrapper d-none d-lg-flex align-items-center justify-content-center fixed-top" style="background-color: transparent;">
+                    <a class="sidebar-brand brand-logo text-light text-decoration-none">
+                        <p style="color: white; font-size: 35px;margin-top: 3vh;">Zoho </p>
+                    </a>
+                    <a class="sidebar-brand brand-logo-mini text-light text-decoration-none" style="background-color: transparent;">
+                        <p style="color: white; opacity: 1; font-size: 35px;margin-top: 3vh;">ZD</p>
+                    </a>
+                </div>
+                <ul class="nav" style="position: fixed;">
+                    <li class="nav-item profile">
+                        <div class="profile-desc">
+                            <div class="profile-pic">
+                                <div class="count-indicator">
+
+                                    <span class="count bg-success"></span>
+                                </div>
+                                <div class="profile-name">
+
+
+                                </div>
+                            </div>
+
+
+
+
+                            <li class="nav-item menu-items ">
+                                <a class="nav-link" href="/dashboard">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-home"></i>
+            </span>
+                                    <span class="menu-title text-white">Home</span>
+                                </a>
+                            </li>
+
+                            <li class="nav-item menu-items dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-sitemap"></i>
+            </span>
+                                    <span class="menu-title text-white">Items</span>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #fafbfc" href="/itemview">Items</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/additem">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #f7f8f8" href="/viewpricelist">Price List</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/addprice">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+
+
+                                    </li>
+                                </ul>
+
+                            </li>
+
+                            <li class="nav-item menu-items dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-sitemap"></i>
+            </span>
+                                    <span class="menu-title text-white">Banking</span>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #f7fbff" href="/banking_home">Offline Banking</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/create_banking">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+
+
+                                    </li>
+                                </ul>
+
+                            </li>
+
+
+
+
+                            <li class="nav-item menu-items dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-cart-outline "></i>
+            </span>
+                                    <span class="menu-title text-white">Sales</span>
+
+                                </a>
+                                <ul class="dropdown-menu ">
+                                    <li>
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #f6f7f8" href="/view_customr">Customers</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/add_customers">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/allestimates">Estimates</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/newestimate/">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item ">
+                                            <a class="d-inline-block" style="color: #fdfeff" href="/retainer_invoices/">Retainer Invoices</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/add_invoice/">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #fafcff" href="">Sales Orders</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #fbfdff" href="/create_and_send_challan">Delivery Challans</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/create_delivery_chellan">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/invoiceview">Invoices</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/add_prod">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="">Credit Notes</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/view_recurpage">Recurring Invoice</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/create_recur">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                    </li>
+                                </ul>
+
+                            </li>
+
+
+                            <li class="nav-item menu-items dropdown">
+                                <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-basket"></i>
+            </span>
+                                    <span class="menu-title text-white">Purchases</span>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/view_vendor_list/">Vendors</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/vendor/">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/expensepage">Expenses</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/save_expense/">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/recurringbase">Recurring Expenses</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/recurringhome">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/purchaseView">Purchase Orders</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/purchase_order">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/paymentmethod">Payment Made</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/paymentadd_method">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/view_bills">Bills</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/new_bill/">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/recurring_bill">Recurring Bills</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/add_recurring_bills">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </li>
+
+
+                            <li class="nav-item menu-items dropdown">
+                                <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-clock"></i>
+            </span>
+                                    <span class="menu-title  text-white">Time Tracking</span>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/vproj">Projects</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/proj">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                    </li>
+                                </ul>
+
+                            </li>
+
+
+                            <li class="nav-item menu-items dropdown">
+                                <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-account"></i>
+            </span>
+                                    <span class="menu-title  text-white">Accountant</span>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/chartofaccount_home">Chart Of Accounts</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/chartofaccount_home">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                    </li>
+                                </ul>
+
+                            </li>
+
+
+                            <li class="nav-item menu-items">
+                                <a class="nav-link" href="/report_inventory_view">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-calendar-week"></i>
+            </span>
+                                    <span class="menu-title text-white">Reports</span>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item menu-items">
+                                <a class="nav-link" href="#">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-file-outline"></i>
+            </span>
+                                    <span class="menu-title text-white">Documents</span>
+                                </a>
+                            </li>
+
+
+                            <li class="nav-item menu-items dropdown">
+                                <a class="nav-link active dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                                    <span class="menu-icon">
+              <i class="mdi mdi-account"></i>
+            </span>
+                                    <span class="menu-title  text-white">Payroll</span>
+
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="dropdown-item">
+                                            <a class="d-inline-block" style="color: #ffffff" href="/payroll_list">Employees</a>
+                                            <a class="d-inline-block" style="color: #000000;margin-left: 2px;" href="/payroll_list">
+                                                <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                                            </a>
+                                        </div>
+
+                                    </li>
+                                </ul>
+
+                            </li>
+
+                </ul>
+            </nav>
+
+
+
+            <div class="container-fluid page-body-wrapper">
+
+                <nav class="navbar p-0 fixed-top d-flex flex-row" style="z-index: 9999;">
+                    <div class="navbar-brand-wrapper d-flex d-lg-none align-items-center justify-content-center" style="background-color: transparent;">
+                        <a class="sidebar-brand brand-logo-mini text-dark text-decoration-none " href="index.html">
+                            <p style="color: white; opacity: 1; font-size: 35px;margin-top: 3vh;padding-left: 100px;">Zoho</p>
+                        </a>
+                    </div>
+                    <div class="navbar-menu-wrapper flex-grow d-flex align-items-stretch">
+                        <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+
+                        <ul class="navbar-nav">
+                            <div class="search-bar-container" id="search-container">
+                                <input type="text" autocomplete="off" id="myInput" onkeyup="filter(this);" class="form-control text-dark" placeholder="search..." />
+                                <div class="input-group-append"></div>
+                            </div>
+
+
+                        </ul>
+                        <div class="mt-5" id="myDIV" style="position:absolute;width:550px;top:50%;">
+                            <ul id="myList" class="one" style="background-color: #131414;list-style: none;">
+                                <li><a class="text-white" href="/dashboard">Dashboard</a></li>
+                                <li><a class="text-white" href="/itemview">Item</a></li>
+                                <li><a class="text-white" href="/viewpricelist">Price List</a></li>
+                                <li><a class="text-white" href="/banking_home">Offline Banking</a></li>
+                                <li><a class="text-white" href="/allestimates">Estimate</a></li>
+                                <li><a class="text-white" href="/invoiceview">Invoices</a></li>
+                                <li><a class="text-white" href="/view_customr">Customers</a></li>
+                                <li><a class="text-white" href="/retainer_invoices/">Retainer Invoices</a></li>
+                                <li><a class="text-white" href="">Sales Orders</a></li>
+                                <li><a class="text-white" href="">Credit Notes</a></li>
+                                <li><a class="text-white" href="/view_vendor_list/">Vendors</a></li>
+                                <li><a class="text-white" href="/expensepage">Expenses</a></li>
+                                <li><a class="text-white" href="/recurringbase">Recurring Expenses</a></li>
+                                <li><a class="text-white" href="/view_recurpage">Reccuring Invoice</a></li>
+                                <li><a class="text-white" href="/create_and_send_challan">Delivery Challan</a></li>
+                                <li><a class="text-white" href="/purchaseView">Purchase Order</a></li>
+                                <li><a class="text-white" href="/paymentmethod">Payment  Made</a></li>
+                                <li><a class="text-white" href="">Bills</a></li>
+                                <li><a class="text-white" href="/recurring_bill">Reccuring Bills</a></li>
+                                <li><a class="text-white" href="/vproj">Projects</a></li>
+                                <li><a class="text-white" href="/chartofaccount_home">Chart Of Account</a></li>
+
+
+                            </ul>
+                        </div>
+
+
+                        <script>
+                            $(document).ready(function() {
+                                // Initially hide the search bar container
+                                $("#search-container").hide();
+
+                                // When the search icon is clicked
+                                $("#search-btn").click(function() {
+                                    // Toggle the active state of the search bar container
+                                    $("#search-container").toggleClass("active");
+
+                                    // Clear the input box value
+                                    $("#myInput").val('');
+
+                                    // If the search bar container is active, show it; otherwise, hide it and clear the input box value
+                                    if ($("#search-container").hasClass("active")) {
+                                        $("#search-container").show();
+                                    } else {
+                                        $("#search-container").hide();
+                                        $("#myList li").hide();
+                                    }
+                                });
+
+                                $("#myList li").hide();
+
+                                $("#myInput").on("keyup", function() {
+                                    var value = $(this).val().toLowerCase();
+                                    if (value !== '') {
+                                        $("#myList li").filter(function() {
+                                            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+                                        });
+                                    } else {
+                                        $("#myList li").hide();
+                                    }
+                                });
+                            });
+                        </script>
+                        <ul class="navbar-nav navbar-nav-right">
+                            <li>
+                                <div class="icons">
+                                    <i class="fas fa-search" id="search-btn"></i>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="icons">
+                                    <i class="far fa-bell" style="font-size:30px;"></i>
+
+                                </div>
+                            </li>
+                            <li>
+                                <div class="icons">
+                                    <i class="fa fa-gear" style="font-size:30px;"></i>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" id="profileDropdown" href="#" data-bs-toggle="dropdown">
+                                    <div class="navbar-profile">
+                                        
+                                        <img class="img-xs rounded-circle" src="/static/images/default.png" class="rounded-circle"> 
+
+
+
+
+                                        <p class="mb-0 d-none d-sm-block navbar-profile-name" style="color: white;">
+
+                                             Add Company 
+                                        </p>
+
+
+                                        <i class="mdi mdi-menu-down d-none d-sm-block"></i>
+                                    </div>
+                                </a>
+                                <div id="log" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list " aria-labelledby="profileDropdown" style="background-color: transparent; z-index: 9999;">
+
+                                    <div class="dropdown-divider"></div>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="/dashboard" class="dropdown-item preview-item">
+                                        <div class="preview-thumbnail">
+                                            <div class="preview-icon bg-light rounded-circle">
+                                                <i class="mdi mdi-view-dashboard text-success"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="preview-item-content">
+                                            <p class="preview-subject mb-1 " style="color: white;">Dashboard</p>
+                                        </div>
+                                    </a>
+                                    <a href="/view_profile" class="dropdown-item preview-item">
+                                        <div class="preview-thumbnail">
+                                            <div class="preview-icon bg-light rounded-circle">
+                                                <i class="mdi mdi-account text-primary"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="preview-item-content">
+                                            <p class="preview-subject mb-1">Profile</p>
+                                        </div>
+                                    </a>
+                                    <a href="/logout" class="dropdown-item preview-item">
+                                        <div class="preview-thumbnail">
+                                            <div class="preview-icon bg-light rounded-circle">
+                                                <i class="mdi mdi-logout text-danger"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="preview-item-content">
+                                            <p class="preview-subject mb-1">Log out</p>
+                                        </div>
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                </div>
+                            </li>
+                        </ul>
+                        <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-format-line-spacing"></span>
+          </button>
+                    </div>
+                </nav>
+
+                <div class="main-panel">
+                    <div class="content-wrapper">
+                        
+
+<section>
+
+
+        <div class="col-md-12">
+
+
+                
+                
+                <div class="row">
+
+
+                    <div class="col-md-4" >
+                        <section  style="width:390px;height: 650px;overflow-x:hidden;">
+                            <div class="row" >
+
+                                <div class="col-md-7">
+                                    <h3 style="font-size:large;"><b>All Customers</b></h3>
+                                </div>
+                
+                                <div class="col-md-1"></div>
+                
+                                <div class="col-md-4">
+                                   <!-- <a class="btn text-center px-2 py-2 " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                      role="button"><i class="fa fa-filter mx-1"></i>
+                      </a>
+                      <div class="dropdown-menu ">
+                          <a class="dropdown-item"  href="{% url 'view_customr_sname' %}" >Name</a>
+                          <a class="dropdown-item"  href="{% url 'view_customr_scpname' %}" >Company Name</a>
+                          <a  class="dropdown-item" href="">Receivables</a>
+                          <a  class="dropdown-item" href="">Import Customer</a>
+                          <a  class="dropdown-item" href="">Export Customer</a>
+                
+                      </div>&nbsp;-->
+                      <a href="{% url 'add_customers' %}" class="btn fa fa-plus text- px-2 py-2" role="button">
+                          
+                      </a>
+                                </div>
+        
+                
+                            </div><br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            
+                                          
+          
+                          <tbody style="height: 50px;       
+                          overflow-y: auto;   
+                          overflow-x: auto;">
+        
+                              {% for v in vc %}
+                               
+                                 
+                          <tr><td style="color: white;"><a href="{% url 'view_one_customer' v.id %}" style="color: rgb(220, 225, 66);">{{v.customerName}}</a></td></tr>
+                         <tr><td>{{v.customerEmail}}</td><td>{{v.OpeningBalance}}</td></tr>
+                         
+                         
+                          {% endfor %} 
+                          
+                       
+                          </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </section>
+
+
+                        
+                    </div>
+    
+    
+    
+
+                    
+                    <div class="col-md-8" style="border: 1px solid;overflow-y: auto;overflow-x:hidden;
+                    border-color: white; height: 900px;">
+
+                        <section>
+
+                            <div class="row" style="height: 670px;width: 900px;">
+                                <fieldset style="margin-left:0 ;width:95%;margin-top: 2rem;">
+                             <h4 style="color: white;width: 25%;margin-left: 1.8rem;"><b>{{cu.customerName}}</b>
+                             </h4>
+                             
+                             <div class="col-md-6 form-inline" style="margin-left: 36rem;">
+                               <a style="color: rgb(218, 164, 48);" class="btn text-center px-2 py-2 " href="{% url 'editcustomer' cu.id %}" data-toggle="tooltip" title="Edit">
+                                 <i class="fas fa-pencil-alt"></i> 
+                                                    </a>&nbsp;&nbsp;
+                               
+                               
+                               <a style="color: rgb(218, 164, 48);" class="btn text-center px-2 py-2 " href="{% url 'delete_customr' cu.id %}"><i class="fas fa-trash-alt"></i></a>
+                      
+                   </div> </fieldset>
+                   <div style="height: 900px;
+                   width:800px;
+                   ">       
+                     <span class="input-group mb-3 mt-3">
+                       <div class="toggle2"
+                         style="color: rgb(230, 171, 45);font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         Overview </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                       <div class="toggle3"
+                         style="color: rgb(230, 171, 45);font-size:16px;">
+                         Comments</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                         <div class="toggle5"
+                         style="color: rgb(230, 171, 45);font-size:16px;">
+                         Attach</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      
+                       <div class="toggle7"
+                         style="color: rgb(230, 171, 45);font-size:16px;">
+                         Mails</div>
+                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                     </span>
+                  
+                    
+                 <hr style="color: rgb(255, 255, 255);">
+                 
+                 <fieldset2 class="overview" >
+                             <table class="table  text-white table-borderless" style="margin-left:auto;margin-top: 1.5rem;">
+                               <tr><td>
+                               <table class="table  text-white table-borderless" style="width:12%;margin-top: 1.5rem;">
+                              
+                                
+                                <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Primary Contact Information</b>
+                                    <hr style="color: white;"></td></tr> 
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CompanyName:&nbsp;{{cu.companyName}}</td></tr>
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name:&nbsp;{{cu.customerName}}</td></tr> 
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email:&nbsp;{{cu.customerEmail}}</td></tr> 
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Phone :&nbsp;{{cu.customerWorkPhone}}</td></tr> 
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mobile:&nbsp;{{cu.customerMobile}}</td></tr> 
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Skype :&nbsp;{{cu.skype}}</td></tr> 
+                         
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Designation:&nbsp;{{cu.designation}}</td></tr> 
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Department:&nbsp;{{cu.department}}</td></tr> 
+                                   <tr><td style="color: white;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Website:&nbsp;{{cu.website}}</td></tr> 
+                                   
+                 
+                         
+                 
+                                  
+                               <h3></h3></table>
+                                       </td>
+                                     <td><table class="table  text-white table-borderless" 
+                                       style="margin-left:auto;margin-top:auto;">
+                                      
+                                        <tr><td><h4 style="color: white;">Outstanding Receivables</h4></td><td style="color: white;">0.00</td></tr>
+                                            <tr><td style="color: white;">Unused Credits</td><td>0.00</td></tr>
+                                        <tr><td style="color: white;">Payment due period</td><td style="color: white;">0.00</td></tr>
+                                        <!--<tr><td><h3 style="color: white;">Outstanding Payables</h3></td><td>Unused Credits</td></tr>
+                                        <tr><td>0.00</td><td>Associated with Vendor</td></tr>-->
+                                      </table><br><br>
+                                      <h3 style="color: white;">Income</h3>
+                                      <canvas id="myChart" style="width:100%;max-width:600px;"></canvas></td></tr>
+                                        
+                                      <table><hr style="color: white;">
+                                        <tr style="background-color: #333;"><td></td><td style="width: 30%;color: darkgoldenrod;">
+                                            <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GST Details</b></td>
+                                            <td style="width: 200%;color: darkgoldenrod;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Currency:{{cu.currency}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GST Treatment:<br>{{cu.GSTTreatment}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GST Number:{{cu.GSTIN}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PAN Number:{{cu.pan_no}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Place of Supply:{{cu.placeofsupply}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tax Preference:{{cu.Taxpreference}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Opening balance:{{cu.OpeningBalance}}
+                                              </td></tr><br>
+                                            <tr ><td></td><td style="width: 30%;"><b>&nbsp;&nbsp;&nbsp;&nbsp;Billing / Shipping Address</b>
+                                            </td>
+                                            <td style="width: 100%;">&nbsp;&nbsp;&nbsp;&nbsp;Address1 :{{cu.Address1}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp; Address2 :{{cu.Address2}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;City :{{cu.city}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;State :{{cu.state}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;Zipcode :{{cu.zipcode}}
+                                                <br><br>&nbsp;&nbsp;&nbsp;&nbsp;Phone:{{cu.phone1}}
+                                                <br>  <br>&nbsp;&nbsp;&nbsp;&nbsp;Fax :{{cu.fax}}</td><td></td></tr>
+                                           
+                                    <tr style="background-color: #333;"><td></td><td style="width: 30%;"><b>&nbsp;&nbsp;&nbsp;&nbsp;Other Details</b>
+                                    </td>
+                                    <td style="width: 100%;">&nbsp;&nbsp;&nbsp;&nbsp;Payment Terms:{{cu.PaymentTerms}}
+                                        <br><br>&nbsp;&nbsp;&nbsp;&nbsp;Price List :{{cu.PriceList}}
+                                        <br><br> &nbsp;&nbsp;&nbsp;&nbsp;Website :{{cu.website}}
+                                       <br><br>&nbsp;&nbsp;&nbsp;&nbsp;Portal Language:{{cu.PortalLanguage}}
+                                     <br><br> &nbsp;&nbsp;&nbsp;&nbsp;Country:{{cu.country}}
+                                   <br><br>&nbsp;&nbsp;&nbsp;&nbsp;Facebook :{{cu.Facebook}}
+                                   <br><br>&nbsp;&nbsp;&nbsp;&nbsp;Twitter:{{cu.Twitter}}</td><td></td></tr>
+                                  
+                                    </table>
+                                 
+                                   
+                                     </table>
+                                   </fieldset2>
+                                 
+                                 <fieldset3 class="comments" style="display:none;">
+                                   <form method="POST" action="{% url 'cust_comments' cu.id %}"  style="text-align: center;" enctype="multipart/form-data" class="">
+                                    {% csrf_token %}
+                                   <br>
+                                     <div>
+                                        <div class="form-group row mt-4">
+                                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label"><label>Commments</label></div>
+                                             <div class="col-sm-12 col-md-6 col-lg-6">
+                                                 <textarea name="comments" id="comments" class="form-control bg-light text-dark "required></textarea>
+                              </div></div>
+                               
+                                     
+                                     
+                                     </div>
+                                     <div class="row mt-4">
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <div class="col-sm-12 col-md-3 col-lg-3">
+                                       
+                                            <input type="submit" class="form-control bg-warning text-dark " style="font-weight: bold;text-align: center;" value="save"></div>
+                                           
+                                        <div class="col-sm-12 col-md-3 col-lg-3">
+                                            <!--<input type="reset" class="form-control bg-warning text-dark " style="font-weight: bold;text-align: center;" value="Cancel">
+                                            <input type="submit" class="form-control bg-warning text-dark " style="font-weight: bold;text-align: center;" value="save"></div>-->
+                                           
+                                        </div>
+                                     </div>
+                                     </form>
+                                 </fieldset3>
+                                 <fieldset5 style="display: none;">
+                                    <form action="{% url 'cust_Attach_files' cu.id %}" method="post" enctype="multipart/form-data" class="was-validated">
+                                        {% csrf_token %}
+                                        
+                                        <div class="form-group row mt-4">
+                                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Title</label></div>
+                                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                                 <input type="text" class="form-control bg-light text-dark" name="title" placeholder="Title" required>  
+                                                 <div class="valid-feedback">Valid.</div>
+                                                 <div class="invalid-feedback">Please fill out this field.</div>   
+                                                 
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-sm-12 col-md-3 col-lg-3 col-form-label" style="color: rgb(230, 171, 45);"><label style="color: rgb(230, 171, 45);">Upload Document</label></div>
+                                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                                <input type="file" class="form-control bg-light text-dark" name="file" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mt-4">
+                                            <div class="col-sm-12 col-md-3 col-lg-3"></div>
+                                            <div class="col-sm-12 col-md-6 col-lg-6">
+                                                   <input type="submit" class="bg-warning text-dark form-control" value="Upload">   
+                                            </div>
+                                        </div>
+                                    </form>
+                                 </fieldset5>
+                                 <fieldset7 style="display: none;" >
+                                    <div class="container-fluid">
+                                        <a href="{% url 'add_email_customer' cu.id %}" class="btn fa fa-plus text- px-2 py-2" role="button" style="width: 20%;">
+                          Add New Mail
+                                        </a>​
+                                        <table class="table table-responsive-md mt-4" id="table" >
+                                            <thead>
+                                                <tr>
+                                                   
+                                    <th>Mail_From</th>
+                                    <th>Mail_To</th>
+                                    <th>Subject</th>
+                                   
+                                    <th>Mail_Date</th>
+                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            {% for v in em %}
+                                            <tr>
+                                   
+                                             
+                                             
+                                              <td>{{v.mail_from}}</td>
+                                              <td>{{v.mail_to}}</td>
+                                              <td>{{v.subject}}</td>
+                                             
+                                              <td>{{v.mail_date}}</td>
+                                              
+                                              
+                                              
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        </table>
+                                    </div>
+                                 </fieldset7>
+                               </div>
+                                     </div>
+                                     <div class="col-4"></div>
+                                 </div>
+                 
+                 
+                 
+                 
+                 
+                 
+                 
+                         </div>
+                             
+                             </div>
+                 
+                         </div>
+                     
+                        </section>
+
+    
+                    </div><br>
+    
+    
+                </div>
+    
+
+
+            
+            </div>
+
+        
+        </div>
+    
+    </div>
+
+</section>
+
+
+
+
+<script src=
+ "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+</script>
+<script src=
+"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+</script>
+<script src=
+ "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script>
+  var xValues = ["Jan-2023", "Feb-2023", "March-2023", "Apr-2023", "May-2023","Jun-2023","Jul-2023","Aug-2023","Sept-2023","Oct-2023","Nov-2023","Dec-2023"];
+  var yValues = [1200, 4900, 4400, 2400, 1500];
+  var y1Values = [2500, 4000, 1400, 4400, 4500];
+  var barColors = "grey";
+  var barColors1 = "yellow";
+  new Chart("myChart", {
+    type: "bar",
+    data: {
+      labels: xValues,
+      datasets: [{
+        backgroundColor: barColors,
+        data: yValues
+      },{backgroundColor: barColors1,
+        data: y1Values
+      }]
+    },
+    options: {
+      legend: {display: false},
+      title: {
+        display: true,
+        text: "Total Income ( Last 6 Months ):"
+      }
+    }
+  });
+  $(document).ready(function () {
+ $(".toggle2").click(function (e) {
+   e.preventDefault();
+   $("fieldset2").toggle();
+   $("fieldset3").hide();
+   $("fieldset7").hide();
+   $("fieldset5").hide();
+ })
+})
+$(document).ready(function () {
+ $(".toggle3").click(function (e) {
+   e.preventDefault();
+   $("fieldset3").toggle();
+   $("fieldset2").hide();
+   $("fieldset7").hide();
+   $("fieldset5").hide();
+ })
+})
+$(document).ready(function () {
+ $(".toggle7").click(function (e) {
+   e.preventDefault();
+   $("fieldset7").toggle();
+   $("fieldset3").hide();
+   $("fieldset2").hide();
+   $("fieldset5").hide();
+ })
+})
+$(document).ready(function () {
+ $(".toggle5").click(function (e) {
+   e.preventDefault();
+   $("fieldset5").toggle();
+   $("fieldset3").hide();
+   $("fieldset2").hide();
+   $("fieldset7").hide();
+
+ })
+})
+$(function(){
+    $("#upload_link").on('click', function(e){
+        e.preventDefault();
+        $("#upload:hidden").trigger('click');
+    });
+});
+  </script>
+<script type="text/javascript">
+    function convertHTMLtoPDF() {
+        const { jsPDF } = window.jspdf;
+
+        var doc = new jsPDF('l', 'mm', [630, 630]);
+        var pdfjs = document.querySelector('#invoice-section');
+
+        doc.html(pdfjs, {
+            callback: function(doc) {
+                doc.save("retainer-invoice.pdf");
+            },
+            x: 12,
+            y: 12
+        });               
+    }           
+</script> 
+
+
+<script>
+
+    function printRetainerInvoice() {
+      // select the retainer invoice section
+      const retainerSection = document.querySelector('#invoice-section');
+      
+      // get the HTML content of the retainer invoice section
+      const retainerInvoiceHTML = retainerSection.innerHTML;
+      
+      // create a new window and write the retainer invoice HTML to it
+      const newWindow = window.open();
+      newWindow.document.write(retainerInvoiceHTML);
+      
+      // print the new window
+      newWindow.print();
+    }
+
+</script>  
+
+<script>
+    const attachButton = document.getElementById("attach-button");
+    const fileInput = document.getElementById("file-input");
+
+    attachButton.addEventListener("click", () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener("change", () => {
+        fileInput.style.display = "none";
+    });
+
+</script>
+
+
+
+<script>
+    const addCommentLink = document.getElementById("add-comment-link");
+    const commentForm = document.getElementById("comment-form");
+
+    addCommentLink.addEventListener("click", () => {
+    addCommentLink.style.display = "none";
+    commentForm.style.display = "block";
+    });
+
+    const submitCommentBtn = document.getElementById("submit-comment");
+    const commentText = document.getElementById("comment-text");
+    const commentSection = document.getElementById("comment-section");
+    const hiddencomment = document.getElementById("hiddencomments")
+
+    submitCommentBtn.addEventListener("click", () => {
+    const comment = commentText.value;
+    const newCommentElement = document.createElement("p");
+    newCommentElement.setAttribute('name', 'comments');
+    newCommentElement.textContent = comment;
+    commentSection.appendChild(newCommentElement);
+    const newcomment = document.createElement("input")
+    newcomment.setAttribute('type','hidden');
+    newcomment.setAttribute('name','mailcomments');
+    newcomment.value=comment;
+    hiddencomment.appendChild(newcomment);
+    commentText.value = "";
+    commentForm.style.display = "none";
+    addCommentLink.style.display = "block";
+    });
+
+
+</script>
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+        color: rgb(0, 0, 0);
+    }
+    th {
+        background-color: #f2f2f2;
+        color: black;
+    }
+    
+    .invoice-footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    .invoice-footer p {
+        margin: 0;
+        font-size: 14px;
+        color: #000000;
+    }
+    .invoice-total {
+        font-weight: bold;
+    }
+    
+</style>
+<style>
+.button-group {
+  display: flex;
+  align-items: center;
+}
+
+.button-group button {
+  border: none;
+  background-color: #fff;
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.button-group button i {
+  margin-right: 5px;
+}
+
+</style>
+
+
+
+
+                    </div>
+                    <div>
+
+                    </div>
+
+                </div>
+
+                <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+                <script src="/static/assets/vendors/js/vendor.bundle.base.js"></script>
+
+                <script src="/static/assets/vendors/chart.js/Chart.min.js"></script>
+                <script src="/static/assets/vendors/progressbar.js/progressbar.min.js"></script>
+                <script src="/static/assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+                <script src="/static/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+                <script src="/static/assets/vendors/owl-carousel-2/owl.carousel.min.js"></script>
+                <script src="/static/assets/js/jquery.cookie.js%22%20type%3D%22text/javascript"></script>
+                <script src="/static/assets/js/off-canvas.js"></script>
+                <script src="/static/assets/js/hoverable-collapse.js"></script>
+                <script src="/static/assets/js/misc.js"></script>
+                <script src="/static/assets/js/settings.js"></script>
+                <script src="/static/assets/js/todolist.js"></script>
+                <script src="/static/assets/js/dashboard.js"></script>
+
+                <script src="/static/assets/vendors/js/vendor.bundle.base.js"></script>
+
+              <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+             <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+              <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+
+
+               <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+                
+    </body>
+</section>
+
+</html>

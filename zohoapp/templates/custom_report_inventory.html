@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.css">
+<script src="https://cdn.jsdelivr.net/gh/bbbootstrap/libraries@main/choices.min.js"></script>
+
+<style>
+    
+    .container {
+        display: flex;
+        
+
+    }
+    .sidebars {
+       
+       background-color:transparent;
+       
+     
+        height: 70vh;
+        width: 20vw;
+        
+      
+        
+    }
+   
+form {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  
+  border-radius: 5px;
+}
+.form-row{
+    display:inline-flex;
+    width:100vw ;
+}
+label {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+.mt-90{margin-bottom: 90px}
+body
+{
+background: #00B4DB;
+background: -webkit-linear-gradient(to right, #0083B0, #00B4DB);
+background: linear-gradient(to right, #0083B0, #00B4DB);
+}
+
+
+    
+</style>
+<script>
+    $(document).ready(function(){
+    
+    var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
+       removeItemButton: true,
+    //    maxItemCount:5,
+          // searchResultLimit:5,
+    //    renderChoiceLimit:5,
+    //    includeSelectAllOption:true
+      }); 
+    
+
+});
+
+
+</script>
+<script>
+    $(document).ready(function() {
+        $('#choices-multiple-remove-button').select2({
+            placeholder: 'Click or type to select',
+            allowClear: true,
+            tags: true // Allow custom tags
+        });
+    });
+</script>
+
+<ul class="nav nav-pills"style="position: fixed;" >
+  
+
+    <a class="navbar-brand me-auto " href="#" style="font-size:25px;color: white;position: fixed;">Customize Report</a>
+  
+    <li class="nav-item" style="height:4vh; width:80vw;">
+      <input type="button" value="X" onclick="javascript:history.go(-1);" class="btn btn-tansperent"
+                     style="margin-left:1200px ;font-size: 20px;position: fixed;">
+    </li>
+  </ul>
+  
+<br><br><br>
+<div class="container">
+    <div class="sidebars">
+        <h4 style="color:  white;height:10vh ;"><a href="">General</a></h4>
+        
+    </div>
+    </div>
+    <div class="container" style="margin-left:10%;">
+    <form  class="right-side" method="post" action="" style="width:100vw ;">
+        {% csrf_token %}
+        
+        <div class="form-row">
+         
+        <label for="status" class="form-lable" style="width:20vw ;color: white; ">Status</label>
+        <select name="" id="" style="width: 23vw;color: black; height: 7vh;">
+            <option value="">All</option>
+            <option value="">Active</option>
+            <option value="">Inactive</option>
+
+
+        </select> 
+        </div><br><br>
+        <div class="form-row">
+         
+            <label for="status" class="form-lable" style="width:20vw ;color: white; ">Stock Avaliability</label>
+            <select name="" id="" style="width: 23vw;color: black; height: 7vh;">
+                <option value="">No criteria</option>
+                <option value="">Greater than zero</option>
+                <option value="">Less than or equal to zero</option>
+                <option value="">Less than zero</option>
+                <option value=""> Equal to zero</option>
+    
+    
+            </select> 
+            </div>
+        
+        
+        <div>
+            <br><br> 
+            <label for="" > Item Name</label>&nbsp&nbsp
+            <button  type="reset" class="btn btn-tansperent text-primary" id="clearButton" onclick="clearAllSelections()"> clear all</button>
+           
+            <br>
+             <div class="row d-flex justify-content-left mt-100" style="color: black;">
+               
+            <select id="choices-multiple-remove-button" placeholder="Click or Type to select" multiple style="width: 300px;"  >
+            
+           
+                {% for i in items%}
+                <option class="row d-flex justify-content-left mt-90" >{{ i.Name }}</option>
+                
+             {%endfor%}
+            </select>
+        </div>
+        </div>
+    </form>
+</div>
+        
+
+    
+    
+    
+  
+
+{% endblock %}

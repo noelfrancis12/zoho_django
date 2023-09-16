@@ -1,0 +1,171 @@
+
+{% load static %}
+<section id="selected-area">
+                 <style>
+                   
+ body {
+   font-family: Arial, sans-serif;
+   padding: 1px;
+   margin: 0;
+  
+   
+ }
+ 
+ header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 20px;
+   box-shadow: 0 0 10px rgba(0,0,0,0.2);
+   margin-bottom: 20px;
+ }
+ 
+ .logo img {
+   max-height: 100px;
+ }
+ 
+ .company-info h2 {
+   margin: 0;
+   font-size: 2em;
+ }
+ 
+ .company-info p {
+   margin: 0;
+   line-height: 1.5;
+ }
+ 
+ .i.invoice-box {
+ 
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: 0 0 10px rgba(0,0,0,0.2);
+ }
+ 
+ .invoice-box h1 {
+   font-size: 2em;
+  
+ }
+ 
+ .invoice-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   
+ }
+ 
+ .invoice-details, .client-details {
+   margin: 5px 0;
+ }
+ 
+ table {
+   
+   border-collapse: collapse;
+ }
+ 
+ th, td {
+   padding: 3px;
+   text-align: left;
+   border-bottom: 1px solid #ddd;
+ }
+ 
+ #th {
+   background-color: #f2f2f2;
+   color: black;
+ }
+ 
+ .invoice-total {
+   margin-top: 20px;
+   text-align: right;
+ }
+ 
+ .invoice-total p {
+   margin: 5px 0;
+ }
+ 
+ footer {
+   background-color: #fff;
+   padding: 20px;
+   box-shadow: 0 0 10px rgba(0,0,0,0.2);
+   text-align: center;
+   font-size: 0.8em;
+   color: #888;
+   margin-top: 20px;
+ }
+ 
+ footer p {
+   margin: 5px 0;
+ }
+ 
+ 
+                 </style>
+                   <header style="background-color: #c40909;border-radius: 50px;" >
+                       <div class="logo ">
+                           <img class="ml-2" width="100rem" style="border-radius: 50%;" src="{% static 'images/zlogo.png' %}" alt="Company Logo">
+                       </div>
+                       <div  class="company-info">
+                           <h2 class="" style="color: white;padding-top: 10px;">{{company.company_name}}</h2>
+                           <p class="text-white"> {{company.address}}<br>{{comp.city}}<br>Ph: {{company.contact_number}}<br>Email: {{company.company_email}}</p>
+                       </div>
+                   </header>
+                   <div class="invoice-box">
+                       <h1 class="text-dark">SalesOrder</h1>
+                       <div class="invoice-header">
+                           <div class="invoice-details text-dark">
+                             <label class="text-dark">Sales No#: {{sale.sales_no}}</label><br>
+                               <label class="text-dark">Sales Order Date: {{sale.sales_date}}</label>
+                               
+                           </div>
+                           <div class="invoice-total" >
+                               <label class="text-dark">Client Name: <b>{{sale.customer.customerName}}</b></label><br>
+                               <label class="text-dark">Address: {{sale.customer.Address1}}<br>{{sale.customer.Address2}}</label>
+                           </div>
+                       </div>
+                       <table style="margin-top: 20px;">
+                           <thead>
+                               <tr>
+                                 
+                                 <th id="th">Product</th>
+                         
+                                   <th id="th">Quantity</th>
+                                   <th id="th">Price</th>
+                                   <th id="th">Tax %</th>
+                                   <th id="th"> Total</th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                             {% for i in item %}
+                             <tr style="color: black;">
+                               <td>{{i.product}}</td>
+                               <td>{{i.quantity}}</td>
+                               <td>{{i.rate}}</td>
+                               <td>{{i.tax}}</td>
+                               <td>{{i.total}}</td>
+                             </tr>
+                             {% endfor %}
+ 
+                         </tbody>
+                       </table>
+                       
+                       <div class="invoice-total">
+                           <p class="text-dark ">Subtotal: <b>{{sale.subtotal}}</b></p>
+                           {% if sale.igst != '0.00' %}
+                           <p class="text-dark ">IGST: <span class="ml-4"></span><b>{{sale.igst}}</b></p>
+                           {% else %}
+                           <p class="text-dark">SGST: <span class="ml-4"></span> <b>{{sale.sgst}}</p></b>
+                           <p class="text-dark">CGST: <span class="ml-4"></span><b>{{sale.cgst}}</p></b>
+                           {% endif %}
+                           <p class="text-dark">Tax Amount: <span class="ml-4"></span> <b>{{sale.t_tax}}</b></p>
+                           <p class="text-dark">Shipping Charge: <span class="ml-4"></span> <b>{{sale.sh_charge}}</b></p>
+                           <p class="text-dark">Total: <span class="ml-4"></span> <b>{{sale.grandtotal}}</b></p>
+                       </div>
+                      
+                   </div>
+ 
+                   <footer class="mb-5">
+                       <p class="text-dark">&copy; Zho Books 2023 | Info park kakkanad kochi, Ernamkulam, kerala India 12345 | Phone: (123) 456-7890 | Email: info@zohodjango.com</p>
+                   </footer>
+                   <div class="mt-5 mb-5">
+       
+                   </div>
+                  </section>
+ 

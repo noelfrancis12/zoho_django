@@ -1,0 +1,706 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.10.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+
+
+<style>
+    .custom-height {
+        height: 40px;
+    }
+
+    .list-item {
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    .vertical-separator {
+        border-right: 1px solid #ddd;
+        overflow: hidden;
+       height: auto;
+        
+    }
+
+    .list-item:hover {
+        border-bottom: 1px solid rgb(230, 171, 45);
+        
+       
+    }
+
+    /* Fix the CSSParseError by removing the unmatched closing bracket */
+  /*  .custom-item:hover {
+        color: white;
+    }*/
+
+    .btn-group {
+        display: inline-flex;
+    }
+
+    .btn-group > * {
+        margin-right: -2px;
+    }
+
+    
+     p{
+        font-size: 18px;
+    }
+    .p{
+        color:  #DC3545;
+    }
+    .icons{
+        padding-left: 12px;
+    }
+    .icons a{
+        background-color: rgb(230, 171, 45);
+        font-size: 18px;
+        
+    }
+    .form-control input{
+        width: 50px;
+    }
+    .search-bar{
+        width: 60%;
+    }
+    .list-item {
+  border-bottom: 1px solid #ccc; /* Add your preferred border style here */
+ 
+}
+.list-item:active,
+.list-item:focus {
+  border-bottom: 1px solid rgb(230, 171, 45); /* Add the same border style for the active state */
+  /* You can also add any other styles specific to the active state if needed */
+}
+
+</style>
+
+
+<section id="container"  style="border-radius: 20px; background-color: #111; ">
+    <div class="row" style="top: 7rem;">
+        <div class="col-md-5">
+            <div class="search-bar" style="margin-top: 20px; margin-left: 15px;">
+                <form class="input-group">
+                    <input type="search" id="search-input" placeholder="Search Payment Made" class="form-control bg-light text-dark" style="width: 90px;">
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <div class="container-fluid mt-5 " style="border-radius: 20px; height: 100%;" >
+        <div class="row">
+            <div class="col-md-4 vertical-separator" >
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb">Payment Made</h3>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'paymentadd_method' %}" class="btn" style="background-color: rgb(230, 171, 45);">+New</a>
+                        
+                    </div>
+                </div>
+
+                <div class="list-group mt-3" >
+                    {% for p in payment_items %}
+                    <a href="#" class="list-item" data-journal-id="{{ p.id }}"
+                        data-journal-details-url="{% url 'payment_template' p.id %}">
+                        <div class="d-flex justify-content-between text-white">
+                            <span>{{ p.vendor.first_name }}</span>
+                            <span><i class="fa fa-inr"></i>{{ p.amount }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between text-white mt-2">
+                            <span>{{ p.date }}</span>
+                            <!-- <span>{{ journal.status }}</span> -->
+                            
+                        </div>
+                        
+                    </a>
+                    
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-8" >
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <a class="btn  overview-button" style="background-color: rgb(230, 171, 45);"><i class="fa fa-eye"></i>Overview</a>
+                    <a class="btn  template-button" style="background-color: rgb(230, 171, 45);"><i class="fa fa-file"></i>Template</a>
+
+                    <div class="text-right icons">   
+                                       
+                        <a href="#" class="text-white btn btn-sm editoption" style="margin-right: 10px;" data-payment-id="{{ payment.id }}"><i class="fa fa-edit"></i>&nbsp;Edit</a>
+
+
+                            <a href="#" class="text-white btn btn-sm" onclick="convertToPDF()"  style="margin-right: 10px;"><i
+                                class="fa fa-file-pdf"></i>&nbsp; PDF</a>
+                        <a  class="text-white btn btn-sm" onclick="printPage()" style="margin-right: 10px;"><i
+                                class="fa fa-print"></i>&nbsp;Print</a>
+                        
+                                <a href="#" class="text-white deleteoption btn btn-sm" style="margin-right: 10px;" >
+                                    <i class="fa fa-trash"></i>&nbsp;Delete</a>
+                    </div>
+                </div>
+                <div class="details-section mt-3">
+                    
+                    <div class="vendor-name" style="margin-top: 20px;">
+                        <h5>{{ payment.vendor.first_name }} &nbsp;{{ payment.vendor.last_name }}</h5>
+                    </div>
+
+
+
+
+
+        <style>
+            .container-fluid{
+                
+                width: 100%;
+            }
+           
+        </style>
+
+    
+    <div class="container-fluid  text-dark" style=" margin-top: 40px; background-color: azure;"  >
+        <div class="row">
+            <div class="col-lg-9">
+            </div>
+            <div class="col-lg-3 ">
+                <!-- <div class="icons text-left" style=" font-size: 25px; ">                    
+                    <a href="#" class="text-danger editoption" style="margin-right: 10px;" ><i class="fa fa-edit"></i></a>
+
+                    <a href="#" class="text-dark" onclick="convertToPDF()" style="margin-right: 10px;"><i
+                            class="fa fa-file-pdf"></i></a>
+                    <a href="#" class="text-primary" onclick="printPage()" style="margin-right: 10px;"><i
+                            class="fa fa-print"></i></a>
+                    
+                    <a href="{% url 'delete_payment' payment.id %}" class="text-warning" style="margin-right: 10px;" ><i
+                            class="fa fa-trash"></i></a>
+                </div> -->
+            </div>
+        </div>
+
+        
+<section id="container" style="height: 1000px;" >
+
+        <div class="heading text-center" style="margin-top: 20px; ">
+            <h2>Payment Made</h2>
+        </div>
+        <div class="row"style="margin-top: 60px;">
+            <div class="col-sm-6">
+        <div class="vendor-name" style="margin-top: 40px;">
+            <h5>{{ payment.vendor.first_name }} &nbsp;{{ payment.vendor.last_name }}</h5>
+        </div>
+            <div class="email" style="margin-top: 40px; width: 100%;">
+                <h5>Email: <span>{{ payment.vendor.vendor_email }}</span></h5>
+            </div>
+            
+           
+           <div class="date" style="margin-top: 40px;">
+                <h5>Payment Date: <span>{{ payment.date }}</span></h5>
+            </div> 
+            
+        
+        
+        <div class="paid" style="margin-top: 40px;">
+            <h5 >Payment Method: <span>{{ payment.payment.option }}</span></h5>
+
+        </div>
+    </div>
+    <div class="col-md-6">
+        
+        <div class="address" style="margin-top: 40px;">
+           <h4><span>{{company.company_name }}</span></h4>
+         
+        </div>
+        <div class="gst" style="margin-top: 40px;">
+         <h5>{{company.address}}</h5>   
+
+        </div>
+        <div class="gst" style="margin-top: 40px;">
+         <h5>{{company.city}}</h5>
+        </div>
+        <div class="gst" style="margin-top: 40px;">
+         <h5>{{company.state}}</h5>
+        </div>
+    </div>
+    </div>
+        <table id="vendorTable" class="table text-center" style="width:100%;  margin-top: 60px; padding: 20px; ">
+            <thead style="background-color: #Fdd960;">
+                <tr>
+                    <th  class="text-dark">Amount Received</th>
+                    <th class="text-dark">Openning Balance</th>
+                    <th  class="text-dark">Current Balance</th>
+                    
+                    
+                </tr>
+            </thead>
+                <tbody>
+                    <tr>
+                        <td  class="text-dark">₹{{ payment.amount }}</td>
+                        <td  class="text-dark">₹{{ payment.balance }}</td>
+                       <td  class="text-dark">₹{{ payment.current_balance }}</td> 
+                    </tr>
+                    
+
+                </tbody>
+            
+        </table>
+        <footer style="margin-top: 60px; width: 100%; height: auto; padding-bottom: 20px;  color: #111;" >
+            <h5 class="text-center" style="font-size: 15px;">© Zho Books 2023 | Info park kakkanad kochi, Ernamkulam, kerala India 12345 | Phone: (123) 456-7890 | Email: info@zohodjango.com</h5>
+        </footer>
+    </section>
+    
+    </div>
+
+
+<script>
+   function printPage() {
+    window.print();
+}
+function convertToPDF(){
+    const container = document.getElementById('container');
+
+    const options = {
+        filename: 'payment.pdf',
+        image:{type:'jpeg',quality:0.98},
+        htmt2canvas:{scale:2},
+        jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}
+    };
+    html2pdf().from(container).set(options).save();
+}
+$(document).ready(function() {
+    // Click event handler for the "Edit" button with class editoption
+    $('.editoption').click(function() {
+        // Delay execution of the edit logic to ensure the list item is active
+        setTimeout(handleEditOption, 50);
+    });
+
+    // Click event handler for list items in the list-group
+    $('.list-group').on('click', '.list-item', function() {
+        // Remove the 'active' class from other list items and add it to the clicked one
+        $('.list-item').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    // Common edit logic function
+    function handleEditOption() {
+        var selectedJournalId = $('.list-item.active').data('journal-id');
+        if (selectedJournalId !== undefined) {
+            var editUrl = "{% url 'payment_edit' %}?payment_id=" + selectedJournalId;
+            window.location.href = editUrl;
+        } else {
+            // Show an error message or handle the situation when selectedJournalId is undefined
+            console.error("Error: Selected Journal ID is undefined.");
+        }
+    }
+});
+
+
+</script>
+</div>
+                <div class="overview-section  " style="margin-top: 20px; ">
+                    <div class="vendor-name" style="margin-top: 20px;">
+                        <h5>{{ payment.vendor.first_name }} &nbsp;{{ payment.vendor.last_name }}</h5>
+                    </div>
+                    <div class="container-fluid" style="background-color: burlywood; margin-top: 40px; height: 1000px;">
+                        <div class="list-group">
+                            <h2 class="text-dark text-center" style="margin-top: 20px;">Payment Made</h2>
+                            <div class="vendor-company" style="margin-top: 30px;">
+                                <h3  style="color: #6c7293;">{{ payment.vendor.company_name }}</h3>
+                    
+                               </div>
+                            <div class="row" style="margin-top: 30px;">
+                                <div class="col-lg-6">
+                                   <div class="vendor-name" style="margin-top: 60px;">
+                                    <h5 class="text-dark">Vendor: <span class="text-dark">{{ payment.vendor.first_name }}&nbsp;{{ payment.vendor.last_name }}</span></h5>
+                    
+                                   </div>
+                                   <div class="vendor-email" style="margin-top: 60px;">
+                                    <h5 class="text-dark">Email: <span class="text-dark">{{ payment.vendor.vendor_email }}</span></h5>
+                    
+                                </div>
+                                <div class="vendor-date" style="margin-top: 60px;">
+                                    <h5 class="text-dark">Payment Date: <span class="text-dark">{{ payment.date }}</span></h5>
+                    
+                                </div>
+                                <div class="vendor-refernce" style="margin-top: 60px;">
+                                    <h5 class="text-dark">Reference: <span class="text-dark">{{ payment.reference }}</span></h5>
+                    
+                                </div>
+                                <div class="vendor-gst" style="margin-top: 60px;">
+                                    <h5 class="text-dark">GST Treatment: <span class="text-dark">{{ payment.gst }}</span></h5>
+                    
+                                </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    
+                                    <div class="other-section" style="background-color: #8b3138; padding: 10px; margin-top: 10px; color: #fff; border-radius: 20px;">
+                                        <div class="vendor-amount" style="margin-top: 20px;">
+                                            <h5 class="text-warning">Amount Received: <span class="text-warning">₹{{ payment.amount }}</span></h5>
+                            
+                                        </div>
+                                        <div class="vendor-method" style="margin-top: 60px;">
+                                            <h5 >Payment-Method: <span >{{ payment.payment }}</span></h5>
+                            
+                                        </div>
+                                        <div class="vendor-through" style="margin-top: 60px;">
+                                            <h5 >Paid Through: <span>{{ payment.cash }}</span></h5>
+                            
+                                        </div>
+                                        <div class="vendor-openning" style="margin-top: 60px;">
+                                            <h5 >Openning Balance: <span>₹{{ payment.balance }}</span></h5>
+                            
+                                        </div>
+                                        <div class="vendor-balance" style="margin-top: 60px;">
+                                            <h5>Current Balance: <span>₹{{ payment.current_balance }}</span></h5>
+                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    
+                                    
+                        </div>
+                    </div>
+                    
+                
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('.list-item').click(function () {
+            $('.list-item').removeClass('active');
+            $(this).addClass('active');
+
+            var journalId = $(this).data('journal-id');
+            var journalDetailsUrl = $(this).data('journal-details-url');
+            $('.details-section').html('<p>Loading payment details...</p>');
+            $.ajax({
+                url: journalDetailsUrl,
+                method: 'GET',
+                data: {
+                    journal_id: journalId
+                },
+                success: function (response) {
+                    $('.details-section').html(response);
+                    $('.template-button').show();
+                },
+                error: function () {
+                    $('.details-section').html('<p>Failed to load payment details.</p>');
+                }
+            });
+        });
+
+        
+       
+
+        $('.editoption').click(function() {
+            var selectedJournalId = $('.list-item.active').data('journal-id');
+            var editUrl = "{% url 'payment_edit'  %}?payment_id=" + selectedJournalId;
+            window.location.href = editUrl;
+        });
+
+        $('.deleteoption').click(function() {
+            var selectedJournalId = $('.list-item.active').data('journal-id');
+            var editUrl = "{% url 'payment_delete_details'  %}?payment_id=" + selectedJournalId;
+            window.location.href = editUrl;
+        });
+
+        
+
+         
+        
+       
+
+    });
+    
+
+    function printPage() {
+    window.print();
+}
+
+
+
+function convertToPDF(){
+    const container = document.getElementById('container');
+
+    const options = {
+        filename: 'payment.pdf',
+        image:{type:'jpeg',quality:0.98},
+        htmt2canvas:{scale:2},
+        jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}
+    };
+    html2pdf().from(container).set(options).save();
+}
+$(document).ready(function () {
+        // Function to handle the search functionality
+        function performSearch() {
+            var searchQuery = $('#search-input').val().trim().toLowerCase();
+            $('.list-item').each(function () {
+                var text = $(this).text().toLowerCase();
+                if (text.includes(searchQuery)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+
+        // Trigger the search when the "Search" button is clicked
+        $('.search-bar button').click(function (event) {
+            event.preventDefault();
+            performSearch();
+        });
+
+        // Trigger the search when the user types in the search input
+        $('#search-input').keyup(function () {
+            performSearch();
+        });
+
+        // Show all items initially when the page is loaded
+        $('.list-item').show();
+    });
+
+    $(document).ready(function() {
+  // Click event handler for the "Edit" button with class editoption
+  $('.editoption').click(function() {
+    var selectedJournalId = $('.list-item.active').data('journal-id');
+    if (selectedJournalId !== undefined) {
+      var editUrl = "{% url 'payment_edit' %}?payment_id=" + selectedJournalId;
+      window.location.href = editUrl;
+    } else {
+      // Show an error message or handle the situation when selectedJournalId is undefined
+      console.error("Error: Selected Journal ID is undefined.");
+      // Optionally, you can show a message to the user that they need to select a row before clicking Edit
+    }
+  });
+
+  // Click event handler for list items in the list-group
+  $('.list-group').on('click', '.list-item', function() {
+    // Remove the 'active' class from other list items and add it to the clicked one
+    $('.list-item').removeClass('active');
+    $(this).addClass('active');
+
+    var journalId = $(this).data('journal-id');
+    var journalDetailsUrl = $(this).data('journal-details-url');
+    $('.details-section').html('<p>Loading payment details...</p>');
+    $.ajax({
+      url: journalDetailsUrl,
+      method: 'GET',
+      data: {
+        journal_id: journalId
+      },
+      success: function(response) {
+        $('.details-section').html(response);
+        $('.template-button').show();
+        $('.editoption').prop('disabled', false); // Enable the Edit button
+      },
+      error: function() {
+        $('.details-section').html('<p>Failed to load payment details.</p>');
+        $('.editoption').prop('disabled', true); // Disable the Edit button on error
+      }
+    });
+  });
+
+  // Trigger "Edit" button click when the page loads with a specific row selected
+  $(window).on('load', function() {
+    var selectedJournalId = $('.list-item.active').data('journal-id');
+    if (selectedJournalId !== undefined) {
+      var editUrl = "{% url 'payment_edit' %}?payment_id=" + selectedJournalId;
+      window.location.href = editUrl;
+    }
+  });
+});
+
+$(document).ready(function() {
+  // Function to open the payment details page on clicking the "editoption" link
+  $('.editoption').click(function(e) {
+    e.preventDefault(); // Prevent default link behavior (i.e., navigating to another page)
+
+    // Get the payment_id from the data attribute
+    var paymentId = $(this).data('payment-id');
+
+    // Construct the URL for the payment_details view using the paymentId
+    var url = "/payment_details/" + paymentId + "/";
+
+    // Redirect to the payment_details view
+    window.location.href = url;
+  });
+});
+$(document).ready(function() {
+  // Click event handler for the "Delete" button with class deleteoption
+  $('.deleteoption').click(function() {
+    var selectedJournalId = $(this).data('journal-id');
+    if (selectedJournalId !== undefined) {
+      // Send an AJAX request to the Django view that handles the delete operation
+      $.ajax({
+        url: "{% url 'payment_delete_details' %}",
+        method: 'DELETE',
+        data: {
+          journal_id: selectedJournalId
+        },
+        success: function(response) {
+          // Handle the success response (e.g., refresh the page or update the list)
+          alert('Payment data deleted successfully.');
+          window.location.reload(); // For example, refresh the page after successful deletion
+        },
+        error: function() {
+          // Handle the error response
+          alert('Failed to delete payment data.');
+        }
+      });
+    } else {
+      // Show an error message or handle the situation when selectedJournalId is undefined
+      console.error("Error: Selected Journal ID is undefined.");
+      // Optionally, you can show a message to the user that they need to select a row before clicking Delete
+    }
+  });
+});
+    
+    // Variable to keep track of whether the "details-section" is visible or not
+    var detailsVisible = false;
+
+    // Function to toggle the visibility of the content sections
+    function toggleContentSections(showList) {
+        if (showList) {
+            $('.details-section').hide();
+            $('.overview-section').show();
+            detailsVisible = false;
+        } else {
+            $('.details-section').show();
+            $('.overview-section').hide();
+            detailsVisible = true;
+        }
+    }
+
+    // Initially, show the "details-section" content and hide the "overview-section" content
+    toggleContentSections(false);
+
+    // Click event handler for the "Overview" button
+    $('.overview-button').click(function () {
+        toggleContentSections(true);
+    });
+
+    // Click event handler for the "Template" button
+    $('.template-button').click(function () {
+        if (detailsVisible) {
+            toggleContentSections(true);
+        } else {
+            toggleContentSections(false);
+        }
+    });
+
+    // Click event handler for list items in the list-group
+    $('.list-groups').on('click', '.list-item', function () {
+        $('.list-item').removeClass('active');
+        $(this).addClass('active');
+
+        // Get the data-journal-id attribute of the selected list-item
+        var selectedJournalId = $(this).data('journal-id');
+
+        // Assuming the payment_id is part of the URL, you can construct the URL for the AJAX request
+        var ajaxUrl = "/payment_lists/" + selectedJournalId + "/";
+
+        // Make an AJAX request to fetch the data for the selected item
+        $.ajax({
+            url: ajaxUrl,
+            method: 'GET',
+            success: function (response) {
+                // Update the content of the overview-section with the fetched data from the AJAX response
+                $('.overview-section').html(response);
+                toggleContentSections(false); // Show the "details-section" with the updated content
+            },
+            error: function () {
+                // Handle the error, if any
+            }
+        });
+    });
+
+
+  
+    // Function to fetch the overview content using AJAX
+    function fetchOverviewContent(paymentId) {
+        // AJAX request to fetch the payment-list.html content for the specified payment_id
+        $.ajax({
+            url: "/payment_lists/" + paymentId + "/",
+            method: "GET",
+            success: function (response) {
+                // Update the overview-section with the fetched content
+                $('.overview-section').html(response);
+            },
+            error: function () {
+                // Handle the error, if any
+                console.error("Failed to fetch overview content.");
+            }
+        });
+    }
+
+    // Variable to keep track of the selected payment_id
+    var selectedPaymentId = null;
+
+    // Function to toggle the visibility of the content sections
+    function toggleContentSections(showList) {
+        if (showList) {
+            $('.details-section').hide();
+            $('.overview-section').show();
+            if (selectedPaymentId !== null) {
+                fetchOverviewContent(selectedPaymentId); // Fetch the overview content if payment_id is selected
+            }
+        } else {
+            $('.details-section').show();
+            $('.overview-section').hide();
+        }
+    }
+
+    // Initially, show the "details-section" content and hide the "overview-section" content
+    toggleContentSections(false);
+
+    // Click event handler for the "Overview" button
+    $('.overview-button').click(function () {
+        toggleContentSections(true);
+    });
+
+    // Click event handler for the "Template" button
+    $('.template-button').click(function () {
+        if (detailsVisible) {
+            toggleContentSections(true);
+        } else {
+            toggleContentSections(false);
+        }
+    });
+
+    // Click event handler for list items in the list-group
+    $('.list-group').on('click', '.list-item', function () {
+        $('.list-item').removeClass('active');
+        $(this).addClass('active');
+
+        // Get the data-journal-id attribute of the selected list-item
+        var selectedJournalId = $(this).data('journal-id');
+
+        // Update the selectedPaymentId with the selected payment_id
+        selectedPaymentId = selectedJournalId;
+
+        if (detailsVisible) {
+            // If the details-section is visible, fetch the overview content and update the overview-section
+            fetchOverviewContent(selectedPaymentId);
+        } else {
+            // Show the "details-section" content and hide the "overview-section" content
+            toggleContentSections(false);
+        }
+    });
+
+
+
+
+</script>
+
+{% endblock %}

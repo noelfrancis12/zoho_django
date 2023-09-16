@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+  .modal{
+      z-index: 9999;
+      overflow: scroll;
+        }
+
+
+.form-group{
+  width: 40%;
+}
+
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    
+    @media screen and (max-width: 600px) {
+      .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+      }
+      input[type=text], select, textarea {
+      width: 100%;
+
+    }
+    }
+
+    .dropdown input,
+    .dropdown button {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+
+    .dropdown.open input,
+    .dropdown.open button {
+      display: block;
+    }
+
+    .row a{
+      color: rgb(218, 164, 48);
+      font-size: 12px;
+    }
+
+    .table th a{
+      color:rgb(218, 164, 48);
+      font-size: 11px;
+      margin-left: 100px;
+    }
+
+
+    ::-webkit-scrollbar {
+      width: 5px; 
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
+
+    .item{
+      height: auto;
+    }
+ 
+  
+  
+
+ 
+</style>
+
+
+<div class="container-fulid containerprof">
+
+  <div class="card radius-15 p-3">
+    <div class="card-body">
+        <div class="card-title">
+          <h2 class="mb-0 text-uppercase text-right">NEW BANK</h2>
+        </div>
+    </div>
+  </div>
+
+  <div class="card radius-15 p-5">
+    <form action="{% url 'create_bank' %}" method="post" enctype="multipart/form-data"id="myForm">
+      {% csrf_token %}
+      
+        <div class="row">
+          <label for="date" class="col-md-3 p-3">Date</label>
+          <div class="col-md-6 p-3">
+            <input type="date" class="form-control text-dark bg-light" id="date" name="date" required>
+          </div>
+        </div>
+        
+        <div class="row">
+            <label for="name" class="col-md-3 p-3">Bank Name</label>
+            <div class="col-md-6 p-3">
+              <input type="text" class="form-control text-dark bg-light" id="name" name="name">
+            </div>
+          </div>
+
+          <div class="row">
+            <label for="ac_no" class="col-md-3 p-3 ">Account Number</label>
+            <div class="col-md-6 p-3">
+              <input type="text" class="form-control text-dark bg-light" id="ac_no" name="ac_no" placeholder="15 Digits">
+            </div>
+          </div>
+    <script>
+
+  const acNoInput = document.getElementById('ac_no');
+
+  acNoInput.addEventListener('input', function () {
+    const inputValue = this.value.trim();
+    const isValid = /^\d{15}$/.test(inputValue); 
+
+    if (!isValid) {
+   
+      this.setCustomValidity('Account number must be 15 digits');
+    } else {
+      this.setCustomValidity(''); 
+    }
+  });
+</script>
+          <div class="row">
+            <label for="opn_bal" class="col-md-3 p-3">Opening Balance</label>
+            <div class="col-md-6 p-3">
+              <div class="input-group">
+                <div class="input-group-append">
+                  <select class="form-control form-select text-dark bg-light" id="bal_type" name="bal_type" style="background-color: #888; width: 100px;">
+                    <option value="Credit">Credit</option>
+                    <option value="Debit">Debit</option>
+                   
+                  </select>
+                </div>
+                <input type="number" class="form-control text-dark bg-light" id="opn_bal" name="opn_bal">
+              </div>
+            </div>
+          </div>
+          
+        
+          <div class="row">
+            <label for="branch" class="col-md-3 p-3">Branch</label>
+            <div class="col-md-6 p-3">
+              <input type="text" class="form-control text-dark bg-light" id="branch" name="branch">
+            </div>
+          </div>
+          <div class="row">
+            <label for="ifsc" class="col-md-3 p-3">IFSC</label>
+            <div class="col-md-6 p-3">
+              <input type="text" class="form-control text-dark bg-light" id="ifsc" name="ifsc">
+            </div>
+          </div>
+          <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE" id="save">
+          <input class="btn  save_btn  rounded-pill text-grey  my-4 mt-2 py-2" type="reset" value="RESET">
+        </div>
+    </form>
+
+{%endblock%}
