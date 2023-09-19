@@ -1,1 +1,0 @@
-from zoho_django.wsgi import application

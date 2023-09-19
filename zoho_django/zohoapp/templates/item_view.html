@@ -1,0 +1,281 @@
+  {% extends 'base.html' %}
+  {% load static %}
+  {% block content %}
+
+ 
+  
+ 
+  <section class="container" sryle="position:fixed;z-index:99;" > 
+    <div class="row mt-3 " style="margin-top: -3rem; margin-left:1rem;" >
+      <div class="col-md-10 form-inline ">
+        <div class="row">
+          <div class="col-md-9"><a class="text-white" style="font-size: 2rem;">All Items</a></div>
+          <input type="text"  id="searchInput" class="form-control bg-dark" placeholder="Search Items..." style="margin-top: 25px; width: 30%;">
+          
+          <div class="btn-group" role="group"  style="margin-left: 1rem;margin-top:1.7rem;display:inline-flex;width:4rem;height:2rem;">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Sort
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              <a class="dropdown-item" href="#"  data-sort="all">All</a>
+              <a class="dropdown-item" href="#"  data-sort="name">Name</a>
+              <a class="dropdown-item" href="#"  data-sort="HSN">HSN/SAC</a>
+              <a class="dropdown-item" href="#"  data-sort="usage">Usage Unit</a>
+              {% comment %} <a class="dropdown-item" href="#" id="sortByName">Name</a>
+              <a class="dropdown-item" href="#" id="sortByHSN">HSN</a>
+              <a class="dropdown-item" href="#" id="sortByUsageUnit">Usage Unit</a> {% endcomment %}
+            </div>
+            
+          </div>
+          <div class="btn-group" role="group"  style="margin-left: 58rem;margin-top:-1.9rem;display:inline-flex;width:4rem">
+            <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Filter
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+              <a class="dropdown-item" href="#" id="filterAllButton">All</a>
+              <a class="dropdown-item" href="#" id="filterActiveButton">Active</a>
+              <a class="dropdown-item" href="#" id="filterInactiveButton">Inactive</a>
+            </div>
+            
+          </div>
+          <div class="col-md-9 form-inline"  style="margin-top: -2rem; margin-left:64rem;"><a style="color: #000;" class="btn btn-secondary " href="{% url 'additem' %}"><i class="fa-solid fa-plus "></i>New Item</a>
+            <a style="color: #ccc;"href="#3"> </a>
+          </div> 
+        </div>
+      </div>
+    </div>  
+    <div id="tableContainer" style="max-height: 500px; overflow-y: auto;">
+      <table id="dataTable" class="table text-white mt-2" style="width: 100%; margin-top: 40px;">
+        <thead>
+          <tr>
+            <th class="col" id="nameHeader">Name</th>
+            <th class="col">Description</th>
+            <th class="col">Sales Rate</th>
+            <th class="col">Purchase Rate</th>
+            <th class="col">HSN/SAC</th>
+            <th class="col" id="stockHeader">Stock on Inventory</th>
+            <th class="col">Usage Unit</th>
+            <th class="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in view %}
+          <tr class="{% if v.satus == 'active' or v.satus == 'Active' %}active{% elif v.satus == 'inactive' or v.satus == 'Inactive' %}inactive{% endif %}">
+            <td class="item-name-cell" onclick="location.href ='{% url 'detail' v.id %}'">{{ v.Name }}</td>
+            <td>{{ v.s_desc }}</td>
+            <td>{{ v.s_price }}</td>
+            <td>{{ v.p_price }}</td>
+            <td>{{ v.hsn }}</td>
+            <td>{{ v.stock }}</td>
+            <td>{{ v.unit.unit }}</td>
+            <td>{{ v.satus }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+
+  <script>
+    $(document).ready(function() {
+      var originalTable = $('#dataTable').clone(); // Clone the original table on page load
+  
+      // Function to sort items by name
+      function sortByName() {
+        var rows = $('#dataTable tbody tr').get();
+        rows.sort(function(a, b) {
+          var keyA = $(a).children('td').eq(0).text().toUpperCase();
+          var keyB = $(b).children('td').eq(0).text().toUpperCase();
+          if (keyA < keyB) return -1;
+          if (keyA > keyB) return 1;
+          return 0;
+        });
+        $.each(rows, function(index, row) {
+          $('#dataTable').children('tbody').append(row);
+        });
+      }
+  
+      // Function to sort items by HSN/SAC
+      function sortByHSN() {
+        var rows = $('#dataTable tbody tr').get();
+        rows.sort(function(a, b) {
+          var keyA = $(a).children('td').eq(4).text();
+          var keyB = $(b).children('td').eq(4).text();
+          return keyA.localeCompare(keyB);
+        });
+        $.each(rows, function(index, row) {
+          $('#dataTable').children('tbody').append(row);
+        });
+      }
+
+      // Function to sort items by Usage Unit
+      function sortByUsageUnit() {
+        var rows = $('#dataTable tbody tr').get();
+        rows.sort(function(a, b) {
+          var keyA = $(a).children('td').eq(6).text(); // Adjust the column index for Usage Unit
+          var keyB = $(b).children('td').eq(6).text(); // Adjust the column index for Usage Unit
+          return keyA.localeCompare(keyB);
+        });
+        $.each(rows, function(index, row) {
+          $('#dataTable').children('tbody').append(row);
+        });
+      }
+
+      // Function to restore the table to its original state
+      function restoreOriginalTable() {
+        $('#dataTable').replaceWith(originalTable.clone()); // Replace the current table with the original table clone
+      }
+
+  
+      // Handle sorting based on data-sort attribute
+      $('[data-sort]').on('click', function() {
+        var sortType = $(this).data('sort');
+        if (sortType === 'name') {
+          sortByName();
+        } else if (sortType === 'HSN') {
+          sortByHSN();
+        } else if (sortType === 'usage') {
+          sortByUsageUnit();
+        } else if (sortType === 'all') {
+          restoreOriginalTable();
+        }
+      });
+    });
+  </script>
+  
+
+
+  
+  <script>
+    // Function to filter items based on status
+    function filterItems(status) {
+      
+      if (status === 'active' || status === 'Active') {
+        $('tbody tr').hide();
+        $('tbody tr.active, tbody tr.Active').show();
+      } else if (status === 'inactive' || status === 'Inactive') {
+        $('tbody tr').hide();
+        $('tbody tr.inactive, tbody tr.Inactive').show();
+      } else {
+        $('tbody tr').show(); // Show all items
+      }
+    }
+  
+    // Attach the filter function to the filter buttons
+    $('#filterActiveButton').on('click', function() {
+      filterItems('active');
+    });
+  
+    $('#filterInactiveButton').on('click', function() {
+      filterItems('inactive');
+    });
+  
+    $('#filterAllButton').on('click', function() {
+      filterItems('all');
+    });
+  </script>
+  
+
+
+  
+  
+  
+  <script>
+    // Function to handle the search
+    function searchTable() {
+      let input, filter, table, tr, td, i, j, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toLowerCase();
+      table = document.getElementById("dataTable");
+      tr = table.getElementsByTagName("tr");
+
+      // Loop through all table rows (excluding the first row, which contains the column headers)
+      for (i = 1; i < tr.length; i++) {
+        let rowVisible = false;
+        td = tr[i].getElementsByTagName("td");
+
+        // Loop through all table cells (columns) in each row
+        for (j = 0; j < td.length; j++) {
+          if (td[j]) {
+            txtValue = td[j].textContent || td[j].innerText;
+            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+              rowVisible = true;
+              break;
+            }
+          }
+        }
+  
+        // Show/hide the row based on the search results
+        tr[i].style.display = rowVisible ? "" : "none";
+      }
+    }
+  
+    // Attach the search function to the input field's "input" event
+    document.getElementById("searchInput").addEventListener("input", searchTable);
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> 
+
+
+{% endblock %}
+
+
+
+
+
+
+  
+
+
+
+  
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var originalTable = $('#dataTable').clone(); // Clone the original table on page load
+
+    // Function to sort items by name
+    function sortByName() {
+      var rows = $('#dataTable tbody tr').get();
+      rows.sort(function(a, b) {
+        var keyA = $(a).children('td').eq(0).text().toUpperCase();
+        var keyB = $(b).children('td').eq(0).text().toUpperCase();
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+      });
+      $.each(rows, function(index, row) {
+        $('#dataTable').children('tbody').append(row);
+      });
+    }
+
+    // Function to sort items by stock on inventory
+    function sortByStock() {
+      var rows = $('#dataTable tbody tr').get();
+      rows.sort(function(a, b) {
+        var keyA = parseInt($(a).children('td').eq(5).text());
+        var keyB = parseInt($(b).children('td').eq(5).text());
+        return keyA - keyB;
+      });
+      $.each(rows, function(index, row) {
+        $('#dataTable').children('tbody').append(row);
+      });
+    }
+
+    // Event handler for the "Filter" dropdown
+    $('.dropdown-item').on('click', function() {
+      var sortType = $(this).data('sort');
+      if (sortType === 'name') {
+        sortByName();
+      } else if (sortType === 'stock') {
+        sortByStock();
+      } else if (sortType === 'all') {
+        $('#dataTable').replaceWith(originalTable.clone());
+      }
+    });
+  });
+
+</script>
